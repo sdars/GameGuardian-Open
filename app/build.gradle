@@ -1,0 +1,81 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'catch_.me_.if_.you_.can_'
+    compileSdk 34
+    buildToolsVersion '34.0.0'
+
+    defaultConfig {
+        applicationId 'catch_.me_.if_.you_.can_'
+        minSdk 21
+        targetSdk 24
+        versionCode 16155
+        versionName '101.4'
+        multiDexEnabled false
+    }
+
+    signingConfigs {
+        release {
+            storeFile rootProject.file('keystore/release.jks')
+            storePassword System.getenv('GG_KEYSTORE_PASSWORD') ?: 'gameguardian'
+            keyAlias System.getenv('GG_KEY_ALIAS') ?: 'gameguardian'
+            keyPassword System.getenv('GG_KEY_PASSWORD') ?: 'gameguardian'
+        }
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+        }
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
+    }
+
+    buildFeatures {
+        buildConfig false
+        resValues true
+    }
+
+    packagingOptions {
+        jniLibs {
+            useLegacyPackaging true
+        }
+    }
+
+    aaptOptions {
+        noCompress 'arsc', 'png', 'res/raw/ydw3a', 'res/raw/ydw3x', 'res/raw/ydwhe', 'res/raw/ydwsh'
+    }
+
+    sourceSets {
+        main {
+            java.srcDirs = ['src/main/java']
+            res.srcDirs = ['src/main/res']
+            manifest.srcFile 'src/main/AndroidManifest.xml'
+        }
+    }
+}
+
+dependencies {
+}
+
+tasks.register("printReleaseCp") {
+    doLast {
+        println "CP-ENTRIES:"
+        tasks.getByName("compileReleaseJavaWithJavac").classpath.files.each { println "  " + it }
+    }
+}

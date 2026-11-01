@@ -1,0 +1,54 @@
+package android.ext;
+
+/* JADX INFO: loaded from: classes.dex */
+class Script$searchNumber extends android.ext.Script$BusyApiFunction {
+    final /* synthetic */ android.ext.Script f0;
+
+    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
+    Script$searchNumber(android.ext.Script script) {
+        super(script);
+        this.f0 = script;
+    }
+
+    @Override // android.ext.Script$ApiFunction
+    protected final int Y2() {
+        return 7;
+    }
+
+    @Override // android.ext.Script$ApiFunction
+    public final luaj.Varargs c3(luaj.Varargs varargs) {
+        this.f0.y3();
+        if ((this instanceof android.ext.Script$refineNumber) && android.ext.MainService.instance.p0 == 0) {
+            return luaj.LuaValue.f1674d;
+        }
+        try {
+            if (android.ext.i2.n(this.f0.t3(), android.ext.Script.D3(varargs.E(1)), android.ext.Script.f3(varargs.Y(2, 127)), varargs.V(3, false), android.ext.Script.e3(varargs.Y(4, 536870912)), varargs.a0(5, 0L), varargs.a0(6, -1L), false, varargs.a0(7, 0L))) {
+                return luaj.LuaValue.f1674d;
+            }
+            return null;
+        } catch (java.lang.NumberFormatException e2) {
+            return luaj.LuaValue.K2(android.ext.Script.V3(e2));
+        }
+    }
+
+    @Override // android.ext.Script$ApiFunction
+    protected final boolean d3(java.io.Writer writer, int i, luaj.LuaValue luaValue) {
+        if (i != 2) {
+            if (i != 4) {
+                if ((i == 5 || i == 6) && luaValue.j1()) {
+                    return android.ext.Script$ApiFunction.h3(writer, luaValue);
+                }
+            } else if (luaValue.h1()) {
+                return android.ext.Script$ApiFunction.g3(writer, this.f0.g0.f374d, luaValue);
+            }
+        } else if (luaValue.h1()) {
+            return android.ext.Script$ApiFunction.g3(writer, this.f0.g0.f372b, luaValue);
+        }
+        return super.d3(writer, i, luaValue);
+    }
+
+    @Override // android.ext.Script$ApiFunction
+    final java.lang.String k3() {
+        return this instanceof android.ext.Script$refineNumber ? "gg.searchNumber(string text [, int type = gg.TYPE_AUTO [, bool encrypted = false [, int sign = gg.SIGN_EQUAL [, long memoryFrom = 0 [, long memoryTo = -1 [, long limit = 0]]]]]]) -> true || string with error".replace("searchNumber", "refineNumber") : "gg.searchNumber(string text [, int type = gg.TYPE_AUTO [, bool encrypted = false [, int sign = gg.SIGN_EQUAL [, long memoryFrom = 0 [, long memoryTo = -1 [, long limit = 0]]]]]]) -> true || string with error";
+    }
+}

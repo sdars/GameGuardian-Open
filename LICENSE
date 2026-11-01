@@ -1,0 +1,22 @@
+GameGuardian 101.4 - open source reconstruction
+==============================================
+
+Copyright (c) 2026 the authors of this reconstruction.
+
+This repository contains a reconstruction of the Android application
+"GameGuardian" (package catch_.me_.if_.you_.can_, version 101.4) that was
+produced by static analysis of the original APK.
+
+GameGuardian is a commercial product.  The original program, its name, its
+trademarks and the copyright in the underlying code belong to GameGuardian
+Ltd.  No part of the original binary is redistributed with this repository,
+and no affiliation with or endorsement by GameGuardian Ltd. is claimed.
+
+The build tooling in tools/lib/ is redistributed under the Apache License
+2.0 (smali and baksmali, https://github.com/JesusFreke/smali); the remaining
+tooling and the reconstruction itself are provided for educational and
+interoperability purposes.
+
+The project signing key in keystore/release.jks is a project local key.  It
+signs the artefacts published from this repository and must not be used for
+anything else.

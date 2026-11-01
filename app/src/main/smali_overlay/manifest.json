@@ -1,0 +1,17 @@
+[
+ {
+  "file": "android/ext/m.smali",
+  "signature": "e(Landroid/ext/n;[IJLjava/lang/String;I)I",
+  "lines": 47918
+ },
+ {
+  "file": "android/ext/n$a.smali",
+  "signature": "a(Landroid/ext/n;JLjava/lang/String;I)I",
+  "lines": 3013
+ },
+ {
+  "file": "luaj/LuaClosure.smali",
+  "signature": "Y2([Lluaj/LuaValue;Lluaj/Varargs;Z)Lluaj/Varargs;",
+  "lines": 6223
+ }
+]
