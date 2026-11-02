@@ -241,6 +241,7 @@ with the smali of the original dex and fixed in the same way:
 | `android.ext.PathSelector$a.compare` | `iA = -1` and the trailing `if (z) { iA = -1; }` were dropped | restored |
 | `android.ext.t1.d(String)` | the whole branch structure was wrong | rewritten from the smali |
 | `android.ext.RegionList.h(w)` | the `Bad name length` branch was not guarded - the exception was thrown on *every* entry, and the `IOException` handler did not leave the loop | the branch was put back into its `if`, the handler leaves the loop |
+| `android.ext.RegionList.h(w)` | the exit of the loop was lost as well: the dex leaves the loop when the flags of a region are zero (the end of the map of the process), the java code kept reading and ran into the end of the buffer (`BufferUnderflowException`) | the zero flags leave the loop |
 
 `tools/repair/scan_loop_catch.py` reports every catch clause that sits inside
 a loop body without a break/return/throw - that is the fingerprint of the
@@ -302,7 +303,51 @@ that keeps the type of the failure (the "sneaky throw" idiom, see
 `tools/repair/fix_exception_wrappers.py` performs the replacement and
 `tools/repair/fix_exception_wrappers.py --check` reports the remaining ones.
 
-### 4.6 On device
+### 4.6 The object of a "new-instance" has to reach every register
+
+The dex code allocates an object with `new-instance` and calls the
+constructor with `invoke-direct`.  The register that holds the new object is
+not necessarily the register the constructor is called on - the code moves
+the reference first:
+
+```
+new-instance v2, Landroid/ext/z1$d;
+...
+move-object v14, v2
+invoke-direct {v14 .. v21}, Landroid/ext/z1$d;-><init>(...)V
+...
+invoke-interface {v8, v2}, Ljava/util/List;->add(Ljava/lang/Object;)Z
+```
+
+The java translation of `tools/repair/smali_to_java.py` builds the object at
+the position of the constructor call, so the register of the `new-instance`
+kept the `null` of the allocation and the reconstruction added a *null* to
+the list where the original dex adds the object.  The process list of the
+floating panel died with it:
+
+```
+java.lang.NullPointerException: Attempt to write to field 'long android.ext.z1$d.k'
+on a null object reference
+    at android.ext.z1.s(z1.java:1268)
+```
+
+The translation now hands the object to every register that carries the
+reference:
+
+```java
+st.v2o = new android.ext.z1$d((android.ext.z1$c) st.v15o, st.v16i, ...);
+st.v14o = st.v2o;
+```
+
+`tools/repair/scan_new_instance.py` reports every method of the original dex
+that moves the reference of a `new-instance` before the constructor call and
+reads the register afterwards.  Four of the methods of the reconstruction
+used the pattern (`android.ext.Tools.A0`, `android.ext.Tools.Z`,
+`android.ext.z1.n` and `gg_e.c.b`) and were regenerated.  `gg_e.c.b` threw
+the object it had just built (`throw v1`); with the old translation it threw
+*null* instead of the `lasm.c` exception of the original dex.
+
+### 4.7 On device
 
 Device `123.57.254.92:51213`, MI 8, Android 10, arm64-v8a, root available.
 
@@ -315,10 +360,12 @@ Device `123.57.254.92:51213`, MI 8, Android 10, arm64-v8a, root available.
   `DI: 8 4 <pid>`, `InOut: x64: true; QE_ALIGN: 4; <pid>`,
 * the process list of the floating panel shows the real processes with their
   architecture and memory usage (`[2507] 系统界面 [x64] [223 MB]`),
-* a target process can be selected and attached to,
+* a target process can be selected and attached to, the map of the process is
+  read back: `used: ProcessInfo [cmdline=mark.via, name=Via, pid=20819, ...]`,
+  `TE get: 1:1100 2:1100 ...`, `RE get: 1:1100 2:1100 ...`,
 * `logcat`: no `FATAL EXCEPTION`, no `UnsupportedOperationException`, no
-  `Bad cmdline length`, no `Bad name length` and no
-  `PackageManager$NameNotFoundException`.
+  `Bad cmdline length`, no `Bad name length`, no
+  `PackageManager$NameNotFoundException` and no `BufferUnderflowException`.
 
 ---
 

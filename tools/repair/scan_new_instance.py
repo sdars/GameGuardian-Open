@@ -65,6 +65,33 @@ def groups_of(m):
     return res
 
 
+def reads_after(m, index, reg):
+    """True when the register is read by an instruction after index."""
+    for op, args in m.insns[index + 1:]:
+        if op.startswith('invoke-') or op.startswith('filled-new-array'):
+            regs = S.reglist(args[0], m)
+            if reg in regs[1:]:
+                return True
+            continue
+        defined = set(r for (r, _k) in S.defs_of(op, args, m))
+        if reg in defined:
+            continue
+        if op in ('move', 'move/from16', 'move/16', 'move-wide', 'move-wide/from16',
+                  'move-wide/16', 'move-object', 'move-object/from16',
+                  'move-object/16'):
+            if S.regnum(args[1], m) == reg:
+                return True
+            continue
+        for tok in args:
+            if isinstance(tok, str) and tok.startswith('v'):
+                try:
+                    if S.regnum(tok, m) == reg:
+                        return True
+                except Exception:  # noqa: BLE001
+                    continue
+    return False
+
+
 def method_signatures(text):
     out = []
     for block in text.split('.method ')[1:]:
@@ -101,7 +128,7 @@ def main(argv):
                     print('?? %s %s: %s' % (name, sig, exc))
                     continue
                 for i, regs in groups_of(m).items():
-                    if len(regs) > 1:
+                    if len(regs) > 1 and reads_after(m, i, regs[0]):
                         hits += 1
                         names_ = ', '.join('v%d' % r for r in regs)
                         rel = os.path.relpath(path, ROOT)

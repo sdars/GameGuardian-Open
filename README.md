@@ -10,9 +10,9 @@ resulting APK installs and runs.
 |---|---|
 | Reconstructed from | `GameGuardian-101.4.apk`, sha256 `774b84ccbdb0a53c9a1b26b4238826d4b647d8d4a14c95a4177926c191e12bd8` |
 | Package / version | `catch_.me_.if_.you_.can_` / `101.4` (versionCode `16155`) |
-| Java sources | 1139 files, 488 924 lines |
+| Java sources | 1139 files, 488 944 lines |
 | Smali in the build | none - `app/src/main/java` is the only input |
-| Release APK | `release/GameGuardian-101.4-open.apk` (sha256 `9b7f4d3894939144c2c3477939372154417d603dcf52d8b84ff98fd3632ded1c`) |
+| Release APK | `release/GameGuardian-101.4-open.apk` (sha256 `aff559456788f40ebc6ad5c6eb2cd0e35a8917674b124603fbff3a1e37277fcc`) |
 
 ---
 
@@ -91,6 +91,13 @@ bash tools/verify/overlay_diff/run_overlay_diff.sh
 
 bash tools/verify/luaj_diff/run_diff.sh
 #   -> 12 lua scripts, original dex against the pure source, identical stdout
+
+python3 tools/repair/scan_new_instance.py
+#   -> the methods of the original dex that move the reference of a
+#      "new-instance" before the constructor call and read it afterwards
+
+python3 tools/repair/fix_exception_wrappers.py --check
+#   -> the call sites that would change the runtime type of a failure
 ```
 
 The two differential tests compare the reconstruction with the original dex:
@@ -109,8 +116,13 @@ On device (MI 8, Android 10, arm64-v8a, root):
 * the daemon starts and the handshake succeeds:
   `Daemon: .../files/GG-Q51u/lib5.so`, `DI: 8 4 <pid>`,
   `InOut: x64: true; QE_ALIGN: 4; <pid>`,
-* a target process can be selected and attached to,
-* `logcat` shows no `FATAL EXCEPTION` and no `UnsupportedOperationException`.
+* the process list of the floating panel shows every process with its
+  architecture and memory usage (`[10161] Trebuchet [x64] [165 MB]`),
+* a target process can be selected and attached to and its memory map is
+  read back (`used: ProcessInfo [cmdline=mark.via, name=Via, pid=20819, ...]`,
+  `TE get: 1:1100 2:1100 ...`),
+* `logcat` shows no `FATAL EXCEPTION`, no `UnsupportedOperationException` and
+  no exception of the application service at all.
 
 ## Legal
 

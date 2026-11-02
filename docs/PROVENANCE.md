@@ -35,7 +35,7 @@ The APK itself is **not** part of this repository.
 | | |
 |---|---|
 | file | `GameGuardian-101.4-open.apk` |
-| sha256 | `9b7f4d3894939144c2c3477939372154417d603dcf52d8b84ff98fd3632ded1c` |
+| sha256 | `aff559456788f40ebc6ad5c6eb2cd0e35a8917674b124603fbff3a1e37277fcc` |
 | size | 17 896 103 bytes |
 | signing certificate | CN=GameGuardian |
 | certificate SHA-256 | `ac5f2382db5845fcab78fd775faea3653c09e18b80e4244ffddd323d1c4aa374` |
@@ -50,7 +50,7 @@ the build.
 ```
 original apk           774b84ccbdb0a53c9a1b26b4238826d4b647d8d4a14c95a4177926c191e12bd8
 gradle app-release.apk see git history of the build step
-final release apk      9b7f4d3894939144c2c3477939372154417d603dcf52d8b84ff98fd3632ded1c
+final release apk      aff559456788f40ebc6ad5c6eb2cd0e35a8917674b124603fbff3a1e37277fcc
 ```
 
 The scripts below re-derive the guarantee that the released APK is the pure

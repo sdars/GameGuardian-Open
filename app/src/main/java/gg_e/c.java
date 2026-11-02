@@ -73661,6 +73661,14 @@ public class c implements a {
         return -1;
     }
 
+    /* ------------------------------------------------------------- *
+     *  .method public b()Lgg_e/f;
+     *
+     *  Translated from the original dex code into plain java.
+     *  Every dalvik instruction becomes one java statement, the
+     *  register file lives in the state object below and the
+     *  control flow is a switch over the instruction index.
+     * ------------------------------------------------------------- */
     public f b() {
         xm_bState st = new xm_bState();
         st.v17o = this;
@@ -74481,7 +74489,11 @@ public class c implements a {
                         st.v9d = 0.0;
                     case 142:
                         st.pc = 142;
-                        st.v9o = new lasm.c((st.v10i != 0), st.v11i, st.v12i, st.v13i, (java.lang.String) st.v14o, (char) st.v15i, st.v16i);
+                        st.v1o = new lasm.c((st.v10i != 0), st.v11i, st.v12i, st.v13i, (java.lang.String) st.v14o, (char) st.v15i, st.v16i);
+                        st.v1i = 0;
+                        st.v1j = 0L;
+                        st.v1d = 0.0;
+                        st.v9o = st.v1o;
                         st.v9i = 0;
                         st.v9j = 0L;
                         st.v9d = 0.0;
@@ -74544,15 +74556,6 @@ public class c implements a {
         }
         return -1;
     }
-
-    /* ------------------------------------------------------------- *
-     *  .method protected h()Lgg_e/f;
-     *
-     *  Translated from the original dex code into plain java.
-     *  Every dalvik instruction becomes one java statement, the
-     *  register file lives in the state object below and the
-     *  control flow is a switch over the instruction index.
-     * ------------------------------------------------------------- */
     protected f h() {
         xm_hState st = new xm_hState();
         st.v6o = this;

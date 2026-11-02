@@ -1264,8 +1264,9 @@ class Generator(object):
                 # the register of the new-instance carries the object as
                 # well - the dex code uses it after the constructor call
                 out = []
-                for reg in group:
-                    out.extend(self.setreg(reg, K_REF, expr))
+                out.extend(self.setreg(group[0], K_REF, expr))
+                for reg in group[1:]:
+                    out.extend(self.setreg(reg, K_REF, self.R(group[0], K_REF)))
                 return out
             return self.setreg(regs[0], K_REF, expr)
         else:

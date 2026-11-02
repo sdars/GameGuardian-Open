@@ -1000,7 +1000,11 @@ public class z1 {
                         st.v16d = 0.0;
                     case 98:
                         st.pc = 98;
-                        st.v14o = new android.ext.z1$d((android.ext.z1$c) st.v15o, st.v16i, st.v17i, (java.lang.String) st.v18o, st.v19i, (st.v20i != 0), st.v21i);
+                        st.v2o = new android.ext.z1$d((android.ext.z1$c) st.v15o, st.v16i, st.v17i, (java.lang.String) st.v18o, st.v19i, (st.v20i != 0), st.v21i);
+                        st.v2i = 0;
+                        st.v2j = 0L;
+                        st.v2d = 0.0;
+                        st.v14o = st.v2o;
                         st.v14i = 0;
                         st.v14j = 0L;
                         st.v14d = 0.0;
@@ -1224,7 +1228,6 @@ public class z1 {
         }
         return -1;
     }
-
     public static void o(android.ext.w wVar) {
         i.n(wVar);
     }

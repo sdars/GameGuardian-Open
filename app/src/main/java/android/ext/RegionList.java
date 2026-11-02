@@ -211,6 +211,10 @@ public class RegionList extends android.fix.ImageButtonView implements android.v
                             sparseIntArray.put(iE, sparseIntArray.get(iE) + ((int) j));
                             str = strIntern;
                         }
+                    } else {
+                        /* the dex leaves the loop here: the flags of the
+                           region are zero, the map of the process ends */
+                        done = true;
                     }
             } catch (java.io.IOException e2) {
                 android.ext.e1.l("???", e2);

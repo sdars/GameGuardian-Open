@@ -578,7 +578,11 @@ public abstract class Tools {
                         st.v12d = 0.0;
                     case 76:
                         st.pc = 76;
-                        st.v8o = new android.ext.Tools$y((java.lang.Class) st.v9o, (java.lang.String) st.v10o, (java.lang.Class[]) st.v11o, st.v12o, (java.lang.Object[]) st.v13o);
+                        st.v16o = new android.ext.Tools$y((java.lang.Class) st.v9o, (java.lang.String) st.v10o, (java.lang.Class[]) st.v11o, st.v12o, (java.lang.Object[]) st.v13o);
+                        st.v16i = 0;
+                        st.v16j = 0L;
+                        st.v16d = 0.0;
+                        st.v8o = st.v16o;
                         st.v8i = 0;
                         st.v8j = 0L;
                         st.v8d = 0.0;
@@ -647,7 +651,11 @@ public abstract class Tools {
                         st.v12d = 0.0;
                     case 91:
                         st.pc = 91;
-                        st.v8o = new android.ext.Tools$y((java.lang.Class) st.v9o, (java.lang.String) st.v10o, (java.lang.Class[]) st.v11o, st.v12o, (java.lang.Object[]) st.v13o);
+                        st.v16o = new android.ext.Tools$y((java.lang.Class) st.v9o, (java.lang.String) st.v10o, (java.lang.Class[]) st.v11o, st.v12o, (java.lang.Object[]) st.v13o);
+                        st.v16i = 0;
+                        st.v16j = 0L;
+                        st.v16d = 0.0;
+                        st.v8o = st.v16o;
                         st.v8i = 0;
                         st.v8j = 0L;
                         st.v8d = 0.0;
@@ -844,7 +852,6 @@ public abstract class Tools {
         }
         return -1;
     }
-
     public static void A1(android.widget.ListView listView, android.ext.Tools$a0 tools$a0) {
         if (tools$a0 == null) {
             return;
@@ -2512,7 +2519,11 @@ java.lang.Throwable th = null;
                         st.v12d = 0.0;
                     case 76:
                         st.pc = 76;
-                        st.v8o = new android.ext.Tools$y((java.lang.Class) st.v9o, (java.lang.String) st.v10o, (java.lang.Class[]) st.v11o, st.v12o, (java.lang.Object[]) st.v13o);
+                        st.v16o = new android.ext.Tools$y((java.lang.Class) st.v9o, (java.lang.String) st.v10o, (java.lang.Class[]) st.v11o, st.v12o, (java.lang.Object[]) st.v13o);
+                        st.v16i = 0;
+                        st.v16j = 0L;
+                        st.v16d = 0.0;
+                        st.v8o = st.v16o;
                         st.v8i = 0;
                         st.v8j = 0L;
                         st.v8d = 0.0;
@@ -2581,7 +2592,11 @@ java.lang.Throwable th = null;
                         st.v12d = 0.0;
                     case 91:
                         st.pc = 91;
-                        st.v8o = new android.ext.Tools$y((java.lang.Class) st.v9o, (java.lang.String) st.v10o, (java.lang.Class[]) st.v11o, st.v12o, (java.lang.Object[]) st.v13o);
+                        st.v16o = new android.ext.Tools$y((java.lang.Class) st.v9o, (java.lang.String) st.v10o, (java.lang.Class[]) st.v11o, st.v12o, (java.lang.Object[]) st.v13o);
+                        st.v16i = 0;
+                        st.v16j = 0L;
+                        st.v16d = 0.0;
+                        st.v8o = st.v16o;
                         st.v8i = 0;
                         st.v8j = 0L;
                         st.v8d = 0.0;
@@ -2778,7 +2793,6 @@ java.lang.Throwable th = null;
         }
         return -1;
     }
-
     public static boolean Z0(java.lang.Process process) {
         try {
             process.exitValue();
