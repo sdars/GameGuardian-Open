@@ -65,11 +65,16 @@ abstract class s {
 
     private static int c(byte[] bArr, byte[] bArr2, int i) {
         for (int iMax = java.lang.Math.max(0, i); iMax <= bArr.length - bArr2.length; iMax++) {
+            boolean match = true;
             for (int i2 = 0; i2 < bArr2.length; i2++) {
                 if (bArr[iMax + i2] != bArr2[i2]) {
+                    match = false;
+                    break;
                 }
             }
-            return iMax;
+            if (match) {
+                return iMax;
+            }
         }
         return -1;
     }
@@ -164,6 +169,7 @@ abstract class s {
                         while (i14 < i9) {
                             int i15 = byteBufferOrder.getInt(i7 + 8 + (i14 * 4));
                             iArr[i14] = i15;
+                            boolean inside = false;
                             if (i15 >= 0) {
                                 int i16 = i12;
                                 int i17 = i9;
@@ -171,12 +177,18 @@ abstract class s {
                                     if (i14 > 0 && i15 < iArr[i14 - 1]) {
                                         throw new java.io.IOException(str3 + ": string offsets are not non-decreasing");
                                     }
-                                    i14++;
+                                    inside = true;
                                     i9 = i17;
                                     i12 = i16;
                                 }
                             }
-                            throw new java.io.IOException(str3 + ": string offset " + i14 + " is outside the string data");
+                            if (!inside) {
+                                /* the original dex leaves the loop here (s.smali:
+                                   :cond_5) - only an offset that is negative or
+                                   points behind the string data is an error */
+                                throw new java.io.IOException(str3 + ": string offset " + i14 + " is outside the string data");
+                            }
+                            i14++;
                         }
                         int i18 = i12;
                         int i19 = i9;

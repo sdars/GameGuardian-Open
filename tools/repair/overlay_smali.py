@@ -1,28 +1,24 @@
 #!/usr/bin/env python3
-"""smali overlay for the methods no Java decompiler could reconstruct.
+"""The renames the smali of the original dex needs to match the java tree.
 
-GameGuardian 101.4 contains four methods whose control flow defeats jadx,
-Procyon, CFR and Vineflower alike:
-
-  android/ext/f1$a.run()V                                       (hand written)
-  android/ext/m.e(Landroid/ext/n;[IJLjava/lang/String;I)I         (ARM64 disassembler)
-  android/ext/n$a.a(Landroid/ext/n;JLjava/lang/String;I)I        (ARM64 decoder)
-  luaj/LuaClosure.Y2([Lluaj/LuaValue;Lluaj/Varargs;Z)Lluaj/Varargs;
-
-For the three large ones the original dex bytecode is kept verbatim and
-patched into the smali tree of the compiled Java sources.  Two rewrites are
-needed for that:
+The reconstruction renames two things:
 
   * the obfuscator packages a..g were renamed to gg_a..gg_g in the Java tree,
   * jadx renamed every member whose name collides with a class of the same
     package (f1062a instead of a, f1676f instead of f, ...).
 
-Both rewrites are applied to the smali fragment, so the overlay compiles
-against the Java classes exactly.
+Both rewrites are applied to the smali of the original dex, so that the
+translated code talks to the same names as the java tree.
+
+The module used to build the smali overlay - the three methods that no
+decompiler could rebuild were shipped as smali and patched into the compiled
+dex.  They are plain java now (tools/repair/smali_to_java.py), so the
+overlay is retired; the fragment generator is kept as the reference of the
+three original method bodies.
 
 Usage:
-  overlay_smali.py gen    <baksmali-dir>   apply the overlay to a smali tree
-  overlay_smali.py show                   print what the overlay contains
+  overlay_smali.py gen    <out-dir>   write the three fragments as smali
+  overlay_smali.py show              print what the fragments contain
 """
 import json
 import os
@@ -32,7 +28,7 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 ORIG = os.path.join(ROOT, "tmp", "analysis", "2026-11-01", "apktool_src", "smali")
 REMAP = os.path.join(ROOT, "tools", "repair", "member_renames.json")
-OUTDIR = os.path.join(ROOT, "app", "src", "main", "smali_overlay")
+OUTDIR = os.path.join(ROOT, "tmp", "smali_overlay")
 
 TARGETS = [
     ("android/ext/m.smali", "e(Landroid/ext/n;[IJLjava/lang/String;I)I"),
@@ -106,6 +102,11 @@ def cmd_gen(dest):
 
 
 def cmd_apply(smalidir):
+    raise SystemExit("the smali overlay is retired - the three methods are plain",
+                     "java now, see tools/repair/smali_to_java.py")
+
+
+def cmd_apply_unused(smalidir):
     memmap = load_map()
     manifest = json.load(open(os.path.join(OUTDIR, "manifest.json"), encoding="utf-8"))
     for entry in manifest:

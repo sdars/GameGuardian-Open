@@ -137,35 +137,19 @@ public abstract class r extends gg_a.a implements android.view.View.OnClickListe
             r = true;
             sb.append("1\n");
         }
-        if (!str.startsWith("/data/data/")) {
-            if (str.startsWith("/data/user/")) {
-                str2 = str.split("/", -1)[4];
-                str3 = "3\n";
-            } else {
-                str2 = null;
-            }
-            android.ext.Config.F = "";
-            if (str2 != null) {
-                sb.append(str2);
-                sb.append("\n4\n");
-                android.ext.Config.C = !str2.startsWith(android.ext.i.f1002d);
-                android.ext.Config.E = str2;
-                android.ext.Config.D = str2.contains("vmos");
-                try {
-                    android.ext.Config.F = android.ext.Tools.a0(android.ext.Tools.Y(str2));
-                } catch (java.lang.Throwable th) {
-                    android.ext.e1.s("Failed get vSpace name for " + str2, th);
-                }
-            }
-            if (android.ext.Config.F.length() == 0) {
-                android.ext.Config.F = android.ext.b2.f(catch_.me_.if_.you_.can_.R.string.virtual_space);
-            }
-            sb.append(android.ext.Config.C);
-            sb.append('\n');
+        if (str.startsWith("/data/data/")) {
+            str2 = str.split("/", -1)[3];
+            str3 = "2\n";
+        } else if (str.startsWith("/data/user/")) {
+            str2 = str.split("/", -1)[4];
+            str3 = "3\n";
+        } else {
+            str2 = null;
+            str3 = null;
         }
-        str2 = str.split("/", -1)[3];
-        str3 = "2\n";
-        sb.append(str3);
+        if (str3 != null) {
+            sb.append(str3);
+        }
         android.ext.Config.F = "";
         if (str2 != null) {
             sb.append(str2);
@@ -173,7 +157,11 @@ public abstract class r extends gg_a.a implements android.view.View.OnClickListe
             android.ext.Config.C = !str2.startsWith(android.ext.i.f1002d);
             android.ext.Config.E = str2;
             android.ext.Config.D = str2.contains("vmos");
-            android.ext.Config.F = android.ext.Tools.a0(android.ext.Tools.Y(str2));
+            try {
+                android.ext.Config.F = android.ext.Tools.a0(android.ext.Tools.Y(str2));
+            } catch (java.lang.Throwable th) {
+                android.ext.e1.s("Failed get vSpace name for " + str2, th);
+            }
         }
         if (android.ext.Config.F.length() == 0) {
             android.ext.Config.F = android.ext.b2.f(catch_.me_.if_.you_.can_.R.string.virtual_space);

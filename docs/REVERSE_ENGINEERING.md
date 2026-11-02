@@ -39,16 +39,16 @@ The obfuscator emitted seven helper packages `a` .. `g` in which **every class
 is named after its package** (`a.a`, `a.b`, ... `g.g`).  In Java such a
 package can never be referenced unambiguously, because the simple name `a` is
 both a package and a class.  `tools/repair/rename_packages.py` renames them to
-`gg_a` .. `gg_g`; the change is purely cosmetic and is undone automatically
-when the smali overlay is written (see section 4).
+`gg_a` .. `gg_g`; the change is purely cosmetic.
 
 jadx additionally renames every member whose name collides with a class of the
 same package (`m.a` -> `m.f1062a`, `LuaValue.f` -> `LuaValue.f1676f`, ...).
 689 classes and 1 826 members are affected.  The mapping is extracted from the
 `JADX INFO: renamed from:` comments by
 `tools/repair/extract_member_renames.py` into
-`tools/repair/member_renames.json` and is the second half of the overlay
-rewrite.
+`tools/repair/member_renames.json`; the smali to java translator applies the
+same mapping to the dex code it translates, so both sides speak the same
+names.
 
 ### 2.2 The 64 KB method limit
 
@@ -124,65 +124,201 @@ which is `z && (!Config.vSpaceReal || Config.D)`.  The compiled result is
 compared instruction by instruction with the original dex - the branch
 sequence, the field writes and the call order are identical.
 
-### 3.2 The three large ones - smali overlay
+### 3.2 The three large ones - mechanical translation
 
-Instead of transliterating 57 000 lines of smali into Java (which no
-decompiler manages and which would be unverifiable), the **original dex
-bytecode** is kept and patched into the compiled dex:
+Transliterating 57 000 lines of smali into readable Java is not possible -
+that is exactly what the four decompilers failed at.  The reconstruction
+therefore keeps the *shape* of the dex code instead of its control flow:
 
-1. `tools/build_release.sh` builds the Java sources into `classes.dex`,
-2. `baksmali` disassembles that dex back into smali,
-3. `tools/repair/overlay_smali.py apply` replaces the three method bodies with
-   the fragments in `app/src/main/smali_overlay/`,
-4. `smali` assembles the patched tree into the final `classes.dex`,
-5. the dex is put back into the APK, aligned and signed.
+1. `tools/repair/smali_to_java.py` parses the smali of the original dex and
+   emits a Java state machine.  Every dalvik instruction becomes one java
+   statement, the register file lives in a state object (`mEState`,
+   `naAState`, `lcY2State`) and the control flow is a `switch` over the
+   instruction index:
 
-The fragments are the original smali with exactly two rewrites applied
-(`tools/repair/overlay_smali.py`):
+   ```java
+   private static int mE_run(mEState st) {
+       while (true) {
+           boolean done;
+           int pc = st.pc;
+           if (pc < 1200) {
+               done = mE_c0(st);
+           } else if (pc < 2400) {
+               done = mE_c1(st);
+           } ... else {
+               done = mE_c31(st);
+           }
+           if (done) {
+               return st.resultI;
+           }
+       }
+   }
+   ```
 
-* `L a/...;` -> `L gg_a/...;` (the package rename of section 2.1),
-* `Landroid/ext/m;->a:J` -> `Landroid/ext/m;->f1062a:J` (the member rename of
-  section 2.1).
+   The chunks exist because of the 64 KB method limit of the JVM; each of them
+   is a straight line of translated instructions.
+
+2. `tools/repair/regen_class.py` applies the same translation to whole
+   classes.  It is used for the classes whose jadx output was structurally
+   broken (`android.ext.n$c`, `n$e`, `n$g`, `gg_e.c`, `lasm.LasmBase`).
+
+3. `tools/repair/fix_method.py` splices a single translated method into an
+   existing java file when only that one method is broken.
+
+The translator had to be taught a few dex details:
+
+| dex construct | translation |
+|---|---|
+| `int`/`long`/`float`/`double` registers | four typed fields per register (`v0i`, `v0j`, `v0f`, `v0d`) - the dex type is taken from the instruction |
+| `invoke-super` | direct call to the super method of the current class |
+| `monitor-enter` / `monitor-exit` | `synchronized` block on the state object |
+| `filled-new-array` | `new T[] { ... }` |
+| `const-string` / `const-class` | string pool / class literal |
+| `check-cast` | `(T) obj` |
+| `packed-switch` / `sparse-switch` | `switch` over the key |
+| identity of a class (`==` on a class literal) | the class literal is compared by reference, so the translation keeps one static field per class literal |
+
+The result is checked against the original dex in section 4.
 
 ---
 
 ## 4. How the result is verified
 
-### 4.1 The overlay links
+### 4.1 The build is pure java source
 
-`tools/repair/verify_overlay.py` parses the produced dex directly (no
-external tool) and checks every class and every member the overlay touches
-against the classes that were compiled from Java:
-
-```
-dex classes      : 1154
-member references: 27
-OK - every class and member referenced by the overlay exists
-```
-
-### 4.2 The overlay is the original implementation
-
-`tools/repair/verify_overlay_fidelity.py` disassembles the original dex and
-the release dex and compares the three method bodies instruction by
-instruction:
+`tools/repair/verify_pure_source.py` checks that the release dex was built
+from java only and that the three methods are the java state machines:
 
 ```
-IDENTICAL  android/ext/m.smali          e(Landroid/ext/n;[IJLjava/lang/String;I)I  (47917 lines)
-IDENTICAL  android/ext/n$a.smali        a(Landroid/ext/n;JLjava/lang/String;I)I  (3012 lines)
-IDENTICAL  luaj/LuaClosure.smali        Y2([Lluaj/LuaValue;Lluaj/Varargs;Z)Lluaj/Varargs;  (6222 lines)
+OK        no smali in app/src and none in app/build.gradle
+
+method         entry        original      release state machine
+m.smali        entry           25242           11          111489
+n$a.smali      entry            1637           10            8824
+LuaClosure.smali entry           3292           10           15284
+
+OK        no undecompiled stub left in the release dex
 ```
 
-### 4.3 On device
+### 4.2 The two large methods behave like the original
+
+`tools/verify/overlay_diff/run_overlay_diff.sh` compiles one harness and runs
+it twice - once against the dex2jar dump of the original APK, once against
+the compiled reconstruction.  Both runs see the same 620 input vectors (fixed
+vectors plus a seeded random sweep) and the output has to be byte identical:
+
+```
+RESULT: PASS - 7839 lines identical between the original dex and the pure source
+```
+
+The vectors cover `android.ext.m.e` (the ARM64 disassembler) and
+`android.ext.n$a.a` (the ARM64 decoder).
+
+### 4.3 The Lua VM behaves like the original
+
+`tools/verify/luaj_diff/run_diff.sh` does the same for the whole Lua runtime:
+twelve lua scripts (tables, closures, coroutines, the compiler, the standard
+library) are executed on both classpaths and compared byte for byte.
+
+```
+RESULT: PASS - 12/12 scripts byte-identical between pure-source and original luaj VM
+```
+
+`luaj.LuaClosure.Y2` - the third of the three large methods - is the entry
+point of that runtime, so it is covered by this test as well.
+
+### 4.4 The decompiler bugs that were fixed by hand
+
+jadx does not only fail on the four big methods, it also produces wrong code
+in a few smaller ones.  Each of them was found by comparing the java source
+with the smali of the original dex and fixed in the same way:
+
+| class | defect | repair |
+|---|---|---|
+| `android.ext.n$d.i(String)` | the mismatch exit of the inner loop was dropped - the method never returned | loop rewritten from the smali (`tools/repair/fix_method.py`) |
+| `android.ext.m.l(int,int,int)` | 73 `if (iLowestOneBit == iHighestOneBit) { }` blocks - the `break` of every branch was dropped | the `break` was added in all 73 branches |
+| `luaj.LuaValue.J0` | the second `l1()` check was dropped, so the comparison result was wrong | `compareFailed` branch restored |
+| `android.ext.PathSelector$a.compare` | `iA = -1` and the trailing `if (z) { iA = -1; }` were dropped | restored |
+| `android.ext.t1.d(String)` | the whole branch structure was wrong | rewritten from the smali |
+| `android.ext.RegionList.h(w)` | the `Bad name length` branch was not guarded - the exception was thrown on *every* entry, and the `IOException` handler did not leave the loop | the branch was put back into its `if`, the handler leaves the loop |
+
+`tools/repair/scan_loop_catch.py` reports every catch clause that sits inside
+a loop body without a break/return/throw - that is the fingerprint of the
+`RegionList.h` defect - and `tools/repair/smali_handlers.py` prints the
+exception handlers of a smali method together with its loop back edges, so
+that both sides can be compared.
+
+### 4.5 The exception type of a failure must survive the translation
+
+The dex format has no checked exceptions: a handler matches the runtime type
+of the failure, no matter what the java signatures declare.  javac does know
+checked exceptions, so the java reconstruction has to declare them, and every
+call of such a method needs a handler.  The repair pipeline wrapped those
+call sites into
+
+```java
+try {
+    ...
+} catch (java.lang.RuntimeException e) {
+    throw e;
+} catch (java.lang.Throwable e) {
+    throw new java.lang.RuntimeException(e);
+}
+```
+
+which compiles - but it changes the *runtime* type of the failure: a
+`java.io.IOException` leaves the method as a `java.lang.RuntimeException`.
+Every dex handler that catches the original type stops matching and the
+failure ends up in a catch-all handler instead of the handler the original
+code had.
+
+The reconstruction showed that on the device.  `android.ext.z1` asks for the
+application info of every running process; a process may belong to a service
+that is not a package (`com.google.android.gms.persistent`), and the dex
+handler of `android.ext.Tools.Y` catches the
+`PackageManager.NameNotFoundException` and skips that entry.  With the
+wrapper the failure arrived as a `RuntimeException`, escaped the handler and
+killed the process list:
+
+```
+java.lang.RuntimeException: android.content.pm.PackageManager$NameNotFoundException:
+    com.google.android.gms.persistent
+    at android.ext.Tools.Y(Tools.java:1989)
+    at android.ext.z1.h(z1.java:130)
+```
+
+The wrapper is a machine artefact - it appears in none of the decompilations
+of the original apk (jadx 1.5.6, jadx 1.4.7 and CFR 0.152), so every one of
+the 118 occurrences in the reconstruction could be replaced by a rethrow
+that keeps the type of the failure (the "sneaky throw" idiom, see
+`android.ext.GgNoop.rethrow`):
+
+```java
+} catch (java.lang.Throwable e) {
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(e);
+}
+```
+
+`tools/repair/fix_exception_wrappers.py` performs the replacement and
+`tools/repair/fix_exception_wrappers.py --check` reports the remaining ones.
+
+### 4.6 On device
 
 Device `123.57.254.92:51213`, MI 8, Android 10, arm64-v8a, root available.
 
 * `adb install -r release/GameGuardian-101.4-open.apk` -> `Success`
-* `am start -n catch_.me_.if_.you_.can_/.MainActivity` -> `Displayed ... +177ms`
-* `logcat`: no `FATAL EXCEPTION`, no `UnsupportedOperationException`;
-* the reconstructed `f1$a.run()` shows up in the stack trace of the original
-  call site (`at android.ext.f1$a.run(f1$a.java:117)`) and reaches
-  `Install64: true`, i.e. the original branch is taken,
-* the *install mode* dialog of the original app is displayed.
+* `am start -n catch_.me_.if_.you_.can_/.MainActivity` -> `Displayed ... +162ms`
+* the *install mode* dialog of the original app is displayed,
+* the app installs itself under a randomised package name (`com.XXXXXXXXXXXX`),
+  the superuser list of APatch is updated for the new uid and the daemon
+  starts: `Daemon: /data/user/0/<pkg>/files/GG-Q51u/lib5.so`,
+  `DI: 8 4 <pid>`, `InOut: x64: true; QE_ALIGN: 4; <pid>`,
+* the process list of the floating panel shows the real processes with their
+  architecture and memory usage (`[2507] 系统界面 [x64] [223 MB]`),
+* a target process can be selected and attached to,
+* `logcat`: no `FATAL EXCEPTION`, no `UnsupportedOperationException`, no
+  `Bad cmdline length`, no `Bad name length` and no
+  `PackageManager$NameNotFoundException`.
 
 ---
 
@@ -191,6 +327,9 @@ Device `123.57.254.92:51213`, MI 8, Android 10, arm64-v8a, root available.
 * The reconstruction is signed with a project key, not with the key of Game
   Guardian Ltd., so it cannot be installed over the original APK without
   uninstalling it first.
+* The three large methods are state machines, not hand written Java.  They
+  behave exactly like the original (section 4.2 and 4.3), but they are not
+  readable code.
 * `tools/lib/` contains smali/baksmali and their dependencies (Apache-2.0).
-* The three overlay methods are smali, not Java - they are the only part of
-  the project that is not a Java reconstruction.
+  They are only used by the repair pipeline and by the verification tools -
+  the build itself does not need them.

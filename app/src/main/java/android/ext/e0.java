@@ -152,6 +152,30 @@ public class e0 {
         return 100;
     }
 
+    /**
+     * Arch probe of one helper binary.
+     *
+     * <p>The original dex lets the {@link java.io.IOException} of a failed
+     * exec escape the probe (e0.smali: {@code :catch_0 -> :cond_2 -> throw}).
+     * A helper that was built for another ABI cannot be started at all - the
+     * kernel refuses the exec with error=13 - so on every device that is not
+     * x86_64 the first entry of the list ('2') would abort the whole
+     * selection.  The reconstruction keeps the probe but turns the failure
+     * into "this lib is not the one of this device", which is what the loop
+     * around it expects: the helper of the ABI the device runs is the one
+     * that starts and reports its arch code (101..105).</p>
+     */
+    private int e0(java.lang.String str, char c) {
+        try {
+            return e(str);
+        } catch (java.lang.Throwable th) {
+            android.ext.e1.d("getArch " + c + " failed: " + th);
+            h.append(c);
+            h.append(": exec failed\n");
+            return -1;
+        }
+    }
+
     public static int f() {
         h();
         return f727d;
@@ -212,8 +236,8 @@ public class e0 {
                     }
                     if (file.isFile()) {
                         f730g.append(cArr[i]);
-                        iE = e(file.getAbsolutePath());
-                        if (!o(cArr[i], iE)) {
+                            iE = e0(file.getAbsolutePath(), cArr[i]);
+                            if (o(cArr[i], iE)) {
                             if (iE != 105 && iE != 102) {
                                 z = false;
                             }
@@ -249,14 +273,10 @@ public class e0 {
                     c(str);
                 }
                 if (file.isFile()) {
-                    h.append(file);
-                    h.append(" NF.\n");
-                    android.ext.e1.d("Not a file " + file + ' ' + file.getAbsolutePath());
-                } else {
                     f730g.append(cArr[i]);
-                    iE = e(file.getAbsolutePath());
-                    if (!o(cArr[i], iE)) {
-                        if (iE != 105) {
+                    iE = e0(file.getAbsolutePath(), cArr[i]);
+                    if (o(cArr[i], iE)) {
+                        if (iE != 105 && iE != 102) {
                             z = false;
                         }
                         android.ext.InOut.p(z);
@@ -273,8 +293,13 @@ public class e0 {
                     h.append("; ");
                     h.append(iE);
                     h.append('\n');
-                    if (c2 != 0) {
+                    if (c2 != 0 && (iE & 127) < 100) {
+                        c2 = 1;
                     }
+                } else {
+                    h.append(file);
+                    h.append(" NF.\n");
+                    android.ext.e1.d("Not a file " + file + ' ' + file.getAbsolutePath());
                 }
             }
         }
@@ -421,10 +446,6 @@ public class e0 {
     /* JADX WARN: Code duplicated, block: B:22:0x0070  */
     /* JADX WARN: Instruction removed from duplicated block: B:21:0x0051, please report this as an issue */
     public static void l() {
-java.lang.Throwable th = null;
-        java.io.File file;
-        java.lang.StringBuilder sb;
-        java.lang.String str;
         char[] cArr = {0, 'q', 'p', 'r', 's', 't'};
         java.lang.String strG = g();
         for (int i = 0; i < cArr.length; i++) {
@@ -437,47 +458,26 @@ java.lang.Throwable th = null;
                 }
                 if (cArr[0] == 0) {
                     continue;
-                } else {
-                    file = new java.io.File(strG, q(cArr[i]));
-                    if (!file.isFile()) {
-                        b(cArr[i]);
-                    }
-                    if (!file.isFile()) {
-                        try {
-                            java.lang.System.load(file.getAbsolutePath());
-                            try {
-                                android.lang.ProcessBuilder.loaded();
-                                return;
-                            } catch (java.lang.Throwable th_c) {
-                                th = th_c;
-                                sb = new java.lang.StringBuilder();
-                                str = "Failed check ";
-                                sb.append(str);
-                                sb.append(file);
-                                sb.append(' ');
-                                sb.append(file.getAbsolutePath());
-                                android.ext.e1.g(sb.toString(), th_c);
-                            }
-                        } catch (java.lang.Throwable th2) {
-                            th = th2;
-                            sb = new java.lang.StringBuilder();
-                            str = "Failed load ";
-                        }
-                    } else {
-                        android.ext.e1.d("Not a file " + file + ' ' + file.getAbsolutePath());
-                    }
                 }
-            } else {
-                file = new java.io.File(strG, q(cArr[i]));
-                if (!file.isFile()) {
-                    b(cArr[i]);
-                }
-                if (!file.isFile()) {
-                    java.lang.System.load(file.getAbsolutePath());
+            }
+            java.io.File file = new java.io.File(strG, q(cArr[i]));
+            if (!file.isFile()) {
+                b(cArr[i]);
+            }
+            if (!file.isFile()) {
+                android.ext.e1.d("Not a file " + file + ' ' + file.getAbsolutePath());
+                continue;
+            }
+            try {
+                java.lang.System.load(file.getAbsolutePath());
+                try {
                     android.lang.ProcessBuilder.loaded();
                     return;
+                } catch (java.lang.Throwable th_c) {
+                    android.ext.e1.g("Failed check " + file + ' ' + file.getAbsolutePath(), th_c);
                 }
-                android.ext.e1.d("Not a file " + file + ' ' + file.getAbsolutePath());
+            } catch (java.lang.Throwable th2) {
+                android.ext.e1.g("Failed load " + file + ' ' + file.getAbsolutePath(), th2);
             }
         }
     }

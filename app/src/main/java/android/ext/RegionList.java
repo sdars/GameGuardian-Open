@@ -172,49 +172,52 @@ public class RegionList extends android.fix.ImageButtonView implements android.v
         }
         i();
         java.lang.String str = "";
-        while (true) {try {
+        /* the original dex leaves the loop in three places: the end of the map,
+           a name length outside of 0..1024 and an IOException of the reader. */
+        boolean done = false;
+        while (!done) {try {
 
             try {                if (android.ext.GgNoop.never) {
                         throw new java.io.IOException();
                     }
 
-                int iF = wVar.f();
-                if (iF != 0) {
-                    int iE = e(iF);
-                    long jH = wVar.h();
-                    long jH2 = wVar.h();
-                    int iF2 = iE | (wVar.f() << 8);
-                    if ((iF & 2064) == 0) {
-                        str = null;
-                    }
-                    int iF3 = wVar.f();
-                    if (iF3 >= 0 && iF3 <= 1024) {
-                        android.ext.RegionList$b regionList$bB = b(jH);
-                        java.lang.String strIntern = wVar.i(iF3, regionList$bB == null ? null : regionList$bB.f358d).trim().intern();
-                        if (regionList$bB == null || regionList$bB.f355a != iF2 || regionList$bB.f356b != jH || regionList$bB.f357c != jH2) {
-                            regionList$bB = new android.ext.RegionList$b(iF2, jH, jH2);
+                    int iF = wVar.f();
+                    if (iF != 0) {
+                        int iE = e(iF);
+                        long jH = wVar.h();
+                        long jH2 = wVar.h();
+                        int iF2 = iE | (wVar.f() << 8);
+                        if ((iF & 2064) == 0) {
+                            str = null;
                         }
-                        regionList$bB.f358d = strIntern;
-                        regionList$bB.f359e = str;
-                        arrayList.add(regionList$bB);
-                        long j = (regionList$bB.f357c - regionList$bB.f356b) / 4096;
-                        if (j < 0) {
-                            j = 0;
+                        int iF3 = wVar.f();
+                        if (iF3 < 0 || iF3 > 1024) {
+                            /* cond_9d of the original dex */
+                            android.ext.e1.l("Bad name length: " + iF3, new java.lang.RuntimeException());
+                            done = true;
+                        } else {
+                            android.ext.RegionList$b regionList$bB = b(jH);
+                            java.lang.String strIntern = wVar.i(iF3, regionList$bB == null ? null : regionList$bB.f358d).trim().intern();
+                            if (regionList$bB == null || regionList$bB.f355a != iF2 || regionList$bB.f356b != jH || regionList$bB.f357c != jH2) {
+                                regionList$bB = new android.ext.RegionList$b(iF2, jH, jH2);
+                            }
+                            regionList$bB.f358d = strIntern;
+                            regionList$bB.f359e = str;
+                            arrayList.add(regionList$bB);
+                            long j = (regionList$bB.f357c - regionList$bB.f356b) / 4096;
+                            if (j < 0) {
+                                j = 0;
+                            }
+                            sparseIntArray.put(iE, sparseIntArray.get(iE) + ((int) j));
+                            str = strIntern;
                         }
-                        sparseIntArray.put(iE, sparseIntArray.get(iE) + ((int) j));
-                        str = strIntern;
                     }
-                    android.ext.e1.l("Bad name length: " + iF3, new java.lang.RuntimeException());
-                    break;
-                }
-                break;
             } catch (java.io.IOException e2) {
                 android.ext.e1.l("???", e2);
+                done = true;
             };
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
         }
         f342a = arrayList;

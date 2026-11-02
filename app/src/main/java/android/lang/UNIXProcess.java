@@ -37,10 +37,8 @@ final class UNIXProcess extends java.lang.Process {
         } catch (java.security.PrivilegedActionException e2) {
             throw ((java.io.IOException) e2.getException());
         };
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
     }
 
@@ -53,10 +51,8 @@ final class UNIXProcess extends java.lang.Process {
     public static java.lang.Object f(java.security.PrivilegedExceptionAction privilegedExceptionAction) {try {
 
         return java.security.AccessController.doPrivileged(privilegedExceptionAction);
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
     }
 
@@ -217,10 +213,8 @@ final class UNIXProcess extends java.lang.Process {
             } catch (java.lang.Throwable th) {try {
 
                 throw th;
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
             }
         }

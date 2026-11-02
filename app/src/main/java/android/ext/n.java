@@ -25,6 +25,25 @@ public class n {
     /* JADX INFO: renamed from: c, reason: collision with root package name */
     android.ext.n$d f1081c;
 
+    /*
+     * The original dex carried these three synthetic accessors.  They are the
+     * only way the nested classes (n$a, ...) reach the private fields above,
+     * so they are kept verbatim as plain java source.
+     */
+
+    static int a(android.ext.n nVar) {
+        return nVar.f1079a;
+    }
+
+    static int b(android.ext.n nVar, int i) {
+        nVar.f1079a = i;
+        return i;
+    }
+
+    static int c(android.ext.n nVar) {
+        return nVar.f1080b;
+    }
+
     static final void d(java.lang.StringBuilder sb, char c2) {
         if (c2 != 0) {
             sb.append(c2);

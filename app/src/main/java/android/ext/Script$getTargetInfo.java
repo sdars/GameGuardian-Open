@@ -103,10 +103,8 @@ java.lang.Throwable th = null;
                         } catch (android.content.pm.PackageManager.NameNotFoundException e2) {
                             e = e2;
                         };
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
                     }
                     luaValue = luaValue2;

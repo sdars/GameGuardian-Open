@@ -13,10 +13,8 @@ final class a$c implements luaj.Globals$d {
     public luaj.h a(java.io.InputStream inputStream, java.lang.String str) {try {
 
         return luaj.a.o(inputStream, str);
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
     }
 }

@@ -137,10 +137,8 @@ public class z1 {
             } catch (java.lang.NoSuchMethodError e2) {
                 android.ext.e1.a(e2);
             };
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
         } else {
             z = false;
@@ -229,10 +227,8 @@ public class z1 {
                 } catch (java.lang.NoSuchMethodError e4) {
                     android.ext.e1.a(e4);
                 };
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
             } else if (applicationInfoY != null) {
                 strJ = j(str2, applicationInfoY);
@@ -356,74 +352,877 @@ public class z1 {
         return str;
     }
 
+    /* ------------------------------------------------------------- *
+     *  .method private n(Landroid/ext/w;)V
+     *
+     *  Translated from the original dex code into plain java.
+     *  Every dalvik instruction becomes one java statement, the
+     *  register file lives in the state object below and the
+     *  control flow is a switch over the instruction index.
+     * ------------------------------------------------------------- */
     private void n(android.ext.w wVar) {
-java.lang.Throwable th = null;
-        java.util.List<android.app.ActivityManager.RunningAppProcessInfo> runningAppProcesses = null;
-        java.util.List<android.app.ActivityManager.RunningAppProcessInfo> list = null;
-        int iMyPid = 0;
-        int iJ = 0;
-        int iB0 = 0;
-        gg_a.e eVar = null;
-        android.ext.z1$c z1_cH;
-        wVar.j();
-        java.util.ArrayList arrayList = new java.util.ArrayList();
-        h.clear();try {
+        z1nState st = new z1nState();
+        st.v22o = this;
+        st.v23o = wVar;
+        z1n_run(st);
+    }
 
-        try {            if (android.ext.GgNoop.never) {
-                        throw new java.io.IOException();
-                    }
+    @SuppressWarnings("unchecked")
+    private static <T extends Throwable> void z1n_rethrow(java.lang.Throwable t) throws T {
+        throw (T) t;
+    }
 
-            try {
-                android.ext.e1.d("getRunningAppProcesses: start");
-                runningAppProcesses = this.f1417a.getRunningAppProcesses();
-                try {
-                    android.ext.e1.d("getRunningAppProcesses: end " + runningAppProcesses.size());
-                    while (true) {
-                        int iF = wVar.f();
-                        if (iF != 0) {
-                            int iF2 = wVar.f();
-                            boolean z = wVar.e() != 0;
-                            int iF3 = wVar.f();
-                            int iF4 = wVar.f();
-                            int iF5 = wVar.f();
-                            int iF6 = wVar.f();
-                            if (iF6 >= 0 && iF6 <= 200) {
-                                java.lang.String strI = wVar.i(iF6, null);
-                                if (iF != iMyPid && iF != iJ && iF != iB0 && (z1_cH = h(iF, iF2, strI, list, eVar)) != null && !z1_cH.f1427c.equals(android.ext.Tools.C0())) {
-                                    arrayList.add(new android.ext.z1$d(z1_cH, iF, iF2, strI, iF4, z, iF3));
-                                    if (iF5 != 0) {
-                                        h.put(iF, iF5);
-                                        android.ext.e1.d("Tracer: " + iF5 + " -> " + iF);
-                                    }
-                                }
-                            }
-                            android.ext.e1.l("Bad cmdline length: " + iF6, new java.lang.RuntimeException());
-                            break;
-                        }
-                        break;
-                    }
-                } catch (java.lang.Throwable th_c) {
-                    th = th_c;
-                    android.ext.e1.l("Failed getRunningAppProcesses", th_c);
-                }
-            } catch (java.lang.Throwable th2) {
-                th = th2;
-                runningAppProcesses = null;
+    private static final class z1nState {
+        int pc;
+        int resultI;
+        long resultJ;
+        double resultD;
+        java.lang.Object resultO;
+        int tmpI;
+        long tmpJ;
+        double tmpD;
+        java.lang.Object tmpO;
+        java.lang.Throwable ex;
+        int v0i;
+        long v0j;
+        java.lang.Object v0o;
+        double v0d;
+        int v1i;
+        long v1j;
+        java.lang.Object v1o;
+        double v1d;
+        int v2i;
+        long v2j;
+        java.lang.Object v2o;
+        double v2d;
+        int v3i;
+        long v3j;
+        java.lang.Object v3o;
+        double v3d;
+        int v4i;
+        long v4j;
+        java.lang.Object v4o;
+        double v4d;
+        int v5i;
+        long v5j;
+        java.lang.Object v5o;
+        double v5d;
+        int v6i;
+        long v6j;
+        java.lang.Object v6o;
+        double v6d;
+        int v7i;
+        long v7j;
+        java.lang.Object v7o;
+        double v7d;
+        int v8i;
+        long v8j;
+        java.lang.Object v8o;
+        double v8d;
+        int v9i;
+        long v9j;
+        java.lang.Object v9o;
+        double v9d;
+        int v10i;
+        long v10j;
+        java.lang.Object v10o;
+        double v10d;
+        int v11i;
+        long v11j;
+        java.lang.Object v11o;
+        double v11d;
+        int v12i;
+        long v12j;
+        java.lang.Object v12o;
+        double v12d;
+        int v13i;
+        long v13j;
+        java.lang.Object v13o;
+        double v13d;
+        int v14i;
+        long v14j;
+        java.lang.Object v14o;
+        double v14d;
+        int v15i;
+        long v15j;
+        java.lang.Object v15o;
+        double v15d;
+        int v16i;
+        long v16j;
+        java.lang.Object v16o;
+        double v16d;
+        int v17i;
+        long v17j;
+        java.lang.Object v17o;
+        double v17d;
+        int v18i;
+        long v18j;
+        java.lang.Object v18o;
+        double v18d;
+        int v19i;
+        long v19j;
+        java.lang.Object v19o;
+        double v19d;
+        int v20i;
+        long v20j;
+        java.lang.Object v20o;
+        double v20d;
+        int v21i;
+        long v21j;
+        java.lang.Object v21o;
+        double v21d;
+        java.lang.Object v22o;
+        java.lang.Object v23o;
+    }
+
+    private static void z1n_run(z1nState st) {
+        while (true) {
+            boolean done;
+            int pc = st.pc;
+            if (pc < 136) {
+                done = z1n_c0(st);
             }
-            iMyPid = android.os.Process.myPid();
-            iJ = android.ext.MainService.instance.i.J();
-            iB0 = android.ext.MainService.instance.i.b0();
-            eVar = new gg_a.e();
-        } catch (java.io.IOException e2) {
-            android.ext.e1.l("???", e2);
-        };
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
-} catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
-}
-        list = runningAppProcesses;
-        android.ext.MainService.instance.h.d(s(arrayList, list));
+            else {
+                done = z1n_c0(st);
+            }
+            if (done) {
+                return;
+            }
+        }
+    }
+
+    private static boolean z1n_c0(z1nState st) {
+        try {
+            while (true) {
+                switch (st.pc) {
+                    case 0:
+                        st.v7o = st.v22o;
+                        st.v7i = 0;
+                        st.v7j = 0L;
+                        st.v7d = 0.0;
+                    case 1:
+                        st.pc = 1;
+                        ((android.ext.w) st.v23o).j();
+                    case 2:
+                        st.pc = 2;
+                        st.v8o = null;
+                        st.v8i = 0;
+                        st.v8j = 0L;
+                        st.v8d = 0.0;
+                    case 3:
+                        st.pc = 3;
+                        st.v8o = new java.util.ArrayList();
+                        st.v8i = 0;
+                        st.v8j = 0L;
+                        st.v8d = 0.0;
+                    case 4:
+                        st.pc = 4;
+                        st.v0o = android.ext.z1.h;
+                        st.v0i = 0;
+                        st.v0j = 0L;
+                        st.v0d = 0.0;
+                    case 5:
+                        st.pc = 5;
+                        ((android.util.SparseIntArray) st.v0o).clear();
+                    case 6:
+                        st.v9i = 0;
+                        st.v9j = 0L;
+                        st.v9o = null;
+                        st.v9d = 0.0;
+                    case 7:
+                        st.v0o = "getRunningAppProcesses: start";
+                        st.v0i = 0;
+                        st.v0j = 0L;
+                        st.v0d = 0.0;
+                    case 8:
+                        st.pc = 8;
+                        st.tmpI = android.ext.e1.d((java.lang.String) st.v0o);
+                        st.tmpJ = 0L;
+                        st.tmpO = null;
+                    case 9:
+                        st.pc = 9;
+                        st.v0o = ((android.ext.z1) st.v7o).f1417a;
+                        st.v0i = 0;
+                        st.v0j = 0L;
+                        st.v0d = 0.0;
+                    case 10:
+                        st.pc = 10;
+                        st.tmpO = ((android.app.ActivityManager) st.v0o).getRunningAppProcesses();
+                        st.tmpI = 0;
+                        st.tmpJ = 0L;
+                    case 11:
+                        st.v1o = st.tmpO;
+                        st.v1i = 0;
+                        st.v1j = 0L;
+                        st.v1d = 0.0;
+                    case 12:
+                        st.pc = 12;
+                        st.v0o = null;
+                        st.v0i = 0;
+                        st.v0j = 0L;
+                        st.v0d = 0.0;
+                    case 13:
+                        st.pc = 13;
+                        st.v0o = new java.lang.StringBuilder();
+                        st.v0i = 0;
+                        st.v0j = 0L;
+                        st.v0d = 0.0;
+                    case 14:
+                        st.v2o = "getRunningAppProcesses: end ";
+                        st.v2i = 0;
+                        st.v2j = 0L;
+                        st.v2d = 0.0;
+                    case 15:
+                        st.pc = 15;
+                        st.tmpO = ((java.lang.StringBuilder) st.v0o).append((java.lang.String) st.v2o);
+                        st.tmpI = 0;
+                        st.tmpJ = 0L;
+                    case 16:
+                        st.pc = 16;
+                        st.tmpI = ((java.util.List) st.v1o).size();
+                        st.tmpJ = 0L;
+                        st.tmpO = null;
+                    case 17:
+                        st.v2i = st.tmpI;
+                        st.v2j = 0L;
+                        st.v2o = null;
+                        st.v2d = 0.0;
+                    case 18:
+                        st.pc = 18;
+                        st.tmpO = ((java.lang.StringBuilder) st.v0o).append(st.v2i);
+                        st.tmpI = 0;
+                        st.tmpJ = 0L;
+                    case 19:
+                        st.pc = 19;
+                        st.tmpO = ((java.lang.StringBuilder) st.v0o).toString();
+                        st.tmpI = 0;
+                        st.tmpJ = 0L;
+                    case 20:
+                        st.v0o = st.tmpO;
+                        st.v0i = 0;
+                        st.v0j = 0L;
+                        st.v0d = 0.0;
+                    case 21:
+                        st.pc = 21;
+                        st.tmpI = android.ext.e1.d((java.lang.String) st.v0o);
+                        st.tmpJ = 0L;
+                        st.tmpO = null;
+                    case 22:
+                        st.v10o = st.v1o;
+                        st.v10i = 0;
+                        st.v10j = 0L;
+                        st.v10d = 0.0;
+                    case 23:
+                        st.pc = 23;
+                        st.pc = 31;
+                        continue;
+                    case 24:
+                        st.pc = 24;
+                        st.v0o = st.ex;
+                        st.v0i = 0;
+                        st.v0j = 0L;
+                        st.v0d = 0.0;
+                    case 25:
+                        st.pc = 25;
+                        st.pc = 28;
+                        continue;
+                    case 26:
+                        st.pc = 26;
+                        st.v0o = st.ex;
+                        st.v0i = 0;
+                        st.v0j = 0L;
+                        st.v0d = 0.0;
+                    case 27:
+                        st.v1o = st.v9o;
+                        st.v1i = 0;
+                        st.v1j = 0L;
+                        st.v1d = 0.0;
+                    case 28:
+                        st.v2o = "Failed getRunningAppProcesses";
+                        st.v2i = 0;
+                        st.v2j = 0L;
+                        st.v2d = 0.0;
+                    case 29:
+                        st.pc = 29;
+                        st.tmpI = android.ext.e1.l((java.lang.String) st.v2o, (java.lang.Throwable) st.v0o);
+                        st.tmpJ = 0L;
+                        st.tmpO = null;
+                    case 30:
+                        st.pc = 30;
+                        st.pc = 22;
+                        continue;
+                    case 31:
+                        st.pc = 31;
+                        st.tmpI = android.os.Process.myPid();
+                        st.tmpJ = 0L;
+                        st.tmpO = null;
+                    case 32:
+                        st.v0i = st.tmpI;
+                        st.v0j = 0L;
+                        st.v0o = null;
+                        st.v0d = 0.0;
+                    case 33:
+                        st.pc = 33;
+                        st.v1o = android.ext.MainService.instance;
+                        st.v1i = 0;
+                        st.v1j = 0L;
+                        st.v1d = 0.0;
+                    case 34:
+                        st.pc = 34;
+                        st.v1o = ((android.ext.MainService) st.v1o).i;
+                        st.v1i = 0;
+                        st.v1j = 0L;
+                        st.v1d = 0.0;
+                    case 35:
+                        st.pc = 35;
+                        st.tmpI = ((android.ext.f0) st.v1o).J();
+                        st.tmpJ = 0L;
+                        st.tmpO = null;
+                    case 36:
+                        st.v11i = st.tmpI;
+                        st.v11j = 0L;
+                        st.v11o = null;
+                        st.v11d = 0.0;
+                    case 37:
+                        st.pc = 37;
+                        st.v1o = android.ext.MainService.instance;
+                        st.v1i = 0;
+                        st.v1j = 0L;
+                        st.v1d = 0.0;
+                    case 38:
+                        st.pc = 38;
+                        st.v1o = ((android.ext.MainService) st.v1o).i;
+                        st.v1i = 0;
+                        st.v1j = 0L;
+                        st.v1d = 0.0;
+                    case 39:
+                        st.pc = 39;
+                        st.tmpI = ((android.ext.f0) st.v1o).b0();
+                        st.tmpJ = 0L;
+                        st.tmpO = null;
+                    case 40:
+                        st.v12i = st.tmpI;
+                        st.v12j = 0L;
+                        st.v12o = null;
+                        st.v12d = 0.0;
+                    case 41:
+                        st.pc = 41;
+                        st.v13o = null;
+                        st.v13i = 0;
+                        st.v13j = 0L;
+                        st.v13d = 0.0;
+                    case 42:
+                        st.pc = 42;
+                        st.v13o = new gg_a.e();
+                        st.v13i = 0;
+                        st.v13j = 0L;
+                        st.v13d = 0.0;
+                    case 43:
+                        st.pc = 43;
+                        st.tmpI = ((android.ext.w) st.v23o).f();
+                        st.tmpJ = 0L;
+                        st.tmpO = null;
+                    case 44:
+                        st.v15i = st.tmpI;
+                        st.v15j = 0L;
+                        st.v15o = null;
+                        st.v15d = 0.0;
+                    case 45:
+                        st.pc = 45;
+                        if (st.v15i != 0) {
+                            st.pc = 47;
+                            continue;
+                        }
+                    case 46:
+                        st.pc = 46;
+                        st.pc = 130;
+                        continue;
+                    case 47:
+                        st.pc = 47;
+                        st.tmpI = ((android.ext.w) st.v23o).f();
+                        st.tmpJ = 0L;
+                        st.tmpO = null;
+                    case 48:
+                        st.v17i = st.tmpI;
+                        st.v17j = 0L;
+                        st.v17o = null;
+                        st.v17d = 0.0;
+                    case 49:
+                        st.pc = 49;
+                        st.tmpI = (int) ((android.ext.w) st.v23o).e();
+                        st.tmpJ = 0L;
+                        st.tmpO = null;
+                    case 50:
+                        st.v1i = st.tmpI;
+                        st.v1j = 0L;
+                        st.v1o = null;
+                        st.v1d = 0.0;
+                    case 51:
+                        st.pc = 51;
+                        if (st.v1i == 0) {
+                            st.pc = 55;
+                            continue;
+                        }
+                    case 52:
+                        st.v1i = 1;
+                        st.v1j = 0L;
+                        st.v1o = null;
+                        st.v1d = 0.0;
+                    case 53:
+                        st.v20i = 1;
+                        st.v20j = 0L;
+                        st.v20o = null;
+                        st.v20d = 0.0;
+                    case 54:
+                        st.pc = 54;
+                        st.pc = 57;
+                        continue;
+                    case 55:
+                        st.v1i = 0;
+                        st.v1j = 0L;
+                        st.v1o = null;
+                        st.v1d = 0.0;
+                    case 56:
+                        st.v20i = 0;
+                        st.v20j = 0L;
+                        st.v20o = null;
+                        st.v20d = 0.0;
+                    case 57:
+                        st.pc = 57;
+                        st.tmpI = ((android.ext.w) st.v23o).f();
+                        st.tmpJ = 0L;
+                        st.tmpO = null;
+                    case 58:
+                        st.v21i = st.tmpI;
+                        st.v21j = 0L;
+                        st.v21o = null;
+                        st.v21d = 0.0;
+                    case 59:
+                        st.pc = 59;
+                        st.tmpI = ((android.ext.w) st.v23o).f();
+                        st.tmpJ = 0L;
+                        st.tmpO = null;
+                    case 60:
+                        st.v19i = st.tmpI;
+                        st.v19j = 0L;
+                        st.v19o = null;
+                        st.v19d = 0.0;
+                    case 61:
+                        st.pc = 61;
+                        st.tmpI = ((android.ext.w) st.v23o).f();
+                        st.tmpJ = 0L;
+                        st.tmpO = null;
+                    case 62:
+                        st.v14i = st.tmpI;
+                        st.v14j = 0L;
+                        st.v14o = null;
+                        st.v14d = 0.0;
+                    case 63:
+                        st.pc = 63;
+                        st.tmpI = ((android.ext.w) st.v23o).f();
+                        st.tmpJ = 0L;
+                        st.tmpO = null;
+                    case 64:
+                        st.v1i = st.tmpI;
+                        st.v1j = 0L;
+                        st.v1o = null;
+                        st.v1d = 0.0;
+                    case 65:
+                        st.pc = 65;
+                        if (st.v1i < 0) {
+                            st.pc = 117;
+                            continue;
+                        }
+                    case 66:
+                        st.v2i = 200;
+                        st.v2j = 0L;
+                        st.v2o = null;
+                        st.v2d = 0.0;
+                    case 67:
+                        st.pc = 67;
+                        if (st.v1i <= st.v2i) {
+                            st.pc = 69;
+                            continue;
+                        }
+                    case 68:
+                        st.pc = 68;
+                        st.pc = 117;
+                        continue;
+                    case 69:
+                        st.v6o = st.v23o;
+                        st.v6i = 0;
+                        st.v6j = 0L;
+                        st.v6d = 0.0;
+                    case 70:
+                        st.pc = 70;
+                        st.tmpO = ((android.ext.w) st.v6o).i(st.v1i, (java.lang.String) st.v9o);
+                        st.tmpI = 0;
+                        st.tmpJ = 0L;
+                    case 71:
+                        st.v18o = st.tmpO;
+                        st.v18i = 0;
+                        st.v18j = 0L;
+                        st.v18d = 0.0;
+                    case 72:
+                        st.pc = 72;
+                        if (st.v15i == st.v0i) {
+                            st.pc = 43;
+                            continue;
+                        }
+                    case 73:
+                        st.pc = 73;
+                        if (st.v15i == st.v11i) {
+                            st.pc = 43;
+                            continue;
+                        }
+                    case 74:
+                        st.pc = 74;
+                        if (st.v15i != st.v12i) {
+                            st.pc = 76;
+                            continue;
+                        }
+                    case 75:
+                        st.pc = 75;
+                        st.pc = 43;
+                        continue;
+                    case 76:
+                        st.v1o = st.v22o;
+                        st.v1i = 0;
+                        st.v1j = 0L;
+                        st.v1d = 0.0;
+                    case 77:
+                        st.v2i = st.v15i;
+                        st.v2j = 0L;
+                        st.v2o = null;
+                        st.v2d = 0.0;
+                    case 78:
+                        st.v3i = st.v17i;
+                        st.v3j = 0L;
+                        st.v3o = null;
+                        st.v3d = 0.0;
+                    case 79:
+                        st.v4o = st.v18o;
+                        st.v4i = 0;
+                        st.v4j = 0L;
+                        st.v4d = 0.0;
+                    case 80:
+                        st.v5o = st.v10o;
+                        st.v5i = 0;
+                        st.v5j = 0L;
+                        st.v5d = 0.0;
+                    case 81:
+                        st.v6o = st.v13o;
+                        st.v6i = 0;
+                        st.v6j = 0L;
+                        st.v6d = 0.0;
+                    case 82:
+                        st.pc = 82;
+                        st.tmpO = ((android.ext.z1) st.v1o).h(st.v2i, st.v3i, (java.lang.String) st.v4o, (java.util.List) st.v5o, (android.util.SparseArray) st.v6o);
+                        st.tmpI = 0;
+                        st.tmpJ = 0L;
+                    case 83:
+                        st.v1o = st.tmpO;
+                        st.v1i = 0;
+                        st.v1j = 0L;
+                        st.v1d = 0.0;
+                    case 84:
+                        st.pc = 84;
+                        if (st.v1o == null) {
+                            st.pc = 43;
+                            continue;
+                        }
+                    case 85:
+                        st.pc = 85;
+                        st.v2o = ((android.ext.z1$c) st.v1o).f1427c;
+                        st.v2i = 0;
+                        st.v2j = 0L;
+                        st.v2d = 0.0;
+                    case 86:
+                        st.pc = 86;
+                        st.tmpO = android.ext.Tools.C0();
+                        st.tmpI = 0;
+                        st.tmpJ = 0L;
+                    case 87:
+                        st.v3o = st.tmpO;
+                        st.v3i = 0;
+                        st.v3j = 0L;
+                        st.v3d = 0.0;
+                    case 88:
+                        st.pc = 88;
+                        st.tmpI = (((java.lang.String) st.v2o).equals(st.v3o)) ? 1 : 0;
+                        st.tmpJ = 0L;
+                        st.tmpO = null;
+                    case 89:
+                        st.v2i = st.tmpI;
+                        st.v2j = 0L;
+                        st.v2o = null;
+                        st.v2d = 0.0;
+                    case 90:
+                        st.pc = 90;
+                        if (st.v2i == 0) {
+                            st.pc = 92;
+                            continue;
+                        }
+                    case 91:
+                        st.pc = 91;
+                        st.pc = 43;
+                        continue;
+                    case 92:
+                        st.pc = 92;
+                        st.v2o = null;
+                        st.v2i = 0;
+                        st.v2j = 0L;
+                        st.v2d = 0.0;
+                    case 93:
+                        st.v3i = st.v14i;
+                        st.v3j = 0L;
+                        st.v3o = null;
+                        st.v3d = 0.0;
+                    case 94:
+                        st.v14o = st.v2o;
+                        st.v14i = 0;
+                        st.v14j = 0L;
+                        st.v14d = 0.0;
+                    case 95:
+                        st.v4i = st.v15i;
+                        st.v4j = 0L;
+                        st.v4o = null;
+                        st.v4d = 0.0;
+                    case 96:
+                        st.v15o = st.v1o;
+                        st.v15i = 0;
+                        st.v15j = 0L;
+                        st.v15d = 0.0;
+                    case 97:
+                        st.v16i = st.v4i;
+                        st.v16j = 0L;
+                        st.v16o = null;
+                        st.v16d = 0.0;
+                    case 98:
+                        st.pc = 98;
+                        st.v14o = new android.ext.z1$d((android.ext.z1$c) st.v15o, st.v16i, st.v17i, (java.lang.String) st.v18o, st.v19i, (st.v20i != 0), st.v21i);
+                        st.v14i = 0;
+                        st.v14j = 0L;
+                        st.v14d = 0.0;
+                    case 99:
+                        st.pc = 99;
+                        st.tmpI = (((java.util.List) st.v8o).add(st.v2o)) ? 1 : 0;
+                        st.tmpJ = 0L;
+                        st.tmpO = null;
+                    case 100:
+                        st.pc = 100;
+                        if (st.v3i == 0) {
+                            st.pc = 43;
+                            continue;
+                        }
+                    case 101:
+                        st.pc = 101;
+                        st.v1o = android.ext.z1.h;
+                        st.v1i = 0;
+                        st.v1j = 0L;
+                        st.v1d = 0.0;
+                    case 102:
+                        st.pc = 102;
+                        ((android.util.SparseIntArray) st.v1o).put(st.v4i, st.v3i);
+                    case 103:
+                        st.pc = 103;
+                        st.v1o = null;
+                        st.v1i = 0;
+                        st.v1j = 0L;
+                        st.v1d = 0.0;
+                    case 104:
+                        st.pc = 104;
+                        st.v1o = new java.lang.StringBuilder();
+                        st.v1i = 0;
+                        st.v1j = 0L;
+                        st.v1d = 0.0;
+                    case 105:
+                        st.v2o = "Tracer: ";
+                        st.v2i = 0;
+                        st.v2j = 0L;
+                        st.v2d = 0.0;
+                    case 106:
+                        st.pc = 106;
+                        st.tmpO = ((java.lang.StringBuilder) st.v1o).append((java.lang.String) st.v2o);
+                        st.tmpI = 0;
+                        st.tmpJ = 0L;
+                    case 107:
+                        st.pc = 107;
+                        st.tmpO = ((java.lang.StringBuilder) st.v1o).append(st.v3i);
+                        st.tmpI = 0;
+                        st.tmpJ = 0L;
+                    case 108:
+                        st.v2o = " -> ";
+                        st.v2i = 0;
+                        st.v2j = 0L;
+                        st.v2d = 0.0;
+                    case 109:
+                        st.pc = 109;
+                        st.tmpO = ((java.lang.StringBuilder) st.v1o).append((java.lang.String) st.v2o);
+                        st.tmpI = 0;
+                        st.tmpJ = 0L;
+                    case 110:
+                        st.pc = 110;
+                        st.tmpO = ((java.lang.StringBuilder) st.v1o).append(st.v4i);
+                        st.tmpI = 0;
+                        st.tmpJ = 0L;
+                    case 111:
+                        st.pc = 111;
+                        st.tmpO = ((java.lang.StringBuilder) st.v1o).toString();
+                        st.tmpI = 0;
+                        st.tmpJ = 0L;
+                    case 112:
+                        st.v1o = st.tmpO;
+                        st.v1i = 0;
+                        st.v1j = 0L;
+                        st.v1d = 0.0;
+                    case 113:
+                        st.pc = 113;
+                        st.tmpI = android.ext.e1.d((java.lang.String) st.v1o);
+                        st.tmpJ = 0L;
+                        st.tmpO = null;
+                    case 114:
+                        st.pc = 114;
+                        st.pc = 43;
+                        continue;
+                    case 115:
+                        st.pc = 115;
+                        st.v0o = st.ex;
+                        st.v0i = 0;
+                        st.v0j = 0L;
+                        st.v0d = 0.0;
+                    case 116:
+                        st.pc = 116;
+                        st.pc = 128;
+                        continue;
+                    case 117:
+                        st.pc = 117;
+                        st.v0o = null;
+                        st.v0i = 0;
+                        st.v0j = 0L;
+                        st.v0d = 0.0;
+                    case 118:
+                        st.pc = 118;
+                        st.v0o = new java.lang.StringBuilder();
+                        st.v0i = 0;
+                        st.v0j = 0L;
+                        st.v0d = 0.0;
+                    case 119:
+                        st.v2o = "Bad cmdline length: ";
+                        st.v2i = 0;
+                        st.v2j = 0L;
+                        st.v2d = 0.0;
+                    case 120:
+                        st.pc = 120;
+                        st.tmpO = ((java.lang.StringBuilder) st.v0o).append((java.lang.String) st.v2o);
+                        st.tmpI = 0;
+                        st.tmpJ = 0L;
+                    case 121:
+                        st.pc = 121;
+                        st.tmpO = ((java.lang.StringBuilder) st.v0o).append(st.v1i);
+                        st.tmpI = 0;
+                        st.tmpJ = 0L;
+                    case 122:
+                        st.pc = 122;
+                        st.tmpO = ((java.lang.StringBuilder) st.v0o).toString();
+                        st.tmpI = 0;
+                        st.tmpJ = 0L;
+                    case 123:
+                        st.v0o = st.tmpO;
+                        st.v0i = 0;
+                        st.v0j = 0L;
+                        st.v0d = 0.0;
+                    case 124:
+                        st.pc = 124;
+                        st.v1o = null;
+                        st.v1i = 0;
+                        st.v1j = 0L;
+                        st.v1d = 0.0;
+                    case 125:
+                        st.pc = 125;
+                        st.v1o = new java.lang.RuntimeException();
+                        st.v1i = 0;
+                        st.v1j = 0L;
+                        st.v1d = 0.0;
+                    case 126:
+                        st.pc = 126;
+                        st.tmpI = android.ext.e1.l((java.lang.String) st.v0o, (java.lang.Throwable) st.v1o);
+                        st.tmpJ = 0L;
+                        st.tmpO = null;
+                    case 127:
+                        st.pc = 127;
+                        st.pc = 130;
+                        continue;
+                    case 128:
+                        st.v1o = "???";
+                        st.v1i = 0;
+                        st.v1j = 0L;
+                        st.v1d = 0.0;
+                    case 129:
+                        st.pc = 129;
+                        st.tmpI = android.ext.e1.l((java.lang.String) st.v1o, (java.lang.Throwable) st.v0o);
+                        st.tmpJ = 0L;
+                        st.tmpO = null;
+                    case 130:
+                        st.pc = 130;
+                        st.v0o = android.ext.MainService.instance;
+                        st.v0i = 0;
+                        st.v0j = 0L;
+                        st.v0d = 0.0;
+                    case 131:
+                        st.pc = 131;
+                        st.v0o = ((android.ext.MainService) st.v0o).h;
+                        st.v0i = 0;
+                        st.v0j = 0L;
+                        st.v0d = 0.0;
+                    case 132:
+                        st.pc = 132;
+                        st.tmpO = ((android.ext.z1) st.v7o).s((java.util.List) st.v8o, (java.util.List) st.v10o);
+                        st.tmpI = 0;
+                        st.tmpJ = 0L;
+                    case 133:
+                        st.v1o = st.tmpO;
+                        st.v1i = 0;
+                        st.v1j = 0L;
+                        st.v1d = 0.0;
+                    case 134:
+                        st.pc = 134;
+                        ((android.ext.j) st.v0o).d((java.util.List) st.v1o);
+                    case 135:
+                        st.pc = 135;
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        } catch (java.lang.Throwable t) {
+            int h = z1n_handler(st.pc, t);
+            if (h < 0) {
+                z1n_rethrow(t);
+            }
+            st.ex = t;
+            st.pc = h;
+            return false;
+        }
+    }
+
+    private static final Class<?>[] z1n_ctypes = {
+        java.io.IOException.class
+    };
+    private static final int[] z1n_handlers = {
+        7, 12, 26, -1, 12, 22, 24, -1, 31, 127, 115, 0
+    };
+    private static int z1n_handler(int pc, java.lang.Throwable t) {
+        for (int i = 0; i < z1n_handlers.length; i += 4) {
+            if (pc < z1n_handlers[i] || pc >= z1n_handlers[i + 1]) {
+                continue;
+            }
+            int ti = z1n_handlers[i + 3];
+            if (ti < 0 || z1n_ctypes[ti].isInstance(t)) {
+                return z1n_handlers[i + 2];
+            }
+        }
+        return -1;
     }
 
     public static void o(android.ext.w wVar) {

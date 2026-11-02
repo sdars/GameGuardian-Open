@@ -27,10 +27,8 @@ public abstract class IoLib extends luaj.lib.TwoArgFunction {
                 while (true) {try {
 
                     iY2 = ioLib$File.Y2();
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
                     if (iY2 < 0) {
                         break;
@@ -41,10 +39,8 @@ public abstract class IoLib extends luaj.lib.TwoArgFunction {
                 while (true) {try {
 
                     iY2 = ioLib$File.Y2();
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
                     if (iY2 >= 0) {
                         if (iY2 == 10) {
@@ -69,10 +65,8 @@ public abstract class IoLib extends luaj.lib.TwoArgFunction {
             }
         } catch (java.io.EOFException unused) {
         };
-} catch (java.lang.RuntimeException e) {
-    throw e;
 } catch (java.lang.Throwable e) {
-    throw new java.lang.RuntimeException(e);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(e);
 }
         return luaj.LuaString.o3(byteArrayOutputStream.toByteArray());
     }
@@ -94,10 +88,8 @@ public abstract class IoLib extends luaj.lib.TwoArgFunction {
         }try {
 
         ioLib$File.S2();
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
         return M3();
     }
@@ -161,10 +153,8 @@ public abstract class IoLib extends luaj.lib.TwoArgFunction {
         for (int i = 1; i <= iU; i++) {try {
 
             ioLib$File.d3(varargs.H(i));
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
         }
         return ioLib$File;
@@ -308,10 +298,8 @@ public abstract class IoLib extends luaj.lib.TwoArgFunction {
         int iA3;
         try {
             iA3 = ioLib$File.a3();
-        } catch (java.lang.RuntimeException ggEx) {
-            throw ggEx;
         } catch (java.lang.Throwable ggEx2) {
-            throw new java.lang.RuntimeException(ggEx2);
+            throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
         }
         if (iA3 >= 0) {
             return iA3 == 0 ? luaj.LuaValue.L : w3(ioLib$File, iA3);
@@ -326,10 +314,8 @@ public abstract class IoLib extends luaj.lib.TwoArgFunction {
         byte[] bArr = new byte[i];int iZ2;
         try {
         iZ2 = ioLib$File.Z2(bArr, 0, i);;
-        } catch (java.lang.RuntimeException ggEx) {
-            throw ggEx;
         } catch (java.lang.Throwable ggEx2) {
-            throw new java.lang.RuntimeException(ggEx2);
+            throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
         }
         return iZ2 < 0 ? luaj.LuaValue.f1673c : luaj.LuaString.p3(bArr, 0, iZ2);
     }
@@ -339,20 +325,16 @@ public abstract class IoLib extends luaj.lib.TwoArgFunction {
         while (true) {int iX2;
             try {
             iX2 = ioLib$File.X2();;
-            } catch (java.lang.RuntimeException ggEx) {
-                throw ggEx;
             } catch (java.lang.Throwable ggEx2) {
-                throw new java.lang.RuntimeException(ggEx2);
+                throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
             }
             if (str.indexOf(iX2) < 0) {
                 return i2;
             }try {
 
             ioLib$File.Y2();
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
             i2++;
             if (byteArrayOutputStream != null) {
@@ -465,10 +447,8 @@ public abstract class IoLib extends luaj.lib.TwoArgFunction {
     public luaj.Varargs Y2(luaj.LuaValue luaValue) {try {
 
         q3("file:flush", luaValue).U2();
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
         return luaj.LuaValue.f1674d;
     }
@@ -487,10 +467,8 @@ public abstract class IoLib extends luaj.lib.TwoArgFunction {
         }try {
 
         return luaj.LuaValue.I2(q3("file:seek", luaValue).b3(str, i));
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
     }
 
@@ -505,10 +483,8 @@ public abstract class IoLib extends luaj.lib.TwoArgFunction {
         }try {
 
         q3("file:setvbuf", luaValue).c3(str, i);
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
         return luaj.LuaValue.f1674d;
     }
@@ -549,10 +525,8 @@ public abstract class IoLib extends luaj.lib.TwoArgFunction {
         J3(true);try {
 
         this.V.U2();
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
         return luaj.LuaValue.f1674d;
     }
@@ -602,10 +576,8 @@ public abstract class IoLib extends luaj.lib.TwoArgFunction {
     public luaj.Varargs m3() {try {
 
         return N3();
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
     }
 
@@ -634,10 +606,8 @@ public abstract class IoLib extends luaj.lib.TwoArgFunction {
         if (z && varargsE3.Q(1) && ioLib$FileI3.T2()) {try {
 
             ioLib$FileI3.S2();
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
         }
         return varargsE3;

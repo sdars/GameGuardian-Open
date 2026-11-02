@@ -27,10 +27,8 @@ public abstract class IoLib$File extends luaj.LuaValue {
 try {
 
             return X2() < 0;
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
         } catch (java.io.EOFException unused) {
             return true;

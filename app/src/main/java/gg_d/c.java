@@ -68,10 +68,8 @@ public abstract class c extends android.content.ContentProvider {
     public android.os.ParcelFileDescriptor openFile(android.net.Uri uri, java.lang.String str) {try {
 
         return android.os.ParcelFileDescriptor.open(c(uri), 268435456);
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
     }
 

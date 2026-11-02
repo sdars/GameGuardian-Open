@@ -24,10 +24,8 @@ class b1$z extends java.io.InputStream {
         int length;
         try {
             length = (int) (this.f654a.length() - this.f654a.getFilePointer());
-        } catch (java.lang.RuntimeException ggEx) {
-            throw ggEx;
         } catch (java.lang.Throwable ggEx2) {
-            throw new java.lang.RuntimeException(ggEx2);
+            throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
         }
         if (length > 0) {
             return length;
@@ -52,10 +50,8 @@ class b1$z extends java.io.InputStream {
     public int read() {
         try {
             return this.f654a.read();
-        } catch (java.lang.RuntimeException ggEx) {
-            throw ggEx;
         } catch (java.lang.Throwable ggEx2) {
-            throw new java.lang.RuntimeException(ggEx2);
+            throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
         }
     }
 
@@ -63,10 +59,8 @@ class b1$z extends java.io.InputStream {
     public int read(byte[] bArr) {
         try {
             return this.f654a.read(bArr);
-        } catch (java.lang.RuntimeException ggEx) {
-            throw ggEx;
         } catch (java.lang.Throwable ggEx2) {
-            throw new java.lang.RuntimeException(ggEx2);
+            throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
         }
     }
 
@@ -74,10 +68,8 @@ class b1$z extends java.io.InputStream {
     public int read(byte[] bArr, int i, int i2) {
         try {
             return this.f654a.read(bArr, i, i2);
-        } catch (java.lang.RuntimeException ggEx) {
-            throw ggEx;
         } catch (java.lang.Throwable ggEx2) {
-            throw new java.lang.RuntimeException(ggEx2);
+            throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
         }
     }
 

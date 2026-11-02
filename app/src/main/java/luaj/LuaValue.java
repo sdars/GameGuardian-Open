@@ -588,22 +588,35 @@ public abstract class LuaValue extends luaj.Varargs {
         if (luaValueX1.l1()) {
             luaValueX1 = luaValue2.x1(luaValue);
             if (luaValueX1.l1()) {
+                boolean compareFailed = false;
                 if (A.T1(luaValue)) {
                     luaj.LuaString luaString = z;
                     luaj.LuaValue luaValueX2 = x1(luaString);
                     if (luaValueX2.l1()) {
                         luaValueX2 = luaValue2.x1(luaString);
+                        /* jadx dropped this test: when the second operand
+                           resolves to the same string constant the dex raises
+                           the comparison error instead of calling it. */
+                        if (luaValueX2.l1()) {
+                            compareFailed = true;
+                        }
                     }
-                    return luaValueX2.call(luaValue2, this).B1();
-                }
-                java.lang.String strE2 = E2();
-                java.lang.String strE3 = luaValue2.E2();
-                if (strE2.equals(strE3)) {
-                    str = "two " + strE2 + " values";
+                    if (!compareFailed) {
+                        return luaValueX2.call(luaValue2, this).B1();
+                    }
                 } else {
-                    str = strE2 + " with " + strE3;
+                    compareFailed = true;
                 }
-                return R0("attempt to compare " + str);
+                if (compareFailed) {
+                    java.lang.String strE2 = E2();
+                    java.lang.String strE3 = luaValue2.E2();
+                    if (strE2.equals(strE3)) {
+                        str = "two " + strE2 + " values";
+                    } else {
+                        str = strE2 + " with " + strE3;
+                    }
+                    return R0("attempt to compare " + str);
+                }
             }
         }
         return luaValueX1.call(this, luaValue2);

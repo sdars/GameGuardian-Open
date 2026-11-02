@@ -32,10 +32,8 @@ class Tools$y {
     public android.ext.Tools$y a() {try {
 
         this.f555f = this.f550a.getMethod(this.f551b, this.f552c);
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
         return this;
     }
@@ -43,10 +41,8 @@ class Tools$y {
     public java.lang.Object b() {try {
 
         return this.f555f.invoke(this.f553d, this.f554e);
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
     }
 }

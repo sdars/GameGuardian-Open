@@ -164,10 +164,8 @@ public class z implements android.view.View.OnClickListener, android.content.Dia
             } catch (java.lang.Throwable th) {try {
 
                 throw th;
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
             }
         }

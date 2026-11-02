@@ -95,10 +95,8 @@ abstract class m0 {
     private static java.lang.String f(byte[] bArr) {try {
 
         return i(java.security.MessageDigest.getInstance("SHA-256").digest(bArr));
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
     }
 

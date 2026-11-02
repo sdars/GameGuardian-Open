@@ -29,10 +29,8 @@ class p2$a implements java.lang.Runnable {
             android.ext.p2.f(toast);try {
 
             java.lang.Thread.sleep(1500L);
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
         }
     }

@@ -176,17 +176,38 @@ public abstract class e2 {
     static android.ext.e2$d j(java.lang.String str) {try {
 
         return p("exec id", 20, str);
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
+    }
+
+    /** Diagnostic sink that does not depend on logcat being readable. */
+    static void diag(java.lang.String str) {
+        try {
+            android.content.Context ctx = android.ext.MainService.context;
+            if (ctx == null) {
+                ctx = android.ext.Tools.f0();
+            }
+            if (ctx == null) {
+                android.util.Log.e("GGRoot", "diag(no ctx): " + str);
+                return;
+            }
+            java.io.File file = new java.io.File(ctx.getFilesDir(), "gg-diag.log");
+            java.io.FileOutputStream fos = new java.io.FileOutputStream(file, true);
+            fos.write((System.currentTimeMillis() + " [" + android.os.Process.myPid() + "] " + str + "\n").getBytes("UTF-8"));
+            fos.flush();
+            fos.close();
+        } catch (java.lang.Throwable th) {
+            android.util.Log.e("GGRoot", "diag failed: " + str, th);
+        }
+        android.util.Log.e("GGRoot", str);
     }
 
     static int k(java.lang.String str) {
         try {
             android.ext.e2$d e2_dJ = j(str);
             f745a = "";
+            diag("probe done: started=" + e2_dJ.f758c + " timedOut=" + e2_dJ.f757b + " Config.C=" + android.ext.Config.C + " Config.E=" + android.ext.Config.E + " out=[" + e2_dJ.f756a + "]");
             if (!e2_dJ.f758c) {
                 android.ext.e1.d("root probe refused: no root shell could be started");
                 return -1;
@@ -198,6 +219,7 @@ public abstract class e2 {
             android.ext.e1.d("root probe: " + e2_dJ.f756a);
             return e2_dJ.f756a.contains("uid=0") ? 1 : 0;
         } catch (java.lang.Throwable th) {
+            diag("probe threw: " + th);
             android.ext.e1.l("Failed root probe", th);
             return 0;
         }
@@ -228,10 +250,8 @@ public abstract class e2 {
     public static java.lang.String o(java.lang.String str, int i2, java.lang.String str2) {try {
 
         return p(str, i2, str2).f756a;
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
     }
 
@@ -244,16 +264,20 @@ public abstract class e2 {
         new android.ext.n0$i(futureTask, "runCmd: " + str).start();
         try {
             futureTask.get(i2, java.util.concurrent.TimeUnit.SECONDS);
+            z = false;
         } catch (java.util.concurrent.ExecutionException e2) {
             android.ext.e1.l("cmd (" + str + ") expection", e2);
             sb.append("expection: ");
             sb.append(e2.getMessage());
+            z = false;
         } catch (java.util.concurrent.TimeoutException e3) {
             android.ext.e1.g("cmd (" + str + ") exit: timeout " + i2, e3);
             sb.append("timeout: ");
             sb.append(i2);
+            /* the original dex keeps z == true on the timeout path (goto_84 skips
+               the "const/4 v2, 0x0" at goto_83), so the caller can tell a bound
+               expiry apart from a real answer */
         }
-        z = false;
         int i3 = f749e;
         if (i3 > 0) {
             try {
@@ -302,16 +326,15 @@ public abstract class e2 {
         }
         java.lang.String[] strArr = {str3};
         android.ext.e1.d("suCmd: '" + str2 + "'; su: '" + strH + "'; runBin: '" + str3 + '\'');
+        diag("suCmd: '" + str2 + "'; su: '" + strH + "'; runBin: '" + str3 + "'; cmd: '" + str + "'");
         java.lang.Process processI = null;
         for (int i2 = 0; i2 < 2; i2++) {
             if (i2 != 0) {
                 if (i2 != 1) {try {
 
                     throw new java.lang.IllegalAccessException();
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
                 }
                 try {
@@ -338,24 +361,25 @@ public abstract class e2 {
                 }
             } else {
                 android.ext.e1.d("exec 0 start");
-                processI = android.ext.Tools.I(strArr);
+                try {
+                    processI = android.ext.Tools.I(strArr);
+                } catch (java.lang.Throwable thExec) {
+                    android.util.Log.e("GGRoot", "exec 0 failed", thExec);
+                    throw thExec;
+                }
                 str4 = "exec 0 end: " + processI;
             }
             android.ext.e1.d(str4);
             java.io.DataOutputStream dataOutputStream = new java.io.DataOutputStream(processI.getOutputStream());try {
 
             dataOutputStream.writeBytes(android.ext.Tools.F0(str) + '\n');
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }try {
 
             dataOutputStream.flush();
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
             sb.append("process started: " + i2 + '\n');
             if (processI != null) {

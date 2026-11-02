@@ -403,10 +403,8 @@ public class n0 implements java.lang.Thread.UncaughtExceptionHandler {
             if (!(th instanceof android.ext.n0$h)) {try {
 
                 k(h(thread, th, true));
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
                 if (f1101d) {
                     android.ext.r.I();

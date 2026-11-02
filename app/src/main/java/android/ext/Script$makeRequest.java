@@ -97,10 +97,8 @@ final class Script$makeRequest extends android.ext.Script$ApiFunction implements
     public luaj.Varargs o3(java.lang.String str, luaj.LuaTable luaTable, luaj.LuaString luaString) {try {
 
         return p3(str, luaTable, luaString, 30000, 30000, 30000);
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
     }
 

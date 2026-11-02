@@ -60,20 +60,16 @@ class b1$b0 {
     public long b() {try {
 
         return this.f607c ? this.f606b.capacity() : this.f605a.length();
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
     }
 
     public long c() {try {
 
         return this.f607c ? this.f606b.position() : this.f605a.getFilePointer();
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
     }
 
@@ -85,10 +81,8 @@ class b1$b0 {
         if (!this.f607c) {try {
 
             return this.f605a.read(bArr, i, i2);
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
         }
         int iMin = java.lang.Math.min(i2, this.f606b.remaining());
@@ -105,10 +99,8 @@ class b1$b0 {
         } else {try {
 
             this.f605a.seek(j);
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
         }
     }
@@ -117,10 +109,8 @@ class b1$b0 {
         if (!this.f607c) {try {
 
             this.f605a.skipBytes(i);
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
         } else {
             java.nio.ByteBuffer byteBuffer = this.f606b;
@@ -134,10 +124,8 @@ class b1$b0 {
         } else {try {
 
             this.f605a.write(bArr);
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
         }
     }
@@ -148,10 +136,8 @@ class b1$b0 {
         } else {try {
 
             this.f605a.write(bArr, i, i2);
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
         }
     }

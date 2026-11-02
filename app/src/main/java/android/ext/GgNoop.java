@@ -42,4 +42,32 @@ public final class GgNoop {
      */
     public static void keep() throws java.lang.Throwable {
     }
+
+    /**
+     * Rethrow a failure without changing its runtime type.
+     *
+     * <p>The dex runtime propagates a failure with the type it was raised
+     * with; the java sources of the reconstruction have to satisfy javac,
+     * which only knows checked exceptions.  A call of a method that declares
+     * a checked exception is therefore wrapped into a
+     * {@link java.lang.RuntimeException} - that changes the type of the
+     * failure and every dex handler that catches the original type stops
+     * matching.</p>
+     *
+     * <p>This helper throws the failure with its original type (the "sneaky
+     * throw" idiom): the cast is unchecked, so the bytecode only carries
+     * the erasure of the type variable and the failure leaves the method
+     * unchanged.  The type parameter is fixed to
+     * {@link java.lang.RuntimeException} at the call site, so javac does not
+     * ask the caller to handle a checked exception.</p>
+     *
+     * @param t the failure to rethrow
+     * @return never returns, the method always throws
+     * @throws E the type of the failure, at the call site always
+     *             {@link java.lang.RuntimeException}
+     */
+    @SuppressWarnings("unchecked")
+    public static <E extends Throwable> RuntimeException rethrow(Throwable t) throws E {
+        throw (E) t;
+    }
 }

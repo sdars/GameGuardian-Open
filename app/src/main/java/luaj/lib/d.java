@@ -40,10 +40,8 @@ public abstract class d {
         }try {
 
         return field.getInt(fileDescriptor);
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
     }
 
@@ -58,10 +56,8 @@ public abstract class d {
         if (eVar == null) {try {
 
             return new java.io.FileInputStream(file);
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
         }
         java.lang.String strA = a(file);
@@ -70,19 +66,15 @@ public abstract class d {
         }java.io.FileInputStream fileInputStream;
         try {
         fileInputStream = new java.io.FileInputStream(new java.io.File(strA));;
-        } catch (java.lang.RuntimeException ggEx) {
-            throw ggEx;
         } catch (java.lang.Throwable ggEx2) {
-            throw new java.lang.RuntimeException(ggEx2);
+            throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
         }try {
 
         if (b(fileInputStream.getFD(), eVar, true)) {
             return fileInputStream;
         };
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
         try {
             fileInputStream.close();

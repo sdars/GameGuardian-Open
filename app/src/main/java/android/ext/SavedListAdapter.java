@@ -204,10 +204,8 @@ public class SavedListAdapter extends android.ext.BaseAdapterIndexer implements 
             } catch (java.io.IOException e2) {
                 android.ext.e1.l("???", e2);
             };
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
         }
         if (z) {

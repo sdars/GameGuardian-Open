@@ -34,10 +34,8 @@ public class w {
             android.ext.e1.l("getSeq fail", e2);
             bE = -1;
         };
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
         this.f1287a.position(iPosition);
         return bE;

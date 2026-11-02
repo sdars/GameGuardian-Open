@@ -344,10 +344,8 @@ public class a {
     luaj.LuaValue k() {try {
 
         return this.h == 1 ? luaj.LuaLong.I2(h()) : n(i());
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
     }
 

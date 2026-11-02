@@ -34,10 +34,8 @@ public abstract class a {
         int[] iArr = new int[1];try {
 
         return new android.lang.UNIXProcess(c(strArr[0]), bArr2, length, android.lang.ProcessEnvironment.j(map, iArr), iArr[0], c(str), new int[]{-1, -1, -1}, z);
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
     }
 

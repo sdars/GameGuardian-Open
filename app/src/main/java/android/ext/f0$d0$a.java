@@ -23,18 +23,14 @@ class f0$d0$a implements java.lang.Runnable {
 try {
 
             this.f830b.f828a.h0(this.f829a);
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
         } catch (java.io.IOException e2) {
             android.ext.e1.l("Failed process message: " + ((int) this.f829a[0]) + ' ' + this.f829a.length, e2);
         };
-} catch (java.lang.RuntimeException e) {
-    throw e;
 } catch (java.lang.Throwable e) {
-    throw new java.lang.RuntimeException(e);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(e);
 }
     }
 }

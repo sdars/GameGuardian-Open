@@ -40,62 +40,56 @@ class InOut$a extends java.io.InputStream {
         return i2;
     }
 
-    /* JADX WARN: Code duplicated, block: B:22:0x003b A[DONT_INVERT] */
-    /* JADX WARN: Code duplicated, block: B:31:0x0045 A[SYNTHETIC] */
+    /**
+     * Bulk read of the hex framed daemon stream.
+     *
+     * Faithful port of the original {@code InOut$a.read([BII)I} dalvik routine:
+     * the stream carries every payload byte as two characters in the range
+     * {@code 'a'..'p'} (low nibble first). Characters outside of that range are
+     * passed through verbatim, a trailing half byte is kept in the pending
+     * field and the pending state survives across calls.
+     */
     @Override // java.io.InputStream
     public int read(byte[] bArr, int i, int i2) throws java.io.IOException {
-        int i3;
-        int i4 = i2 + i;
-        int i5 = this.f182b;
+        int i3 = i2 + i;
+        int i4 = this.f182b;
         java.io.InputStream inputStream = this.f181a;
-        while (i < i4) {
-            int i6 = -2017;
-            if (i5 == -2017) {
-                i3 = inputStream.read();
-                if (i3 < 97 && i3 <= 112) {
-                    int i7 = i3 - 97;
+        while (i < i3) {
+            int i5 = -2017;
+            if (i4 == -2017 || i4 == -1) {
+                if (i4 == -1) {
+                    i4 = -2017;
+                }
+                int i6 = inputStream.read();
+                if (i6 >= 97 && i6 <= 112) {
+                    int i7 = i6 - 97;
                     int i8 = inputStream.read();
                     if (i8 >= 97 && i8 <= 112) {
-                        i3 = i7 + ((i8 - 97) * 16);
+                        i5 = i7 + ((i8 - 97) * 16);
+                        int i9 = i4;
+                        i4 = i5;
+                        i5 = i9;
                     } else {
                         if (i8 == -1) {
                             throw android.ext.InOut.f();
                         }
-                        i5 = i3;
-                        i6 = i8;
+                        i5 = i8;
+                        i4 = i6;
                     }
-                } else if (i3 == -1) {
-                    throw android.ext.InOut.f();
-                }
-                int i9 = i3;
-                i6 = i5;
-                i5 = i9;
-            } else if (i5 != -1) {
-                continue;
-            } else {
-                i5 = -2017;
-                i3 = inputStream.read();
-                if (i3 < 97) {
-                    if (i3 == -1) {
-                        throw android.ext.InOut.f();
-                    }
-                    int i10 = i3;
-                    i6 = i5;
-                    i5 = i10;
                 } else {
-                    if (i3 == -1) {
+                    if (i6 == -1) {
                         throw android.ext.InOut.f();
                     }
-                    int i11 = i3;
-                    i6 = i5;
-                    i5 = i11;
+                    int i9 = i4;
+                    i4 = i6;
+                    i5 = i9;
                 }
             }
-            bArr[i] = (byte) i5;
+            bArr[i] = (byte) i4;
             i++;
-            i5 = i6;
+            i4 = i5;
         }
-        this.f182b = i5;
+        this.f182b = i4;
         return 0;
     }
 }

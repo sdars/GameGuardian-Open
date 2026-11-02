@@ -316,84 +316,64 @@ public class InternalKeyboard extends gg_a.c {
                 switch (i) {
                     case 5000:
                         i2 = 67;
-                        str = null;
                         break;
                     case 5001:
                         i2 = 112;
-                        str = null;
                         break;
                     case 5002:
-                        strValueOf = android.ext.t1.f1251a;
-                        str = strValueOf;
-                        i2 = 0;
+                        str = android.ext.t1.f1251a;
                         break;
                     case 5003:
-                        c2 = android.ext.t1.f1252b;
+                        str = java.lang.String.valueOf(android.ext.t1.f1252b);
                         break;
                     case 5004:
                     case 5005:
-                        if (iMax != iMax2 || ((iMax != 0 || i != 5004) && (iMax != editText.getText().length() || i != 5005))) {
-                            i2 = i == 5004 ? 21 : 22;
-                            str = null;
+                        boolean sendKey;
+                        if (iMax != iMax2) {
+                            sendKey = true;
+                        } else if (iMax == 0) {
+                            sendKey = i == 5005 && editText.getText().length() != 0;
+                        } else {
+                            sendKey = iMax != editText.getText().length() || i != 5005;
                         }
-                        str = null;
-                        i2 = 0;
+                        if (sendKey) {
+                            i2 = i == 5004 ? 21 : 22;
+                        }
                         break;
                     case 5006:
                         q();
-                        str = null;
-                        i2 = 0;
                         break;
                     case 5007:
                         android.ext.y0.i(editText);
-                        str = null;
-                        i2 = 0;
                         break;
                     case 5008:
                         android.ext.Tools.o1(editText);
-                        str = null;
-                        i2 = 0;
                         break;
                     case 5009:
                         s();
-                        str = null;
-                        i2 = 0;
                         break;
                     case 5010:
                         p();
-                        str = null;
-                        i2 = 0;
                         break;
                     default:
-                        str = null;
-                        i2 = 0;
                         break;
                 }
-                if (str != null) {
-                    editText.getText().replace(java.lang.Math.min(iMax, iMax2), java.lang.Math.max(iMax, iMax2), str, 0, str.length());
-                    editText.setSelection(java.lang.Math.max(editText.getSelectionStart(), editText.getSelectionEnd()));
-                }
-                if (i2 != 0) {
-                    try {
-                        editText.dispatchKeyEvent(new android.view.KeyEvent(0, i2));
-                        editText.dispatchKeyEvent(new android.view.KeyEvent(1, i2));
-                    } catch (java.lang.Throwable th) {
-                        android.ext.e1.l("Failed send key to app", th);
-                        return;
-                    }
-                }
             }
-            c2 = (char) i;
-            strValueOf = java.lang.String.valueOf(c2);
-            str = strValueOf;
-            i2 = 0;
+            else {
+                str = java.lang.String.valueOf((char) i);
+            }
             if (str != null) {
                 editText.getText().replace(java.lang.Math.min(iMax, iMax2), java.lang.Math.max(iMax, iMax2), str, 0, str.length());
                 editText.setSelection(java.lang.Math.max(editText.getSelectionStart(), editText.getSelectionEnd()));
             }
             if (i2 != 0) {
-                editText.dispatchKeyEvent(new android.view.KeyEvent(0, i2));
-                editText.dispatchKeyEvent(new android.view.KeyEvent(1, i2));
+                try {
+                    editText.dispatchKeyEvent(new android.view.KeyEvent(0, i2));
+                    editText.dispatchKeyEvent(new android.view.KeyEvent(1, i2));
+                } catch (java.lang.Throwable th) {
+                    android.ext.e1.l("Failed send key to app", th);
+                    return;
+                }
             }
         }
     }

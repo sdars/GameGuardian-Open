@@ -149,10 +149,8 @@ public abstract class Script$ApiFunction extends luaj.lib.VarArgFunction {
     protected boolean d3(java.io.Writer writer, int i, luaj.LuaValue luaValue) {try {
 
         return e3(this, writer, i, luaValue);
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
     }
 

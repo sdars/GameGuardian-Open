@@ -174,10 +174,8 @@ public class Script extends luaj.lib.TwoArgFunction implements luaj.lib.e {
                 android.ext.e1.l("???", e2);
                 android.ext.n0.h(java.lang.Thread.currentThread(), e2, false);
             };
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
         }
         p0 = arrayList;

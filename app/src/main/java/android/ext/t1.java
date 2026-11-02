@@ -214,26 +214,21 @@ public abstract class t1 {
         if (cCharAt == ':') {
             sb.append(android.ext.b2.f(catch_.me_.if_.you_.can_.R.string.text));
             str2 = " UTF-8";
-        } else {
-            if (cCharAt != ';') {
-                if (cCharAt == 'H') {
-                    str2 = " DF 59 37 5F 00";
-                } else {
-                    if (cCharAt != 'Q') {
-                        if (cCharAt == 'h') {
-                            str2 = " DF 59 37 5F 00";
-                        }
-                    }
-                    sb.append(" DF 59 '");
-                    sb.append(android.ext.b2.f(catch_.me_.if_.you_.can_.R.string.text));
-                    sb.append(" UTF-8' 37 5F \"");
-                    sb.append(android.ext.b2.f(catch_.me_.if_.you_.can_.R.string.text));
-                    str2 = " UTF-16LE\" 48 00";
-                }
-                return sb.toString();
-            }
+        } else if (cCharAt == ';') {
             sb.append(android.ext.b2.f(catch_.me_.if_.you_.can_.R.string.text));
             str2 = " UTF-16LE";
+        } else if (cCharAt == 'H' || cCharAt == 'h') {
+            /* the dex sends 'H' and 'h' to the same label */
+            str2 = " DF 59 37 5F 00";
+        } else if (cCharAt == 'Q' || cCharAt == 'q') {
+            sb.append(" DF 59 '");
+            sb.append(android.ext.b2.f(catch_.me_.if_.you_.can_.R.string.text));
+            sb.append(" UTF-8' 37 5F \"");
+            sb.append(android.ext.b2.f(catch_.me_.if_.you_.can_.R.string.text));
+            str2 = " UTF-16LE\" 48 00";
+        } else {
+            /* every other character leaves the builder as it is */
+            return sb.toString();
         }
         sb.append(str2);
         return sb.toString();

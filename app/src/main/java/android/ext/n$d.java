@@ -175,17 +175,24 @@ class n$d {
                     int length2 = strSubstring.length();
                     if (length2 != 0) {
                         if (length2 <= i4) {
+                            /* The original dex compares the token against the
+                               text at the cursor and leaves the loop through
+                               two different exits: the mismatch leaves it
+                               immediately, the full match leaves it after the
+                               last character.  jadx dropped the mismatch
+                               exit, which turned the loop into an endless
+                               one. */
                             int i10 = 0;
-                            while (true) {
-                                if (i10 < length2) {
-                                    if (str2.charAt(i3 + i10) == strSubstring.charAt(i10)) {
-                                        i10++;
-                                    }
-                                } else if (i8 < length2) {
-                                    i7 = i9;
-                                    i6 = iIndexOf;
-                                    i8 = length2;
+                            while (i10 < length2) {
+                                if (str2.charAt(i3 + i10) != strSubstring.charAt(i10)) {
+                                    break;
                                 }
+                                i10++;
+                            }
+                            if (i10 >= length2 && i8 < length2) {
+                                i7 = i9;
+                                i6 = iIndexOf;
+                                i8 = length2;
                             }
                         }
                         i6 = iIndexOf;

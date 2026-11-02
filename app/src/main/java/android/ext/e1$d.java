@@ -68,10 +68,8 @@ class e1$d extends android.ext.g0 {
                         try {try {
 
                             line = bufferedReader.readLine();
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
                             if (line != null) {
                                 strTrim = line.trim();
@@ -167,10 +165,8 @@ class e1$d extends android.ext.g0 {
                         z = false;try {
 
                         line = bufferedReader.readLine();
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
                         if (line != null) {
                             strTrim = line.trim();
@@ -234,10 +230,8 @@ class e1$d extends android.ext.g0 {
                         } else {try {
 
                             java.lang.Thread.sleep(500L);
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
                         }
                     }
@@ -296,10 +290,8 @@ class e1$d extends android.ext.g0 {
                     } else {try {
 
                         java.lang.Thread.sleep(500L);
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
                     }
                 } catch (java.io.IOException unused4) {

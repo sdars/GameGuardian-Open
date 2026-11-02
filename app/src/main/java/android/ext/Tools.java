@@ -78,96 +78,771 @@ public abstract class Tools {
     /* JADX WARN: Code duplicated, block: B:38:0x00c4 A[Catch: all -> 0x00ca, TryCatch #3 {all -> 0x00ca, blocks: (B:31:0x005e, B:33:0x00b4, B:35:0x00be, B:38:0x00c4, B:39:0x00c9, B:43:0x00cd, B:44:0x00d1, B:45:0x00d2, B:47:0x00d6, B:34:0x00ba), top: B:62:0x005e, inners: #5 }] */
     /* JADX WARN: Code duplicated, block: B:47:0x00d6 A[Catch: all -> 0x00ca, TRY_LEAVE, TryCatch #3 {all -> 0x00ca, blocks: (B:31:0x005e, B:33:0x00b4, B:35:0x00be, B:38:0x00c4, B:39:0x00c9, B:43:0x00cd, B:44:0x00d1, B:45:0x00d2, B:47:0x00d6, B:34:0x00ba), top: B:62:0x005e, inners: #5 }] */
     public static android.content.pm.PackageInfo A0(java.lang.String str, int i2) throws android.content.pm.PackageManager.NameNotFoundException {
-java.lang.Throwable th = null;
-        android.content.pm.PackageInfo packageInfo = null;
-        java.lang.Object objU0 = null;
-        android.ext.Tools$y tools$yX0;
-        boolean zA;
-        java.lang.Object objB = null;
-        if (android.ext.a0.i(str)) {
-            android.ext.e1.i("Failed getPackageInfo, isBuggedPackage: " + str);
-            return null;
+        toolsA0State st = new toolsA0State();
+        st.v20o = str;
+        st.v21i = i2;
+        return toolsA0_run(st);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T extends Throwable> void toolsA0_rethrow(java.lang.Throwable t) throws T {
+        throw (T) t;
+    }
+
+    private static final class toolsA0State {
+        int pc;
+        int resultI;
+        long resultJ;
+        double resultD;
+        java.lang.Object resultO;
+        int tmpI;
+        long tmpJ;
+        double tmpD;
+        java.lang.Object tmpO;
+        java.lang.Throwable ex;
+        int v0i;
+        long v0j;
+        java.lang.Object v0o;
+        double v0d;
+        int v1i;
+        long v1j;
+        java.lang.Object v1o;
+        double v1d;
+        int v2i;
+        long v2j;
+        java.lang.Object v2o;
+        double v2d;
+        int v3i;
+        long v3j;
+        java.lang.Object v3o;
+        double v3d;
+        int v4i;
+        long v4j;
+        java.lang.Object v4o;
+        double v4d;
+        int v5i;
+        long v5j;
+        java.lang.Object v5o;
+        double v5d;
+        int v6i;
+        long v6j;
+        java.lang.Object v6o;
+        double v6d;
+        int v7i;
+        long v7j;
+        java.lang.Object v7o;
+        double v7d;
+        int v8i;
+        long v8j;
+        java.lang.Object v8o;
+        double v8d;
+        int v9i;
+        long v9j;
+        java.lang.Object v9o;
+        double v9d;
+        int v10i;
+        long v10j;
+        java.lang.Object v10o;
+        double v10d;
+        int v11i;
+        long v11j;
+        java.lang.Object v11o;
+        double v11d;
+        int v12i;
+        long v12j;
+        java.lang.Object v12o;
+        double v12d;
+        int v13i;
+        long v13j;
+        java.lang.Object v13o;
+        double v13d;
+        int v14i;
+        long v14j;
+        java.lang.Object v14o;
+        double v14d;
+        int v15i;
+        long v15j;
+        java.lang.Object v15o;
+        double v15d;
+        int v16i;
+        long v16j;
+        java.lang.Object v16o;
+        double v16d;
+        int v17i;
+        long v17j;
+        java.lang.Object v17o;
+        double v17d;
+        int v18i;
+        long v18j;
+        java.lang.Object v18o;
+        double v18d;
+        int v19i;
+        long v19j;
+        java.lang.Object v19o;
+        double v19d;
+        java.lang.Object v20o;
+        int v21i;
+    }
+
+    private static android.content.pm.PackageInfo toolsA0_run(toolsA0State st) {
+        while (true) {
+            boolean done;
+            int pc = st.pc;
+            if (pc < 125) {
+                done = toolsA0_c0(st);
+            }
+            else {
+                done = toolsA0_c0(st);
+            }
+            if (done) {
+                return (android.content.pm.PackageInfo) st.resultO;
+            }
         }
-        android.content.pm.PackageManager packageManagerB0 = B0();
-        if (packageManagerB0 != null) {
-            try {
-                boolean zA2 = android.ext.a0.a(str, "pkg_info");
-                try {
-                    packageInfo = packageManagerB0.getPackageInfo(str, i2);
-                    try {
-                        android.ext.a0.b(zA2);
-                    } catch (java.lang.Throwable th_c) {
-                        th = th_c;
-                        if (!(th_c instanceof android.content.pm.PackageManager.NameNotFoundException)) {
-                            throw th_c;
+    }
+
+    private static boolean toolsA0_c0(toolsA0State st) {
+        try {
+            while (true) {
+                switch (st.pc) {
+                    case 0:
+                        st.v1o = st.v20o;
+                        st.v1i = 0;
+                        st.v1j = 0L;
+                        st.v1d = 0.0;
+                    case 1:
+                        st.pc = 1;
+                        st.v2o = java.lang.String.class;
+                        st.v2i = 0;
+                        st.v2j = 0L;
+                        st.v2d = 0.0;
+                    case 2:
+                        st.pc = 2;
+                        st.tmpI = (android.ext.a0.i((java.lang.String) st.v20o)) ? 1 : 0;
+                        st.tmpJ = 0L;
+                        st.tmpO = null;
+                    case 3:
+                        st.v0i = st.tmpI;
+                        st.v0j = 0L;
+                        st.v0o = null;
+                        st.v0d = 0.0;
+                    case 4:
+                        st.v3i = 0;
+                        st.v3j = 0L;
+                        st.v3o = null;
+                        st.v3d = 0.0;
+                    case 5:
+                        st.pc = 5;
+                        if (st.v0i == 0) {
+                            st.pc = 15;
+                            continue;
                         }
-                        android.ext.e1.l("Failed getPackageInfo", th_c);
-                    }
-                } catch (java.lang.Throwable th2) {
-                    try {
-                        android.ext.a0.b(zA2);
-                        throw th2;
-                    } catch (java.lang.Throwable th3) {
-                        th = th3;
-                        packageInfo = null;
-                        if (!(th instanceof android.content.pm.PackageManager.NameNotFoundException)) {
-                            throw th;
+                    case 6:
+                        st.pc = 6;
+                        st.v0o = null;
+                        st.v0i = 0;
+                        st.v0j = 0L;
+                        st.v0d = 0.0;
+                    case 7:
+                        st.pc = 7;
+                        st.v0o = new java.lang.StringBuilder();
+                        st.v0i = 0;
+                        st.v0j = 0L;
+                        st.v0d = 0.0;
+                    case 8:
+                        st.v2o = "Failed getPackageInfo, isBuggedPackage: ";
+                        st.v2i = 0;
+                        st.v2j = 0L;
+                        st.v2d = 0.0;
+                    case 9:
+                        st.pc = 9;
+                        st.tmpO = ((java.lang.StringBuilder) st.v0o).append((java.lang.String) st.v2o);
+                        st.tmpI = 0;
+                        st.tmpJ = 0L;
+                    case 10:
+                        st.pc = 10;
+                        st.tmpO = ((java.lang.StringBuilder) st.v0o).append((java.lang.String) st.v1o);
+                        st.tmpI = 0;
+                        st.tmpJ = 0L;
+                    case 11:
+                        st.pc = 11;
+                        st.tmpO = ((java.lang.StringBuilder) st.v0o).toString();
+                        st.tmpI = 0;
+                        st.tmpJ = 0L;
+                    case 12:
+                        st.v0o = st.tmpO;
+                        st.v0i = 0;
+                        st.v0j = 0L;
+                        st.v0d = 0.0;
+                    case 13:
+                        st.pc = 13;
+                        st.tmpI = android.ext.e1.i((java.lang.String) st.v0o);
+                        st.tmpJ = 0L;
+                        st.tmpO = null;
+                    case 14:
+                        st.pc = 14;
+                        st.pc = 124;
+                        continue;
+                    case 15:
+                        st.pc = 15;
+                        st.tmpO = android.ext.Tools.B0();
+                        st.tmpI = 0;
+                        st.tmpJ = 0L;
+                    case 16:
+                        st.v0o = st.tmpO;
+                        st.v0i = 0;
+                        st.v0j = 0L;
+                        st.v0d = 0.0;
+                    case 17:
+                        st.v4o = "Failed getPackageInfo";
+                        st.v4i = 0;
+                        st.v4j = 0L;
+                        st.v4d = 0.0;
+                    case 18:
+                        st.pc = 18;
+                        if (st.v0o == null) {
+                            st.pc = 45;
+                            continue;
                         }
-                        android.ext.e1.l("Failed getPackageInfo", th);
-                        if (packageInfo == null) {
-                            try {
-                                java.lang.Class<?> cls = objU0.getClass();
-                                java.lang.Class cls2 = java.lang.Integer.TYPE;
-                                tools$yX0 = x0(cls, new android.ext.Tools$y[]{new android.ext.Tools$y(cls, "getPackageInfo", new java.lang.Class[]{java.lang.String.class, cls2, cls2}, objU0, new java.lang.Object[]{str, java.lang.Integer.valueOf(i2), 0}), new android.ext.Tools$y(cls, "getPackageInfo", new java.lang.Class[]{java.lang.String.class, cls2}, objU0, new java.lang.Object[]{str, java.lang.Integer.valueOf(i2)})});
-                                if (tools$yX0 != null) {
-                                    zA = android.ext.a0.a(str, "pkg_info2");
-                                    try {
-                                        objB = tools$yX0.b();
-                                        android.ext.a0.b(zA);
-                                        if (objB != null) {
-                                            throw new android.content.pm.PackageManager.NameNotFoundException(str);
-                                        }
-                                    } catch (java.lang.Throwable th4) {
-                                        android.ext.a0.b(zA);
-                                        throw th4;
-                                    }
-                                }
-                                if (objB instanceof android.content.pm.PackageInfo) {
-                                    return (android.content.pm.PackageInfo) objB;
-                                }
-                            } catch (java.lang.Throwable th5) {
-                                if (th5 instanceof android.content.pm.PackageManager.NameNotFoundException) {
-                                    throw th5;
-                                }
-                                android.ext.e1.l("Failed getPackageInfo", th5);
-                            }
+                    case 19:
+                        st.v5o = "pkg_info";
+                        st.v5i = 0;
+                        st.v5j = 0L;
+                        st.v5d = 0.0;
+                    case 20:
+                        st.pc = 20;
+                        st.tmpI = (android.ext.a0.a((java.lang.String) st.v1o, (java.lang.String) st.v5o)) ? 1 : 0;
+                        st.tmpJ = 0L;
+                        st.tmpO = null;
+                    case 21:
+                        st.v5i = st.tmpI;
+                        st.v5j = 0L;
+                        st.v5o = null;
+                        st.v5d = 0.0;
+                    case 22:
+                        st.v6i = st.v21i;
+                        st.v6j = 0L;
+                        st.v6o = null;
+                        st.v6d = 0.0;
+                    case 23:
+                        st.pc = 23;
+                        st.tmpO = ((android.content.pm.PackageManager) st.v0o).getPackageInfo((java.lang.String) st.v1o, st.v6i);
+                        st.tmpI = 0;
+                        st.tmpJ = 0L;
+                    case 24:
+                        st.v7o = st.tmpO;
+                        st.v7i = 0;
+                        st.v7j = 0L;
+                        st.v7d = 0.0;
+                    case 25:
+                        st.pc = 25;
+                        android.ext.a0.b((st.v5i != 0));
+                    case 26:
+                        st.pc = 26;
+                        st.pc = 47;
+                        continue;
+                    case 27:
+                        st.pc = 27;
+                        st.v0o = st.ex;
+                        st.v0i = 0;
+                        st.v0j = 0L;
+                        st.v0d = 0.0;
+                    case 28:
+                        st.pc = 28;
+                        st.pc = 39;
+                        continue;
+                    case 29:
+                        st.pc = 29;
+                        st.v0o = st.ex;
+                        st.v0i = 0;
+                        st.v0j = 0L;
+                        st.v0d = 0.0;
+                    case 30:
+                        st.v7o = st.v0o;
+                        st.v7i = 0;
+                        st.v7j = 0L;
+                        st.v7d = 0.0;
+                    case 31:
+                        st.pc = 31;
+                        android.ext.a0.b((st.v5i != 0));
+                    case 32:
+                        st.pc = 32;
+                        throw (java.lang.Throwable) st.v7o;
+                    case 33:
+                        st.pc = 33;
+                        st.v0o = st.ex;
+                        st.v0i = 0;
+                        st.v0j = 0L;
+                        st.v0d = 0.0;
+                    case 34:
+                        st.v7o = st.v3o;
+                        st.v7i = 0;
+                        st.v7j = 0L;
+                        st.v7d = 0.0;
+                    case 35:
+                        st.pc = 35;
+                        st.pc = 39;
+                        continue;
+                    case 36:
+                        st.pc = 36;
+                        st.v0o = st.ex;
+                        st.v0i = 0;
+                        st.v0j = 0L;
+                        st.v0d = 0.0;
+                    case 37:
+                        st.v6i = st.v21i;
+                        st.v6j = 0L;
+                        st.v6o = null;
+                        st.v6d = 0.0;
+                    case 38:
+                        st.pc = 38;
+                        st.pc = 34;
+                        continue;
+                    case 39:
+                        st.v5i = (st.v0o instanceof android.content.pm.PackageManager.NameNotFoundException) ? 1 : 0;
+                        st.v5j = 0L;
+                        st.v5o = null;
+                        st.v5d = 0.0;
+                    case 40:
+                        st.pc = 40;
+                        if (st.v5i != 0) {
+                            st.pc = 43;
+                            continue;
                         }
-                        return packageInfo;
-                    }
+                    case 41:
+                        st.pc = 41;
+                        st.tmpI = android.ext.e1.l((java.lang.String) st.v4o, (java.lang.Throwable) st.v0o);
+                        st.tmpJ = 0L;
+                        st.tmpO = null;
+                    case 42:
+                        st.pc = 42;
+                        st.pc = 47;
+                        continue;
+                    case 43:
+                        st.pc = 43;
+                        st.v0o = (android.content.pm.PackageManager.NameNotFoundException) st.v0o;
+                        st.v0i = 0;
+                        st.v0j = 0L;
+                        st.v0d = 0.0;
+                    case 44:
+                        st.pc = 44;
+                        throw (java.lang.Throwable) st.v0o;
+                    case 45:
+                        st.v6i = st.v21i;
+                        st.v6j = 0L;
+                        st.v6o = null;
+                        st.v6d = 0.0;
+                    case 46:
+                        st.v7o = st.v3o;
+                        st.v7i = 0;
+                        st.v7j = 0L;
+                        st.v7d = 0.0;
+                    case 47:
+                        st.pc = 47;
+                        if (st.v7o != null) {
+                            st.pc = 123;
+                            continue;
+                        }
+                    case 48:
+                        st.pc = 48;
+                        st.tmpO = android.ext.Tools.u0();
+                        st.tmpI = 0;
+                        st.tmpJ = 0L;
+                    case 49:
+                        st.v0o = st.tmpO;
+                        st.v0i = 0;
+                        st.v0j = 0L;
+                        st.v0d = 0.0;
+                    case 50:
+                        st.pc = 50;
+                        if (st.v0o == null) {
+                            st.pc = 123;
+                            continue;
+                        }
+                    case 51:
+                        st.pc = 51;
+                        st.tmpO = ((java.lang.Object) st.v0o).getClass();
+                        st.tmpI = 0;
+                        st.tmpJ = 0L;
+                    case 52:
+                        st.v5o = st.tmpO;
+                        st.v5i = 0;
+                        st.v5j = 0L;
+                        st.v5d = 0.0;
+                    case 53:
+                        st.v14i = 2;
+                        st.v14j = 0L;
+                        st.v14o = null;
+                        st.v14d = 0.0;
+                    case 54:
+                        st.pc = 54;
+                        st.v15o = new android.ext.Tools$y[st.v14i];
+                        st.v15i = 0;
+                        st.v15j = 0L;
+                        st.v15d = 0.0;
+                    case 55:
+                        st.pc = 55;
+                        st.v16o = null;
+                        st.v16i = 0;
+                        st.v16j = 0L;
+                        st.v16d = 0.0;
+                    case 56:
+                        st.v10o = "getPackageInfo";
+                        st.v10i = 0;
+                        st.v10j = 0L;
+                        st.v10d = 0.0;
+                    case 57:
+                        st.v8i = 3;
+                        st.v8j = 0L;
+                        st.v8o = null;
+                        st.v8d = 0.0;
+                    case 58:
+                        st.pc = 58;
+                        st.v11o = new java.lang.Class[st.v8i];
+                        st.v11i = 0;
+                        st.v11j = 0L;
+                        st.v11d = 0.0;
+                    case 59:
+                        st.v17i = 0;
+                        st.v17j = 0L;
+                        st.v17o = null;
+                        st.v17d = 0.0;
+                    case 60:
+                        st.pc = 60;
+                        ((java.lang.Object[]) st.v11o)[st.v17i] = st.v2o;
+                    case 61:
+                        st.pc = 61;
+                        st.v18o = java.lang.Integer.TYPE;
+                        st.v18i = 0;
+                        st.v18j = 0L;
+                        st.v18d = 0.0;
+                    case 62:
+                        st.v19i = 1;
+                        st.v19j = 0L;
+                        st.v19o = null;
+                        st.v19d = 0.0;
+                    case 63:
+                        st.pc = 63;
+                        ((java.lang.Object[]) st.v11o)[st.v19i] = st.v18o;
+                    case 64:
+                        st.pc = 64;
+                        ((java.lang.Object[]) st.v11o)[st.v14i] = st.v18o;
+                    case 65:
+                        st.pc = 65;
+                        st.v13o = new java.lang.Object[st.v8i];
+                        st.v13i = 0;
+                        st.v13j = 0L;
+                        st.v13d = 0.0;
+                    case 66:
+                        st.pc = 66;
+                        ((java.lang.Object[]) st.v13o)[st.v17i] = st.v1o;
+                    case 67:
+                        st.pc = 67;
+                        st.tmpO = java.lang.Integer.valueOf(st.v21i);
+                        st.tmpI = 0;
+                        st.tmpJ = 0L;
+                    case 68:
+                        st.v8o = st.tmpO;
+                        st.v8i = 0;
+                        st.v8j = 0L;
+                        st.v8d = 0.0;
+                    case 69:
+                        st.pc = 69;
+                        ((java.lang.Object[]) st.v13o)[st.v19i] = st.v8o;
+                    case 70:
+                        st.pc = 70;
+                        st.tmpO = java.lang.Integer.valueOf(st.v17i);
+                        st.tmpI = 0;
+                        st.tmpJ = 0L;
+                    case 71:
+                        st.v8o = st.tmpO;
+                        st.v8i = 0;
+                        st.v8j = 0L;
+                        st.v8d = 0.0;
+                    case 72:
+                        st.pc = 72;
+                        ((java.lang.Object[]) st.v13o)[st.v14i] = st.v8o;
+                    case 73:
+                        st.v8o = st.v16o;
+                        st.v8i = 0;
+                        st.v8j = 0L;
+                        st.v8d = 0.0;
+                    case 74:
+                        st.v9o = st.v5o;
+                        st.v9i = 0;
+                        st.v9j = 0L;
+                        st.v9d = 0.0;
+                    case 75:
+                        st.v12o = st.v0o;
+                        st.v12i = 0;
+                        st.v12j = 0L;
+                        st.v12d = 0.0;
+                    case 76:
+                        st.pc = 76;
+                        st.v8o = new android.ext.Tools$y((java.lang.Class) st.v9o, (java.lang.String) st.v10o, (java.lang.Class[]) st.v11o, st.v12o, (java.lang.Object[]) st.v13o);
+                        st.v8i = 0;
+                        st.v8j = 0L;
+                        st.v8d = 0.0;
+                    case 77:
+                        st.pc = 77;
+                        ((java.lang.Object[]) st.v15o)[st.v17i] = st.v16o;
+                    case 78:
+                        st.pc = 78;
+                        st.v16o = null;
+                        st.v16i = 0;
+                        st.v16j = 0L;
+                        st.v16d = 0.0;
+                    case 79:
+                        st.v10o = "getPackageInfo";
+                        st.v10i = 0;
+                        st.v10j = 0L;
+                        st.v10d = 0.0;
+                    case 80:
+                        st.pc = 80;
+                        st.v11o = new java.lang.Class[st.v14i];
+                        st.v11i = 0;
+                        st.v11j = 0L;
+                        st.v11d = 0.0;
+                    case 81:
+                        st.pc = 81;
+                        ((java.lang.Object[]) st.v11o)[st.v17i] = st.v2o;
+                    case 82:
+                        st.pc = 82;
+                        ((java.lang.Object[]) st.v11o)[st.v19i] = st.v18o;
+                    case 83:
+                        st.pc = 83;
+                        st.v13o = new java.lang.Object[st.v14i];
+                        st.v13i = 0;
+                        st.v13j = 0L;
+                        st.v13d = 0.0;
+                    case 84:
+                        st.pc = 84;
+                        ((java.lang.Object[]) st.v13o)[st.v17i] = st.v1o;
+                    case 85:
+                        st.pc = 85;
+                        st.tmpO = java.lang.Integer.valueOf(st.v21i);
+                        st.tmpI = 0;
+                        st.tmpJ = 0L;
+                    case 86:
+                        st.v2o = st.tmpO;
+                        st.v2i = 0;
+                        st.v2j = 0L;
+                        st.v2d = 0.0;
+                    case 87:
+                        st.pc = 87;
+                        ((java.lang.Object[]) st.v13o)[st.v19i] = st.v2o;
+                    case 88:
+                        st.v8o = st.v16o;
+                        st.v8i = 0;
+                        st.v8j = 0L;
+                        st.v8d = 0.0;
+                    case 89:
+                        st.v9o = st.v5o;
+                        st.v9i = 0;
+                        st.v9j = 0L;
+                        st.v9d = 0.0;
+                    case 90:
+                        st.v12o = st.v0o;
+                        st.v12i = 0;
+                        st.v12j = 0L;
+                        st.v12d = 0.0;
+                    case 91:
+                        st.pc = 91;
+                        st.v8o = new android.ext.Tools$y((java.lang.Class) st.v9o, (java.lang.String) st.v10o, (java.lang.Class[]) st.v11o, st.v12o, (java.lang.Object[]) st.v13o);
+                        st.v8i = 0;
+                        st.v8j = 0L;
+                        st.v8d = 0.0;
+                    case 92:
+                        st.pc = 92;
+                        ((java.lang.Object[]) st.v15o)[st.v19i] = st.v16o;
+                    case 93:
+                        st.pc = 93;
+                        st.tmpO = android.ext.Tools.x0((java.lang.Class) st.v5o, (android.ext.Tools$y[]) st.v15o);
+                        st.tmpI = 0;
+                        st.tmpJ = 0L;
+                    case 94:
+                        st.v0o = st.tmpO;
+                        st.v0i = 0;
+                        st.v0j = 0L;
+                        st.v0d = 0.0;
+                    case 95:
+                        st.pc = 95;
+                        if (st.v0o == null) {
+                            st.pc = 113;
+                            continue;
+                        }
+                    case 96:
+                        st.v2o = "pkg_info2";
+                        st.v2i = 0;
+                        st.v2j = 0L;
+                        st.v2d = 0.0;
+                    case 97:
+                        st.pc = 97;
+                        st.tmpI = (android.ext.a0.a((java.lang.String) st.v1o, (java.lang.String) st.v2o)) ? 1 : 0;
+                        st.tmpJ = 0L;
+                        st.tmpO = null;
+                    case 98:
+                        st.v2i = st.tmpI;
+                        st.v2j = 0L;
+                        st.v2o = null;
+                        st.v2d = 0.0;
+                    case 99:
+                        st.pc = 99;
+                        st.tmpO = ((android.ext.Tools$y) st.v0o).b();
+                        st.tmpI = 0;
+                        st.tmpJ = 0L;
+                    case 100:
+                        st.v3o = st.tmpO;
+                        st.v3i = 0;
+                        st.v3j = 0L;
+                        st.v3d = 0.0;
+                    case 101:
+                        st.pc = 101;
+                        android.ext.a0.b((st.v2i != 0));
+                    case 102:
+                        st.pc = 102;
+                        if (st.v3o == null) {
+                            st.pc = 104;
+                            continue;
+                        }
+                    case 103:
+                        st.pc = 103;
+                        st.pc = 113;
+                        continue;
+                    case 104:
+                        st.pc = 104;
+                        st.v0o = null;
+                        st.v0i = 0;
+                        st.v0j = 0L;
+                        st.v0d = 0.0;
+                    case 105:
+                        st.pc = 105;
+                        st.v0o = new android.content.pm.PackageManager.NameNotFoundException((java.lang.String) st.v1o);
+                        st.v0i = 0;
+                        st.v0j = 0L;
+                        st.v0d = 0.0;
+                    case 106:
+                        st.pc = 106;
+                        throw (java.lang.Throwable) st.v0o;
+                    case 107:
+                        st.pc = 107;
+                        st.v0o = st.ex;
+                        st.v0i = 0;
+                        st.v0j = 0L;
+                        st.v0d = 0.0;
+                    case 108:
+                        st.pc = 108;
+                        st.pc = 117;
+                        continue;
+                    case 109:
+                        st.pc = 109;
+                        st.v0o = st.ex;
+                        st.v0i = 0;
+                        st.v0j = 0L;
+                        st.v0d = 0.0;
+                    case 110:
+                        st.v1o = st.v0o;
+                        st.v1i = 0;
+                        st.v1j = 0L;
+                        st.v1d = 0.0;
+                    case 111:
+                        st.pc = 111;
+                        android.ext.a0.b((st.v2i != 0));
+                    case 112:
+                        st.pc = 112;
+                        throw (java.lang.Throwable) st.v1o;
+                    case 113:
+                        st.v0i = (st.v3o instanceof android.content.pm.PackageInfo) ? 1 : 0;
+                        st.v0j = 0L;
+                        st.v0o = null;
+                        st.v0d = 0.0;
+                    case 114:
+                        st.pc = 114;
+                        if (st.v0i == 0) {
+                            st.pc = 123;
+                            continue;
+                        }
+                    case 115:
+                        st.pc = 115;
+                        st.v3o = (android.content.pm.PackageInfo) st.v3o;
+                        st.v3i = 0;
+                        st.v3j = 0L;
+                        st.v3d = 0.0;
+                    case 116:
+                        st.pc = 116;
+                        st.pc = 124;
+                        continue;
+                    case 117:
+                        st.v1i = (st.v0o instanceof android.content.pm.PackageManager.NameNotFoundException) ? 1 : 0;
+                        st.v1j = 0L;
+                        st.v1o = null;
+                        st.v1d = 0.0;
+                    case 118:
+                        st.pc = 118;
+                        if (st.v1i != 0) {
+                            st.pc = 121;
+                            continue;
+                        }
+                    case 119:
+                        st.pc = 119;
+                        st.tmpI = android.ext.e1.l((java.lang.String) st.v4o, (java.lang.Throwable) st.v0o);
+                        st.tmpJ = 0L;
+                        st.tmpO = null;
+                    case 120:
+                        st.pc = 120;
+                        st.pc = 123;
+                        continue;
+                    case 121:
+                        st.pc = 121;
+                        st.v0o = (android.content.pm.PackageManager.NameNotFoundException) st.v0o;
+                        st.v0i = 0;
+                        st.v0j = 0L;
+                        st.v0d = 0.0;
+                    case 122:
+                        st.pc = 122;
+                        throw (java.lang.Throwable) st.v0o;
+                    case 123:
+                        st.v3o = st.v7o;
+                        st.v3i = 0;
+                        st.v3j = 0L;
+                        st.v3d = 0.0;
+                    case 124:
+                        st.pc = 124;
+                        st.resultO = st.v3o;
+                        st.resultI = 0;
+                        st.resultJ = 0L;
+                        st.resultD = 0.0;
+                        return true;
+                    default:
+                        return false;
                 }
-            } catch (java.lang.Throwable th6) {
-                th = th6;
             }
-        } else {
-            packageInfo = null;
+        } catch (java.lang.Throwable t) {
+            int h = toolsA0_handler(st.pc, t);
+            if (h < 0) {
+                toolsA0_rethrow(t);
+            }
+            st.ex = t;
+            st.pc = h;
+            return false;
         }
-        if (packageInfo == null && (objU0 = u0()) != null) {
-            java.lang.Class<?> cls3 = objU0.getClass();
-            java.lang.Class cls4 = java.lang.Integer.TYPE;
-            tools$yX0 = x0(cls3, new android.ext.Tools$y[]{new android.ext.Tools$y(cls3, "getPackageInfo", new java.lang.Class[]{java.lang.String.class, cls4, cls4}, objU0, new java.lang.Object[]{str, java.lang.Integer.valueOf(i2), 0}), new android.ext.Tools$y(cls3, "getPackageInfo", new java.lang.Class[]{java.lang.String.class, cls4}, objU0, new java.lang.Object[]{str, java.lang.Integer.valueOf(i2)})});
-            if (tools$yX0 != null) {
-                zA = android.ext.a0.a(str, "pkg_info2");
-                objB = tools$yX0.b();
-                android.ext.a0.b(zA);
-                if (objB != null) {
-                    throw new android.content.pm.PackageManager.NameNotFoundException(str);
-                }
+    }
+
+    private static final Class<?>[] toolsA0_ctypes = {
+    };
+    private static final int[] toolsA0_handlers = {
+        19, 22, 36, -1, 23, 25, 29, -1, 25, 26, 27, -1, 31, 33, 33, -1, 51, 99, 107, -1, 99, 101, 109, -1, 101, 116, 107, -1
+    };
+    private static int toolsA0_handler(int pc, java.lang.Throwable t) {
+        for (int i = 0; i < toolsA0_handlers.length; i += 4) {
+            if (pc < toolsA0_handlers[i] || pc >= toolsA0_handlers[i + 1]) {
+                continue;
             }
-            if (objB instanceof android.content.pm.PackageInfo) {
-                return (android.content.pm.PackageInfo) objB;
+            int ti = toolsA0_handlers[i + 3];
+            if (ti < 0 || toolsA0_ctypes[ti].isInstance(t)) {
+                return toolsA0_handlers[i + 2];
             }
         }
-        return packageInfo;
+        return -1;
     }
 
     public static void A1(android.widget.ListView listView, android.ext.Tools$a0 tools$a0) {
@@ -554,10 +1229,8 @@ java.lang.Throwable th = null;
                 if (!message.contains("nknown error") && !message.contains("xec failed") && !message.contains("ead failed")) {try {
 
                     throw th;
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
                 }
                 android.ext.e1.s("Failed exec: " + java.util.Arrays.toString(strArr) + "; " + strArr2 + "; " + file, th);
@@ -1308,10 +1981,8 @@ java.lang.Throwable th = null;
     public static android.content.pm.ApplicationInfo Y(java.lang.String str) {try {
 
         return Z(str, 0);
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
     }
 
@@ -1332,97 +2003,780 @@ java.lang.Throwable th = null;
     /* JADX WARN: Code duplicated, block: B:37:0x00c3  */
     /* JADX WARN: Code duplicated, block: B:38:0x00c4 A[Catch: all -> 0x00ca, TryCatch #3 {all -> 0x00ca, blocks: (B:31:0x005e, B:33:0x00b4, B:35:0x00be, B:38:0x00c4, B:39:0x00c9, B:43:0x00cd, B:44:0x00d1, B:45:0x00d2, B:47:0x00d6, B:34:0x00ba), top: B:62:0x005e, inners: #5 }] */
     /* JADX WARN: Code duplicated, block: B:47:0x00d6 A[Catch: all -> 0x00ca, TRY_LEAVE, TryCatch #3 {all -> 0x00ca, blocks: (B:31:0x005e, B:33:0x00b4, B:35:0x00be, B:38:0x00c4, B:39:0x00c9, B:43:0x00cd, B:44:0x00d1, B:45:0x00d2, B:47:0x00d6, B:34:0x00ba), top: B:62:0x005e, inners: #5 }] */
+    /* ------------------------------------------------------------- *
+     *  .method public static Z(Ljava/lang/String;I)Landroid/content/pm/ApplicationInfo;
+     *
+     *  Translated from the original dex code into plain java.
+     *  Every dalvik instruction becomes one java statement, the
+     *  register file lives in the state object below and the
+     *  control flow is a switch over the instruction index.
+     * ------------------------------------------------------------- */
     public static android.content.pm.ApplicationInfo Z(java.lang.String str, int i2) throws android.content.pm.PackageManager.NameNotFoundException {
-java.lang.Throwable th = null;
-        android.content.pm.ApplicationInfo applicationInfo = null;
-        java.lang.Object objU0 = null;
-        android.ext.Tools$y tools$yX0;
-        boolean zA;
-        java.lang.Object objB = null;
-        if (android.ext.a0.i(str)) {
-            android.ext.e1.i("Failed getApplicationInfo, isBuggedPackage: " + str);
-            return null;
+        toolsZState st = new toolsZState();
+        st.v20o = str;
+        st.v21i = i2;
+        return toolsZ_run(st);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T extends Throwable> void toolsZ_rethrow(java.lang.Throwable t) throws T {
+        throw (T) t;
+    }
+
+    private static final class toolsZState {
+        int pc;
+        int resultI;
+        long resultJ;
+        double resultD;
+        java.lang.Object resultO;
+        int tmpI;
+        long tmpJ;
+        double tmpD;
+        java.lang.Object tmpO;
+        java.lang.Throwable ex;
+        int v0i;
+        long v0j;
+        java.lang.Object v0o;
+        double v0d;
+        int v1i;
+        long v1j;
+        java.lang.Object v1o;
+        double v1d;
+        int v2i;
+        long v2j;
+        java.lang.Object v2o;
+        double v2d;
+        int v3i;
+        long v3j;
+        java.lang.Object v3o;
+        double v3d;
+        int v4i;
+        long v4j;
+        java.lang.Object v4o;
+        double v4d;
+        int v5i;
+        long v5j;
+        java.lang.Object v5o;
+        double v5d;
+        int v6i;
+        long v6j;
+        java.lang.Object v6o;
+        double v6d;
+        int v7i;
+        long v7j;
+        java.lang.Object v7o;
+        double v7d;
+        int v8i;
+        long v8j;
+        java.lang.Object v8o;
+        double v8d;
+        int v9i;
+        long v9j;
+        java.lang.Object v9o;
+        double v9d;
+        int v10i;
+        long v10j;
+        java.lang.Object v10o;
+        double v10d;
+        int v11i;
+        long v11j;
+        java.lang.Object v11o;
+        double v11d;
+        int v12i;
+        long v12j;
+        java.lang.Object v12o;
+        double v12d;
+        int v13i;
+        long v13j;
+        java.lang.Object v13o;
+        double v13d;
+        int v14i;
+        long v14j;
+        java.lang.Object v14o;
+        double v14d;
+        int v15i;
+        long v15j;
+        java.lang.Object v15o;
+        double v15d;
+        int v16i;
+        long v16j;
+        java.lang.Object v16o;
+        double v16d;
+        int v17i;
+        long v17j;
+        java.lang.Object v17o;
+        double v17d;
+        int v18i;
+        long v18j;
+        java.lang.Object v18o;
+        double v18d;
+        int v19i;
+        long v19j;
+        java.lang.Object v19o;
+        double v19d;
+        java.lang.Object v20o;
+        int v21i;
+    }
+
+    private static android.content.pm.ApplicationInfo toolsZ_run(toolsZState st) {
+        while (true) {
+            boolean done;
+            int pc = st.pc;
+            if (pc < 125) {
+                done = toolsZ_c0(st);
+            }
+            else {
+                done = toolsZ_c0(st);
+            }
+            if (done) {
+                return (android.content.pm.ApplicationInfo) st.resultO;
+            }
         }
-        android.content.pm.PackageManager packageManagerB0 = B0();
-        if (packageManagerB0 != null) {
-            try {
-                boolean zA2 = android.ext.a0.a(str, "app_info");
-                try {
-                    applicationInfo = packageManagerB0.getApplicationInfo(str, i2);
-                    try {
-                        android.ext.a0.b(zA2);
-                    } catch (java.lang.Throwable th_c) {
-                        th = th_c;
-                        if (!(th_c instanceof android.content.pm.PackageManager.NameNotFoundException)) {
-                            throw th_c;
+    }
+
+    private static boolean toolsZ_c0(toolsZState st) {
+        try {
+            while (true) {
+                switch (st.pc) {
+                    case 0:
+                        st.v1o = st.v20o;
+                        st.v1i = 0;
+                        st.v1j = 0L;
+                        st.v1d = 0.0;
+                    case 1:
+                        st.pc = 1;
+                        st.v2o = java.lang.String.class;
+                        st.v2i = 0;
+                        st.v2j = 0L;
+                        st.v2d = 0.0;
+                    case 2:
+                        st.pc = 2;
+                        st.tmpI = (android.ext.a0.i((java.lang.String) st.v20o)) ? 1 : 0;
+                        st.tmpJ = 0L;
+                        st.tmpO = null;
+                    case 3:
+                        st.v0i = st.tmpI;
+                        st.v0j = 0L;
+                        st.v0o = null;
+                        st.v0d = 0.0;
+                    case 4:
+                        st.v3i = 0;
+                        st.v3j = 0L;
+                        st.v3o = null;
+                        st.v3d = 0.0;
+                    case 5:
+                        st.pc = 5;
+                        if (st.v0i == 0) {
+                            st.pc = 15;
+                            continue;
                         }
-                        android.ext.e1.l("Failed getApplicationInfo", th_c);
-                    }
-                } catch (java.lang.Throwable th2) {
-                    try {
-                        android.ext.a0.b(zA2);
-                        throw th2;
-                    } catch (java.lang.Throwable th3) {
-                        th = th3;
-                        applicationInfo = null;
-                        if (!(th instanceof android.content.pm.PackageManager.NameNotFoundException)) {
-                            throw th;
+                    case 6:
+                        st.pc = 6;
+                        st.v0o = null;
+                        st.v0i = 0;
+                        st.v0j = 0L;
+                        st.v0d = 0.0;
+                    case 7:
+                        st.pc = 7;
+                        st.v0o = new java.lang.StringBuilder();
+                        st.v0i = 0;
+                        st.v0j = 0L;
+                        st.v0d = 0.0;
+                    case 8:
+                        st.v2o = "Failed getApplicationInfo, isBuggedPackage: ";
+                        st.v2i = 0;
+                        st.v2j = 0L;
+                        st.v2d = 0.0;
+                    case 9:
+                        st.pc = 9;
+                        st.tmpO = ((java.lang.StringBuilder) st.v0o).append((java.lang.String) st.v2o);
+                        st.tmpI = 0;
+                        st.tmpJ = 0L;
+                    case 10:
+                        st.pc = 10;
+                        st.tmpO = ((java.lang.StringBuilder) st.v0o).append((java.lang.String) st.v1o);
+                        st.tmpI = 0;
+                        st.tmpJ = 0L;
+                    case 11:
+                        st.pc = 11;
+                        st.tmpO = ((java.lang.StringBuilder) st.v0o).toString();
+                        st.tmpI = 0;
+                        st.tmpJ = 0L;
+                    case 12:
+                        st.v0o = st.tmpO;
+                        st.v0i = 0;
+                        st.v0j = 0L;
+                        st.v0d = 0.0;
+                    case 13:
+                        st.pc = 13;
+                        st.tmpI = android.ext.e1.i((java.lang.String) st.v0o);
+                        st.tmpJ = 0L;
+                        st.tmpO = null;
+                    case 14:
+                        st.pc = 14;
+                        st.pc = 124;
+                        continue;
+                    case 15:
+                        st.pc = 15;
+                        st.tmpO = android.ext.Tools.B0();
+                        st.tmpI = 0;
+                        st.tmpJ = 0L;
+                    case 16:
+                        st.v0o = st.tmpO;
+                        st.v0i = 0;
+                        st.v0j = 0L;
+                        st.v0d = 0.0;
+                    case 17:
+                        st.v4o = "Failed getApplicationInfo";
+                        st.v4i = 0;
+                        st.v4j = 0L;
+                        st.v4d = 0.0;
+                    case 18:
+                        st.pc = 18;
+                        if (st.v0o == null) {
+                            st.pc = 45;
+                            continue;
                         }
-                        android.ext.e1.l("Failed getApplicationInfo", th);
-                        if (applicationInfo == null) {
-                            try {
-                                java.lang.Class<?> cls = objU0.getClass();
-                                java.lang.Class cls2 = java.lang.Integer.TYPE;
-                                tools$yX0 = x0(cls, new android.ext.Tools$y[]{new android.ext.Tools$y(cls, "getApplicationInfo", new java.lang.Class[]{java.lang.String.class, cls2, cls2}, objU0, new java.lang.Object[]{str, java.lang.Integer.valueOf(i2), 0}), new android.ext.Tools$y(cls, "getApplicationInfo", new java.lang.Class[]{java.lang.String.class, cls2}, objU0, new java.lang.Object[]{str, java.lang.Integer.valueOf(i2)})});
-                                if (tools$yX0 != null) {
-                                    zA = android.ext.a0.a(str, "app_info2");
-                                    try {
-                                        objB = tools$yX0.b();
-                                        android.ext.a0.b(zA);
-                                        if (objB != null) {
-                                            throw new android.content.pm.PackageManager.NameNotFoundException(str);
-                                        }
-                                    } catch (java.lang.Throwable th4) {
-                                        android.ext.a0.b(zA);
-                                        throw th4;
-                                    }
-                                }
-                                if (objB instanceof android.content.pm.ApplicationInfo) {
-                                    return (android.content.pm.ApplicationInfo) objB;
-                                }
-                            } catch (java.lang.Throwable th5) {
-                                if (th5 instanceof android.content.pm.PackageManager.NameNotFoundException) {
-                                    throw th5;
-                                }
-                                android.ext.e1.l("Failed getApplicationInfo", th5);
-                            }
+                    case 19:
+                        st.v5o = "app_info";
+                        st.v5i = 0;
+                        st.v5j = 0L;
+                        st.v5d = 0.0;
+                    case 20:
+                        st.pc = 20;
+                        st.tmpI = (android.ext.a0.a((java.lang.String) st.v1o, (java.lang.String) st.v5o)) ? 1 : 0;
+                        st.tmpJ = 0L;
+                        st.tmpO = null;
+                    case 21:
+                        st.v5i = st.tmpI;
+                        st.v5j = 0L;
+                        st.v5o = null;
+                        st.v5d = 0.0;
+                    case 22:
+                        st.v6i = st.v21i;
+                        st.v6j = 0L;
+                        st.v6o = null;
+                        st.v6d = 0.0;
+                    case 23:
+                        st.pc = 23;
+                        st.tmpO = ((android.content.pm.PackageManager) st.v0o).getApplicationInfo((java.lang.String) st.v1o, st.v6i);
+                        st.tmpI = 0;
+                        st.tmpJ = 0L;
+                    case 24:
+                        st.v7o = st.tmpO;
+                        st.v7i = 0;
+                        st.v7j = 0L;
+                        st.v7d = 0.0;
+                    case 25:
+                        st.pc = 25;
+                        android.ext.a0.b((st.v5i != 0));
+                    case 26:
+                        st.pc = 26;
+                        st.pc = 47;
+                        continue;
+                    case 27:
+                        st.pc = 27;
+                        st.v0o = st.ex;
+                        st.v0i = 0;
+                        st.v0j = 0L;
+                        st.v0d = 0.0;
+                    case 28:
+                        st.pc = 28;
+                        st.pc = 39;
+                        continue;
+                    case 29:
+                        st.pc = 29;
+                        st.v0o = st.ex;
+                        st.v0i = 0;
+                        st.v0j = 0L;
+                        st.v0d = 0.0;
+                    case 30:
+                        st.v7o = st.v0o;
+                        st.v7i = 0;
+                        st.v7j = 0L;
+                        st.v7d = 0.0;
+                    case 31:
+                        st.pc = 31;
+                        android.ext.a0.b((st.v5i != 0));
+                    case 32:
+                        st.pc = 32;
+                        throw (java.lang.Throwable) st.v7o;
+                    case 33:
+                        st.pc = 33;
+                        st.v0o = st.ex;
+                        st.v0i = 0;
+                        st.v0j = 0L;
+                        st.v0d = 0.0;
+                    case 34:
+                        st.v7o = st.v3o;
+                        st.v7i = 0;
+                        st.v7j = 0L;
+                        st.v7d = 0.0;
+                    case 35:
+                        st.pc = 35;
+                        st.pc = 39;
+                        continue;
+                    case 36:
+                        st.pc = 36;
+                        st.v0o = st.ex;
+                        st.v0i = 0;
+                        st.v0j = 0L;
+                        st.v0d = 0.0;
+                    case 37:
+                        st.v6i = st.v21i;
+                        st.v6j = 0L;
+                        st.v6o = null;
+                        st.v6d = 0.0;
+                    case 38:
+                        st.pc = 38;
+                        st.pc = 34;
+                        continue;
+                    case 39:
+                        st.v5i = (st.v0o instanceof android.content.pm.PackageManager.NameNotFoundException) ? 1 : 0;
+                        st.v5j = 0L;
+                        st.v5o = null;
+                        st.v5d = 0.0;
+                    case 40:
+                        st.pc = 40;
+                        if (st.v5i != 0) {
+                            st.pc = 43;
+                            continue;
                         }
-                        return applicationInfo;
-                    }
+                    case 41:
+                        st.pc = 41;
+                        st.tmpI = android.ext.e1.l((java.lang.String) st.v4o, (java.lang.Throwable) st.v0o);
+                        st.tmpJ = 0L;
+                        st.tmpO = null;
+                    case 42:
+                        st.pc = 42;
+                        st.pc = 47;
+                        continue;
+                    case 43:
+                        st.pc = 43;
+                        st.v0o = (android.content.pm.PackageManager.NameNotFoundException) st.v0o;
+                        st.v0i = 0;
+                        st.v0j = 0L;
+                        st.v0d = 0.0;
+                    case 44:
+                        st.pc = 44;
+                        throw (java.lang.Throwable) st.v0o;
+                    case 45:
+                        st.v6i = st.v21i;
+                        st.v6j = 0L;
+                        st.v6o = null;
+                        st.v6d = 0.0;
+                    case 46:
+                        st.v7o = st.v3o;
+                        st.v7i = 0;
+                        st.v7j = 0L;
+                        st.v7d = 0.0;
+                    case 47:
+                        st.pc = 47;
+                        if (st.v7o != null) {
+                            st.pc = 123;
+                            continue;
+                        }
+                    case 48:
+                        st.pc = 48;
+                        st.tmpO = android.ext.Tools.u0();
+                        st.tmpI = 0;
+                        st.tmpJ = 0L;
+                    case 49:
+                        st.v0o = st.tmpO;
+                        st.v0i = 0;
+                        st.v0j = 0L;
+                        st.v0d = 0.0;
+                    case 50:
+                        st.pc = 50;
+                        if (st.v0o == null) {
+                            st.pc = 123;
+                            continue;
+                        }
+                    case 51:
+                        st.pc = 51;
+                        st.tmpO = ((java.lang.Object) st.v0o).getClass();
+                        st.tmpI = 0;
+                        st.tmpJ = 0L;
+                    case 52:
+                        st.v5o = st.tmpO;
+                        st.v5i = 0;
+                        st.v5j = 0L;
+                        st.v5d = 0.0;
+                    case 53:
+                        st.v14i = 2;
+                        st.v14j = 0L;
+                        st.v14o = null;
+                        st.v14d = 0.0;
+                    case 54:
+                        st.pc = 54;
+                        st.v15o = new android.ext.Tools$y[st.v14i];
+                        st.v15i = 0;
+                        st.v15j = 0L;
+                        st.v15d = 0.0;
+                    case 55:
+                        st.pc = 55;
+                        st.v16o = null;
+                        st.v16i = 0;
+                        st.v16j = 0L;
+                        st.v16d = 0.0;
+                    case 56:
+                        st.v10o = "getApplicationInfo";
+                        st.v10i = 0;
+                        st.v10j = 0L;
+                        st.v10d = 0.0;
+                    case 57:
+                        st.v8i = 3;
+                        st.v8j = 0L;
+                        st.v8o = null;
+                        st.v8d = 0.0;
+                    case 58:
+                        st.pc = 58;
+                        st.v11o = new java.lang.Class[st.v8i];
+                        st.v11i = 0;
+                        st.v11j = 0L;
+                        st.v11d = 0.0;
+                    case 59:
+                        st.v17i = 0;
+                        st.v17j = 0L;
+                        st.v17o = null;
+                        st.v17d = 0.0;
+                    case 60:
+                        st.pc = 60;
+                        ((java.lang.Object[]) st.v11o)[st.v17i] = st.v2o;
+                    case 61:
+                        st.pc = 61;
+                        st.v18o = java.lang.Integer.TYPE;
+                        st.v18i = 0;
+                        st.v18j = 0L;
+                        st.v18d = 0.0;
+                    case 62:
+                        st.v19i = 1;
+                        st.v19j = 0L;
+                        st.v19o = null;
+                        st.v19d = 0.0;
+                    case 63:
+                        st.pc = 63;
+                        ((java.lang.Object[]) st.v11o)[st.v19i] = st.v18o;
+                    case 64:
+                        st.pc = 64;
+                        ((java.lang.Object[]) st.v11o)[st.v14i] = st.v18o;
+                    case 65:
+                        st.pc = 65;
+                        st.v13o = new java.lang.Object[st.v8i];
+                        st.v13i = 0;
+                        st.v13j = 0L;
+                        st.v13d = 0.0;
+                    case 66:
+                        st.pc = 66;
+                        ((java.lang.Object[]) st.v13o)[st.v17i] = st.v1o;
+                    case 67:
+                        st.pc = 67;
+                        st.tmpO = java.lang.Integer.valueOf(st.v21i);
+                        st.tmpI = 0;
+                        st.tmpJ = 0L;
+                    case 68:
+                        st.v8o = st.tmpO;
+                        st.v8i = 0;
+                        st.v8j = 0L;
+                        st.v8d = 0.0;
+                    case 69:
+                        st.pc = 69;
+                        ((java.lang.Object[]) st.v13o)[st.v19i] = st.v8o;
+                    case 70:
+                        st.pc = 70;
+                        st.tmpO = java.lang.Integer.valueOf(st.v17i);
+                        st.tmpI = 0;
+                        st.tmpJ = 0L;
+                    case 71:
+                        st.v8o = st.tmpO;
+                        st.v8i = 0;
+                        st.v8j = 0L;
+                        st.v8d = 0.0;
+                    case 72:
+                        st.pc = 72;
+                        ((java.lang.Object[]) st.v13o)[st.v14i] = st.v8o;
+                    case 73:
+                        st.v8o = st.v16o;
+                        st.v8i = 0;
+                        st.v8j = 0L;
+                        st.v8d = 0.0;
+                    case 74:
+                        st.v9o = st.v5o;
+                        st.v9i = 0;
+                        st.v9j = 0L;
+                        st.v9d = 0.0;
+                    case 75:
+                        st.v12o = st.v0o;
+                        st.v12i = 0;
+                        st.v12j = 0L;
+                        st.v12d = 0.0;
+                    case 76:
+                        st.pc = 76;
+                        st.v8o = new android.ext.Tools$y((java.lang.Class) st.v9o, (java.lang.String) st.v10o, (java.lang.Class[]) st.v11o, st.v12o, (java.lang.Object[]) st.v13o);
+                        st.v8i = 0;
+                        st.v8j = 0L;
+                        st.v8d = 0.0;
+                    case 77:
+                        st.pc = 77;
+                        ((java.lang.Object[]) st.v15o)[st.v17i] = st.v16o;
+                    case 78:
+                        st.pc = 78;
+                        st.v16o = null;
+                        st.v16i = 0;
+                        st.v16j = 0L;
+                        st.v16d = 0.0;
+                    case 79:
+                        st.v10o = "getApplicationInfo";
+                        st.v10i = 0;
+                        st.v10j = 0L;
+                        st.v10d = 0.0;
+                    case 80:
+                        st.pc = 80;
+                        st.v11o = new java.lang.Class[st.v14i];
+                        st.v11i = 0;
+                        st.v11j = 0L;
+                        st.v11d = 0.0;
+                    case 81:
+                        st.pc = 81;
+                        ((java.lang.Object[]) st.v11o)[st.v17i] = st.v2o;
+                    case 82:
+                        st.pc = 82;
+                        ((java.lang.Object[]) st.v11o)[st.v19i] = st.v18o;
+                    case 83:
+                        st.pc = 83;
+                        st.v13o = new java.lang.Object[st.v14i];
+                        st.v13i = 0;
+                        st.v13j = 0L;
+                        st.v13d = 0.0;
+                    case 84:
+                        st.pc = 84;
+                        ((java.lang.Object[]) st.v13o)[st.v17i] = st.v1o;
+                    case 85:
+                        st.pc = 85;
+                        st.tmpO = java.lang.Integer.valueOf(st.v21i);
+                        st.tmpI = 0;
+                        st.tmpJ = 0L;
+                    case 86:
+                        st.v2o = st.tmpO;
+                        st.v2i = 0;
+                        st.v2j = 0L;
+                        st.v2d = 0.0;
+                    case 87:
+                        st.pc = 87;
+                        ((java.lang.Object[]) st.v13o)[st.v19i] = st.v2o;
+                    case 88:
+                        st.v8o = st.v16o;
+                        st.v8i = 0;
+                        st.v8j = 0L;
+                        st.v8d = 0.0;
+                    case 89:
+                        st.v9o = st.v5o;
+                        st.v9i = 0;
+                        st.v9j = 0L;
+                        st.v9d = 0.0;
+                    case 90:
+                        st.v12o = st.v0o;
+                        st.v12i = 0;
+                        st.v12j = 0L;
+                        st.v12d = 0.0;
+                    case 91:
+                        st.pc = 91;
+                        st.v8o = new android.ext.Tools$y((java.lang.Class) st.v9o, (java.lang.String) st.v10o, (java.lang.Class[]) st.v11o, st.v12o, (java.lang.Object[]) st.v13o);
+                        st.v8i = 0;
+                        st.v8j = 0L;
+                        st.v8d = 0.0;
+                    case 92:
+                        st.pc = 92;
+                        ((java.lang.Object[]) st.v15o)[st.v19i] = st.v16o;
+                    case 93:
+                        st.pc = 93;
+                        st.tmpO = android.ext.Tools.x0((java.lang.Class) st.v5o, (android.ext.Tools$y[]) st.v15o);
+                        st.tmpI = 0;
+                        st.tmpJ = 0L;
+                    case 94:
+                        st.v0o = st.tmpO;
+                        st.v0i = 0;
+                        st.v0j = 0L;
+                        st.v0d = 0.0;
+                    case 95:
+                        st.pc = 95;
+                        if (st.v0o == null) {
+                            st.pc = 113;
+                            continue;
+                        }
+                    case 96:
+                        st.v2o = "app_info2";
+                        st.v2i = 0;
+                        st.v2j = 0L;
+                        st.v2d = 0.0;
+                    case 97:
+                        st.pc = 97;
+                        st.tmpI = (android.ext.a0.a((java.lang.String) st.v1o, (java.lang.String) st.v2o)) ? 1 : 0;
+                        st.tmpJ = 0L;
+                        st.tmpO = null;
+                    case 98:
+                        st.v2i = st.tmpI;
+                        st.v2j = 0L;
+                        st.v2o = null;
+                        st.v2d = 0.0;
+                    case 99:
+                        st.pc = 99;
+                        st.tmpO = ((android.ext.Tools$y) st.v0o).b();
+                        st.tmpI = 0;
+                        st.tmpJ = 0L;
+                    case 100:
+                        st.v3o = st.tmpO;
+                        st.v3i = 0;
+                        st.v3j = 0L;
+                        st.v3d = 0.0;
+                    case 101:
+                        st.pc = 101;
+                        android.ext.a0.b((st.v2i != 0));
+                    case 102:
+                        st.pc = 102;
+                        if (st.v3o == null) {
+                            st.pc = 104;
+                            continue;
+                        }
+                    case 103:
+                        st.pc = 103;
+                        st.pc = 113;
+                        continue;
+                    case 104:
+                        st.pc = 104;
+                        st.v0o = null;
+                        st.v0i = 0;
+                        st.v0j = 0L;
+                        st.v0d = 0.0;
+                    case 105:
+                        st.pc = 105;
+                        st.v0o = new android.content.pm.PackageManager.NameNotFoundException((java.lang.String) st.v1o);
+                        st.v0i = 0;
+                        st.v0j = 0L;
+                        st.v0d = 0.0;
+                    case 106:
+                        st.pc = 106;
+                        throw (java.lang.Throwable) st.v0o;
+                    case 107:
+                        st.pc = 107;
+                        st.v0o = st.ex;
+                        st.v0i = 0;
+                        st.v0j = 0L;
+                        st.v0d = 0.0;
+                    case 108:
+                        st.pc = 108;
+                        st.pc = 117;
+                        continue;
+                    case 109:
+                        st.pc = 109;
+                        st.v0o = st.ex;
+                        st.v0i = 0;
+                        st.v0j = 0L;
+                        st.v0d = 0.0;
+                    case 110:
+                        st.v1o = st.v0o;
+                        st.v1i = 0;
+                        st.v1j = 0L;
+                        st.v1d = 0.0;
+                    case 111:
+                        st.pc = 111;
+                        android.ext.a0.b((st.v2i != 0));
+                    case 112:
+                        st.pc = 112;
+                        throw (java.lang.Throwable) st.v1o;
+                    case 113:
+                        st.v0i = (st.v3o instanceof android.content.pm.ApplicationInfo) ? 1 : 0;
+                        st.v0j = 0L;
+                        st.v0o = null;
+                        st.v0d = 0.0;
+                    case 114:
+                        st.pc = 114;
+                        if (st.v0i == 0) {
+                            st.pc = 123;
+                            continue;
+                        }
+                    case 115:
+                        st.pc = 115;
+                        st.v3o = (android.content.pm.ApplicationInfo) st.v3o;
+                        st.v3i = 0;
+                        st.v3j = 0L;
+                        st.v3d = 0.0;
+                    case 116:
+                        st.pc = 116;
+                        st.pc = 124;
+                        continue;
+                    case 117:
+                        st.v1i = (st.v0o instanceof android.content.pm.PackageManager.NameNotFoundException) ? 1 : 0;
+                        st.v1j = 0L;
+                        st.v1o = null;
+                        st.v1d = 0.0;
+                    case 118:
+                        st.pc = 118;
+                        if (st.v1i != 0) {
+                            st.pc = 121;
+                            continue;
+                        }
+                    case 119:
+                        st.pc = 119;
+                        st.tmpI = android.ext.e1.l((java.lang.String) st.v4o, (java.lang.Throwable) st.v0o);
+                        st.tmpJ = 0L;
+                        st.tmpO = null;
+                    case 120:
+                        st.pc = 120;
+                        st.pc = 123;
+                        continue;
+                    case 121:
+                        st.pc = 121;
+                        st.v0o = (android.content.pm.PackageManager.NameNotFoundException) st.v0o;
+                        st.v0i = 0;
+                        st.v0j = 0L;
+                        st.v0d = 0.0;
+                    case 122:
+                        st.pc = 122;
+                        throw (java.lang.Throwable) st.v0o;
+                    case 123:
+                        st.v3o = st.v7o;
+                        st.v3i = 0;
+                        st.v3j = 0L;
+                        st.v3d = 0.0;
+                    case 124:
+                        st.pc = 124;
+                        st.resultO = st.v3o;
+                        st.resultI = 0;
+                        st.resultJ = 0L;
+                        st.resultD = 0.0;
+                        return true;
+                    default:
+                        return false;
                 }
-            } catch (java.lang.Throwable th6) {
-                th = th6;
             }
-        } else {
-            applicationInfo = null;
+        } catch (java.lang.Throwable t) {
+            int h = toolsZ_handler(st.pc, t);
+            if (h < 0) {
+                toolsZ_rethrow(t);
+            }
+            st.ex = t;
+            st.pc = h;
+            return false;
         }
-        if (applicationInfo == null && (objU0 = u0()) != null) {
-            java.lang.Class<?> cls3 = objU0.getClass();
-            java.lang.Class cls4 = java.lang.Integer.TYPE;
-            tools$yX0 = x0(cls3, new android.ext.Tools$y[]{new android.ext.Tools$y(cls3, "getApplicationInfo", new java.lang.Class[]{java.lang.String.class, cls4, cls4}, objU0, new java.lang.Object[]{str, java.lang.Integer.valueOf(i2), 0}), new android.ext.Tools$y(cls3, "getApplicationInfo", new java.lang.Class[]{java.lang.String.class, cls4}, objU0, new java.lang.Object[]{str, java.lang.Integer.valueOf(i2)})});
-            if (tools$yX0 != null) {
-                zA = android.ext.a0.a(str, "app_info2");
-                objB = tools$yX0.b();
-                android.ext.a0.b(zA);
-                if (objB != null) {
-                    throw new android.content.pm.PackageManager.NameNotFoundException(str);
-                }
+    }
+
+    private static final Class<?>[] toolsZ_ctypes = {
+    };
+    private static final int[] toolsZ_handlers = {
+        19, 22, 36, -1, 23, 25, 29, -1, 25, 26, 27, -1, 31, 33, 33, -1, 51, 99, 107, -1, 99, 101, 109, -1, 101, 116, 107, -1
+    };
+    private static int toolsZ_handler(int pc, java.lang.Throwable t) {
+        for (int i = 0; i < toolsZ_handlers.length; i += 4) {
+            if (pc < toolsZ_handlers[i] || pc >= toolsZ_handlers[i + 1]) {
+                continue;
             }
-            if (objB instanceof android.content.pm.ApplicationInfo) {
-                return (android.content.pm.ApplicationInfo) objB;
+            int ti = toolsZ_handlers[i + 3];
+            if (ti < 0 || toolsZ_ctypes[ti].isInstance(t)) {
+                return toolsZ_handlers[i + 2];
             }
         }
-        return applicationInfo;
+        return -1;
     }
 
     public static boolean Z0(java.lang.Process process) {
@@ -1548,7 +2902,7 @@ java.lang.Throwable th = null;
 java.lang.Throwable e = null;
 java.lang.Throwable th = null;
         int r1;
-        java.io.FileInputStream fileInputStream;
+        java.io.FileInputStream fileInputStream = null;
         java.lang.String str = null;
         java.io.File file = obj instanceof java.io.File ? (java.io.File) obj : new java.io.File(obj.toString());
         if (file.exists()) {
@@ -1588,6 +2942,8 @@ java.lang.Throwable th = null;
                     fileInputStream = null;
                 } catch (java.lang.Throwable th_c) {
                     th = th_c;
+                    /* the original dex saves the stream before it closes it */
+                    r3 = fileInputStream;
                     if (r3 != null) {
                         try {
                             r3.close();
@@ -1601,9 +2957,15 @@ java.lang.Throwable th = null;
             return false;
         } catch (java.lang.Throwable th2) {
             th = th2;
-            r3 = null;
+            r3 = fileInputStream;
+            if (r3 != null) {
+                try {
+                    r3.close();
+                } catch (java.io.IOException unused4) {
+                }
+            }
+            throw th2;
         }
-        return false;
     }
 
     public static java.io.File b0() {
@@ -2489,10 +3851,8 @@ java.lang.Throwable th = null;
             }
             tools$yA = tools$yA2;
         };
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
         if (tools$yA == null) {
             android.ext.e1.d("Methods: " + java.util.Arrays.toString(cls.getMethods()));
@@ -2574,10 +3934,8 @@ java.lang.Throwable th = null;
     public static android.content.pm.PackageInfo z0(java.lang.String str) {try {
 
         return A0(str, 0);
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
     }
 

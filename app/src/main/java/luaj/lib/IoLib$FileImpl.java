@@ -102,10 +102,8 @@ final class IoLib$FileImpl extends luaj.lib.IoLib$File {
                     g3(randomAccessFile2);
                     throw new luaj.lib.IoLib$c("open denied: " + file);
                 };
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
                 g3(randomAccessFile2);
             } catch (java.io.FileNotFoundException unused) {
@@ -113,19 +111,15 @@ final class IoLib$FileImpl extends luaj.lib.IoLib$File {
         }java.io.RandomAccessFile randomAccessFile3;
         try {
         randomAccessFile3 = new java.io.RandomAccessFile(file, "rw");;
-        } catch (java.lang.RuntimeException ggEx) {
-            throw ggEx;
         } catch (java.lang.Throwable ggEx2) {
-            throw new java.lang.RuntimeException(ggEx2);
+            throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
         }try {
 
         if (this.W.O3(file, randomAccessFile3.getFD(), false)) {
             return randomAccessFile3;
         };
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
         g3(randomAccessFile3);
         throw new luaj.lib.IoLib$c("open denied: " + file);

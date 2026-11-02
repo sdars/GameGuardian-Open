@@ -106,10 +106,8 @@ class o0$b implements android.content.DialogInterface.OnClickListener, android.c
                 c2Var.write(")()\n");
             }
         };
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
     }
 

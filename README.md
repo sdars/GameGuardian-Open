@@ -2,16 +2,17 @@
 
 This repository is a clean-room **Java reconstruction of GameGuardian 101.4**
 (`catch_.me_.if_.you_.can_`, versionCode `16155`).  Every class of the original
-APK is present as readable Java source, the project compiles with Gradle, and
-the resulting APK installs and runs.
+APK is present as Java source - including the four methods that defeat every
+Java decompiler - the project compiles with Gradle and nothing else, and the
+resulting APK installs and runs.
 
 | | |
 |---|---|
 | Reconstructed from | `GameGuardian-101.4.apk`, sha256 `774b84ccbdb0a53c9a1b26b4238826d4b647d8d4a14c95a4177926c191e12bd8` |
 | Package / version | `catch_.me_.if_.you_.can_` / `101.4` (versionCode `16155`) |
-| Java sources | 1139 files, 173 106 lines |
-| smali overlay | 3 methods, 57 154 lines (see below) |
-| Release APK | `release/GameGuardian-101.4-open.apk` |
+| Java sources | 1139 files, 488 924 lines |
+| Smali in the build | none - `app/src/main/java` is the only input |
+| Release APK | `release/GameGuardian-101.4-open.apk` (sha256 `9b7f4d3894939144c2c3477939372154417d603dcf52d8b84ff98fd3632ded1c`) |
 
 ---
 
@@ -25,11 +26,10 @@ app/src/main/java/          Java reconstruction of every class of the APK
   lasm/                     the Lua assembler used by the script engine
   luaj/                     the Lua runtime (luaj) with GG specific changes
 app/src/main/res/           resources decoded from the original APK
-app/src/main/smali_overlay/ the three methods no Java decompiler could rebuild
 app/src/main/AndroidManifest.xml
 tools/repair/               the decompilation / repair pipeline
-tools/lib/                  smali + baksmali 2.5.2 and their dependencies
-tools/build_release.sh      end to end build (javac -> d8 -> smali overlay -> apk)
+tools/verify/               the behavioural differential tests
+tools/build_release.sh      end to end build (gradle -> zipalign -> apksigner)
 docs/REVERSE_ENGINEERING.md how the reconstruction was produced and verified
 ```
 
@@ -43,8 +43,8 @@ export ANDROID_HOME=/path/to/android-sdk      # or: export GG_SDK=/path/to/andro
 ./gradlew :app:assembleRelease                 # -> app/build/outputs/apk/release/app-release.apk
 ```
 
-The full release build additionally re-inserts the smali overlay and signs the
-APK:
+The signed release APK (the v1 signature files keep the alias name `CERT`, the
+repack code of `android.ext.b1` looks for them by name):
 
 ```bash
 bash tools/build_release.sh                    # -> release/GameGuardian-101.4-open.apk
@@ -55,46 +55,61 @@ Signing keys (all optional, they only change the signature of the result):
 | variable | default |
 |---|---|
 | `GG_KEYSTORE_PASSWORD` | `gameguardian` |
-| `GG_KEY_ALIAS` | `gameguardian` |
+| `GG_KEY_ALIAS` | `CERT` |
 | `GG_KEY_PASSWORD` | `gameguardian` |
 
-`tools/lib/` already contains `smali-2.5.2.jar`, `baksmali-2.5.2.jar` and their
-dependencies (Apache-2.0, <https://github.com/JesusFreke/smali>), so the build
-works without network access.
+The build needs no network access and no smali assembler: the whole APK is
+compiled from `app/src/main/java`.
 
-## Why there is a smali overlay
+## The four methods no decompiler could rebuild
 
 Four methods of GameGuardian 101.4 defeat **every** Java decompiler tried
 (jadx 1.5.6, Procyon 0.6.0, CFR 0.152, Vineflower 1.10):
 
-| method | size | solution |
+| method | original dex | solution |
 |---|---|---|
 | `android.ext.f1$a.run()` | ~180 smali lines | rewritten by hand in Java |
-| `android.ext.m.e(n,int[],long,String,int)` | 47 918 smali lines | original bytecode kept verbatim |
-| `android.ext.n$a.a(n,long,String,int)` | 3 013 smali lines | original bytecode kept verbatim |
-| `luaj.LuaClosure.Y2(LuaValue[],Varargs,boolean)` | 6 223 smali lines | original bytecode kept verbatim |
+| `android.ext.m.e(n,int[],long,String,int)` | 47 918 smali lines | mechanical smali to java translation |
+| `android.ext.n$a.a(n,long,String,int)` | 3 013 smali lines | mechanical smali to java translation |
+| `luaj.LuaClosure.Y2(LuaValue[],Varargs,boolean)` | 6 223 smali lines | mechanical smali to java translation |
 
-The three large ones are shipped as smali in `app/src/main/smali_overlay/` and
-patched into the compiled dex by `tools/build_release.sh`.  The overlay is the
-**original dex bytecode**, only the two documented renames of the Java tree are
-applied to it (see `docs/REVERSE_ENGINEERING.md`).
+The three large ones are plain Java now.  `tools/repair/smali_to_java.py`
+translates the dex code into a Java state machine - every dalvik instruction
+becomes one java statement, the register file lives in a state object and the
+control flow is a `switch` over the instruction index.  The translation does
+not try to reconstruct the control flow, so it is mechanical and reviewable;
+the same translator regenerates whole classes (`tools/repair/regen_class.py`).
 
 ## Verification
 
 ```bash
-python3 tools/repair/verify_overlay.py build/release/classes.dex
-#   -> every class and member referenced by the overlay exists in the dex
+python3 tools/repair/verify_pure_source.py build/release/classes.dex
+#   -> the build contains no smali, the three methods are java state machines
 
-python3 tools/repair/verify_overlay_fidelity.py build/release/classes.dex
-#   -> the three overlaid methods are instruction identical to the original APK
+bash tools/verify/overlay_diff/run_overlay_diff.sh
+#   -> 620 input vectors, original dex against the pure source, identical stdout
+
+bash tools/verify/luaj_diff/run_diff.sh
+#   -> 12 lua scripts, original dex against the pure source, identical stdout
 ```
+
+The two differential tests compare the reconstruction with the original dex:
+the same harness is compiled once and executed twice - once against the
+dex2jar dump of the original APK, once against `build/app_classes` of the
+reconstruction.  Both runs see the same inputs and their output has to be
+byte identical.  They need the original APK, which is not part of this
+repository.
 
 On device (MI 8, Android 10, arm64-v8a, root):
 
-* the APK installs and `MainActivity` starts without a single exception,
+* the APK installs, `MainActivity` starts without a single exception,
 * the *install mode* dialog of the original app is shown,
-* the reconstructed `f1$a.run()` executes the original branch sequence
-  (`Install64: true` -> `f1.M()`),
+* the app installs itself under a randomised package name and keeps running
+  there,
+* the daemon starts and the handshake succeeds:
+  `Daemon: .../files/GG-Q51u/lib5.so`, `DI: 8 4 <pid>`,
+  `InOut: x64: true; QE_ALIGN: 4; <pid>`,
+* a target process can be selected and attached to,
 * `logcat` shows no `FATAL EXCEPTION` and no `UnsupportedOperationException`.
 
 ## Legal

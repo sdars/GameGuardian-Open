@@ -27,6 +27,9 @@ class PathSelector$a implements java.util.Comparator<android.ext.PathSelector$d>
                 if (this.f323a) {
                     iA = android.ext.r1.a(pathSelector$d.f336b, pathSelector$d2.f336b);
                 } else if (pathSelector$d.f335a.lastModified() > pathSelector$d2.f335a.lastModified()) {
+                    /* jadx lost both the assignment and the block that
+                       returns -1 for the second entry - see the dex code. */
+                    iA = -1;
                 }
                 return iA;
             } catch (java.lang.Throwable th) {
@@ -34,7 +37,9 @@ class PathSelector$a implements java.util.Comparator<android.ext.PathSelector$d>
                 return 0;
             }
         }
-        iA = -1;
+        if (z) {
+            iA = -1;
+        }
         return iA;
     }
 }

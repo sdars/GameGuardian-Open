@@ -64,10 +64,8 @@ public class BaseLib$b extends java.io.BufferedInputStream {
         } catch (java.lang.Throwable th_c_c_c) {try {
 
             throw th_c_c_c;
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
         }
     }

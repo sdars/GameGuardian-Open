@@ -22,10 +22,8 @@ class x2$g extends java.io.FileInputStream {
     protected void finalize() throws java.io.IOException {try {
 
         super.finalize();
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
         new java.io.File(this.f1322a).delete();
     }

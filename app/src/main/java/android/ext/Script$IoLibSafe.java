@@ -33,10 +33,8 @@ final class Script$IoLibSafe extends luaj.lib.IoLib {
         if (this.g0.m(strS3, c2 == 'r')) {try {
 
             return R3(c2);
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
         }
         try {            if (android.ext.GgNoop.never) {
@@ -47,10 +45,8 @@ final class Script$IoLibSafe extends luaj.lib.IoLib {
         } catch (luaj.lib.IoLib$c unused) {try {
 
             return R3(c2);
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
         }
     }

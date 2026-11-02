@@ -26,10 +26,8 @@ public final class ProcessBuilder {
         }try {
 
         return new android.lang.ProcessBuilder(strArr).b(strArr2).a(file).d();
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
     }
 
@@ -99,10 +97,8 @@ java.lang.Throwable e = null;
             sb.append(str3);
             throw new java.io.IOException(sb.toString(), e);
         }
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
     }
 }

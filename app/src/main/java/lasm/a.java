@@ -58,10 +58,8 @@ public class a extends lasm.LasmBase implements gg_e.a {
         } catch (java.io.UnsupportedEncodingException e2) {
             throw new java.lang.RuntimeException(e2);
         };
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
     }
 

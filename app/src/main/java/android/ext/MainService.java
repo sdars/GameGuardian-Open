@@ -1117,8 +1117,9 @@ public class MainService extends android.ext.k2 implements android.view.View.OnC
         this.u = (android.widget.TextView) tabHost.findViewById(catch_.me_.if_.you_.can_.R.id.value_format);
         this.v = tabHost.findViewById(catch_.me_.if_.you_.can_.R.id.info_mem);
         this.w = (android.widget.TextView) tabHost.findViewById(catch_.me_.if_.you_.can_.R.id.saved_format);
-        this.x = (android.widget.TextView) tabHost.findViewById(catch_.me_.if_.you_.can_.R.id.count_wait);
-        this.z = (android.widget.TextView) tabHost.findViewById(catch_.me_.if_.you_.can_.R.id.info_cnt);
+        /* dex: no check-cast here - the original stores the raw View */
+        this.x = tabHost.findViewById(catch_.me_.if_.you_.can_.R.id.count_wait);
+        this.z = tabHost.findViewById(catch_.me_.if_.you_.can_.R.id.info_cnt);
         android.ext.Config.h();
         l1();
         this.Z = tabHost.findViewById(catch_.me_.if_.you_.can_.R.id.search_page);

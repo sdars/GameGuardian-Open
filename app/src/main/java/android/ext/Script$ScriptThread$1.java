@@ -20,10 +20,8 @@ class Script$ScriptThread$1 implements android.content.DialogInterface.OnClickLi
             android.ext.Script script = this.f393a.f392a;
             mainService.x(absolutePath, script.X, script.Y);
         };
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
     }
 }

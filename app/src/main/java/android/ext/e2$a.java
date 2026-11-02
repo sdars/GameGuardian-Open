@@ -55,13 +55,22 @@ class e2$a implements java.util.concurrent.Callable {
             }
         }
         bufferedReader.close();
+        try {
+            java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();
+            byte[] buf = new byte[4096];
+            int n;
+            while ((n = processI.getErrorStream().read(buf)) > 0) {
+                baos.write(buf, 0, n);
+            }
+            android.ext.e2.diag("stderr of '" + this.f752a + "': [" + baos.toString("UTF-8") + "]");
+        } catch (java.lang.Throwable th3) {
+            android.ext.e2.diag("stderr read failed: " + th3);
+        }
         this.f755d.append("exit code: ");try {
 
         this.f755d.append(processI.waitFor());
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
         android.ext.e1.d("cmd (" + this.f752a + ") exit: " + processI.exitValue());
         if (iD0 > 0) {

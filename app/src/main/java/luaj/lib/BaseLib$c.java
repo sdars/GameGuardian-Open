@@ -23,18 +23,14 @@ class BaseLib$c {
         this.f1738a = new java.io.File(str + ".load");try {
 
         this.f1739b = new java.io.BufferedOutputStream(new java.io.FileOutputStream(this.f1738a));
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
         this.f1740c = new java.io.File(str + ".load.tmp");try {
 
         this.f1741d = new java.io.DataOutputStream(new java.io.BufferedOutputStream(new java.io.FileOutputStream(this.f1740c)));
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
     }
 

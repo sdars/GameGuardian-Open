@@ -67,24 +67,18 @@ public class b1 {
         this.r = null;try {
 
         this.l = java.security.MessageDigest.getInstance("SHA1");
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }try {
 
         this.m = java.security.MessageDigest.getInstance("SHA1");
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }try {
 
         this.n = java.security.MessageDigest.getInstance("SHA-256");
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
         this.f597f = d1();
         java.io.File fileT = T(true);
@@ -563,6 +557,7 @@ public class b1 {
                                 i5++;
                                 j = j2;
                                 i3 = 64;
+                                continue;
                             }
                         }
                         throw new android.ext.b1$v("fixDex: string_ids offsets are not strictly increasing");
@@ -752,10 +747,8 @@ public class b1 {
         if (!C.n.equals(v1(this.f594c))) {
             throw J1("commit-hash");
         };
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
         try {
             L1(this.f594c, C.o);
@@ -893,10 +886,8 @@ public class b1 {
             }try {
 
             throw th2_c_c_c;
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
         }
     }
@@ -1049,27 +1040,27 @@ public class b1 {
             int iM = m(packageArchiveInfo.activities, this.f598g, str2) + m(packageArchiveInfo.receivers, this.f598g, str2) + m(packageArchiveInfo.services, this.f598g, str2) + m(packageArchiveInfo.providers, this.f598g, str2);
             android.content.pm.InstrumentationInfo[] instrumentationInfoArr = packageArchiveInfo.instrumentation;
             if (instrumentationInfoArr != null) {
-                if (instrumentationInfoArr.length == 1 && this.f598g.equals(instrumentationInfoArr[0].targetPackage) && this.f598g.equals(packageArchiveInfo.instrumentation[0].packageName)) {
-                    if ((this.f598g + ".Instrumentation").equals(packageArchiveInfo.instrumentation[0].name)) {
-                        int i = 0;
-                        while (true) {
-                            android.content.pm.InstrumentationInfo[] instrumentationInfoArr2 = packageArchiveInfo.instrumentation;
-                            if (i >= instrumentationInfoArr2.length) {
-                                break;
-                            }
-                            android.content.pm.InstrumentationInfo instrumentationInfo = instrumentationInfoArr2[i];
-                            if (!this.f598g.equals(instrumentationInfo.packageName)) {
-                                throw J1("instrumentation");
-                            }
-                            if (!this.f598g.equals(instrumentationInfo.targetPackage)) {
-                                throw J1("instrumentation");
-                            }
-                            iM++;
-                            i++;
+                /* b1.smali: the "instrumentation" error is only raised on the
+                 * failing branches (cond_0/cond_1/cond_2).  A matching
+                 * <instrumentation> element continues with cond_3, so the
+                 * throw has to stay inside the else branch - jadx moved it
+                 * out of the if and made every manifest fail the check. */
+                if (instrumentationInfoArr.length == 1 && this.f598g.equals(instrumentationInfoArr[0].targetPackage) && this.f598g.equals(packageArchiveInfo.instrumentation[0].packageName) && (this.f598g + ".Instrumentation").equals(packageArchiveInfo.instrumentation[0].name)) {
+                    int i = 0;
+                    while (i < instrumentationInfoArr.length) {
+                        android.content.pm.InstrumentationInfo instrumentationInfo = instrumentationInfoArr[i];
+                        if (!this.f598g.equals(instrumentationInfo.packageName)) {
+                            throw J1("instrumentation");
                         }
+                        if (!this.f598g.equals(instrumentationInfo.targetPackage)) {
+                            throw J1("instrumentation");
+                        }
+                        iM++;
+                        i++;
                     }
+                } else {
+                    throw J1("instrumentation");
                 }
-                throw J1("instrumentation");
             }
             if (iM == 0) {
                 throw J1("component");
@@ -1174,10 +1165,8 @@ public class b1 {
             zipFile.close();try {
 
             throw th_c_c_c;
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
         }
     }
@@ -1220,6 +1209,10 @@ public class b1 {
                     bArr = bArr2;
                     byteBufferOrder = byteBuffer;
                     s = 8;
+                    /* the original dex continues with the next chunk here
+                       (b1.smali: :goto_2) - the throw below is only the
+                       error path of an invalid chunk */
+                    continue;
                 }
             }
             throw new android.ext.b1$v("fixResources: invalid resource-table chunk at " + (b1_b0.c() - 8));
@@ -1468,6 +1461,7 @@ public class b1 {
                     if (strArr[i].equals(str)) {
                         try {
                             T1("self-install.stage", str);
+                            android.ext.e2.diag("stage: " + str);
                             return;
                         } catch (java.lang.Throwable th) {
                             android.ext.e1.s("Failed write install stage", th);
@@ -1836,10 +1830,8 @@ public class b1 {
     private static int Y0(java.io.InputStream inputStream, byte[] bArr) {try {
 
         return Z0(inputStream, bArr, 0, bArr.length);
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
     }
 
@@ -1871,6 +1863,7 @@ public class b1 {
     }
 
     private boolean a() throws java.lang.Throwable {
+        android.ext.e2.diag("b1.a(): start, progress=" + C.f611b + " pkg=" + this.f598g);
         o();
         if (android.ext.Tools.e1(this.f598g)) {
             t1(800);
@@ -1999,10 +1992,8 @@ public class b1 {
         if (!A[i]) {try {
 
             return h0(i).length();
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
         }
         byte[][] bArr2 = z;
@@ -2373,20 +2364,16 @@ public class b1 {
     private static java.lang.String l(android.content.pm.Signature signature) {try {
 
         return android.ext.m0.i(java.security.MessageDigest.getInstance("SHA-256").digest(signature.toByteArray()));
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
     }
 
     private static java.util.zip.ZipInputStream l0() {try {
 
         return new java.util.zip.ZipInputStream(new java.io.BufferedInputStream(new java.io.FileInputStream(i0()), 65536));
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
     }
 
@@ -2418,12 +2405,8 @@ public class b1 {
                 throw J1("component");
             }
             java.lang.String str3 = componentInfoArr[i].name;
-            if (str3 != null) {
-                if (str3.startsWith(str + ".")) {
-                    if (str3.startsWith(str2)) {
-                        throw J1("component");
-                    }
-                }
+            if (str3 != null && str3.startsWith(str + ".") && !str3.startsWith(str2)) {
+                continue;
             }
             throw J1("component");
         }
@@ -2991,6 +2974,7 @@ public class b1 {
     }
 
     static void t0() {
+        android.ext.e2.diag("t0: install start, progress=" + C.f611b);
         z = new byte[x.length][];
         try {
             android.ext.b1 b1Var = new android.ext.b1();
@@ -2998,6 +2982,7 @@ public class b1 {
             b1Var.a();
             android.ext.n2.i(new android.ext.b1$n());
         } catch (java.lang.Throwable th) {
+            android.ext.e2.diag("t0: install failed: " + th);
             android.ext.e1.l("Failed install", th);
             java.lang.String message = th.getMessage();
             if (message != null && (message.contains("ENOSPC") || message.contains("o space left"))) {
@@ -3252,7 +3237,6 @@ public class b1 {
     }
 
     private static android.ext.b1$u x(byte[] bArr, int i, int i2, int i3) {
-        int i4;
         java.lang.String str = "fixDex: string " + i3 + " is malformed";
         int i5 = 0;
         int i6 = 0;
@@ -3268,7 +3252,7 @@ public class b1 {
                 if (i6 < 0 || i6 + 1 > i7 - i5) {
                     throw new android.ext.b1$v(str + ": payload overruns its bound");
                 }
-                int i9 = i5 + i;
+                int i9 = i + i5;
                 char[] cArr = new char[i6];
                 for (int i10 = 0; i10 < i6; i10++) {
                     if (i9 >= i2) {
@@ -3282,40 +3266,44 @@ public class b1 {
                     if (i11 < 128) {
                         cArr[i10] = (char) i11;
                         i9++;
-                    } else {
-                        if ((b2 & 224) == 192) {
-                            i4 = i9 + 2;
-                            if (i4 <= i2) {
-                                byte b3 = bArr[i9 + 1];
-                                if ((b3 & 192) == 128) {
-                                    int i12 = (b3 & 63) | ((b2 & 31) << 6);
-                                    if (i12 != 0 && i12 < 128) {
-                                        throw new android.ext.b1$v(str + ": overlong MUTF-8");
-                                    }
-                                    cArr[i10] = (char) i12;
-                                }
-                            }
-                            throw new android.ext.b1$v(str + ": bad MUTF-8");
-                        }
-                        if ((b2 & 240) != 224) {
-                            throw new android.ext.b1$v(str + ": invalid MUTF-8");
-                        }
-                        i4 = i9 + 3;
+                        continue;
+                    }
+                    if ((b2 & 224) == 192) {
+                        int i4 = i9 + 2;
                         if (i4 <= i2) {
-                            byte b4 = bArr[i9 + 1];
-                            if ((b4 & 192) == 128) {
-                                byte b5 = bArr[i9 + 2];
-                                if ((b5 & 192) == 128) {
-                                    int i13 = (b5 & 63) | ((b2 & 15) << 12) | ((b4 & 63) << 6);
-                                    if (i13 < 2048) {
-                                        throw new android.ext.b1$v(str + ": overlong MUTF-8");
-                                    }
-                                    cArr[i10] = (char) i13;
+                            byte b3 = bArr[i9 + 1];
+                            if ((b3 & 192) == 128) {
+                                int i12 = (b3 & 63) | ((b2 & 31) << 6);
+                                if (i12 != 0 && i12 < 128) {
+                                    throw new android.ext.b1$v(str + ": overlong MUTF-8");
                                 }
+                                cArr[i10] = (char) i12;
+                                i9 = i4;
+                                continue;
                             }
                         }
                         throw new android.ext.b1$v(str + ": bad MUTF-8");
                     }
+                    if ((b2 & 240) != 224) {
+                        throw new android.ext.b1$v(str + ": invalid MUTF-8");
+                    }
+                    int i14 = i9 + 3;
+                    if (i14 <= i2) {
+                        byte b4 = bArr[i9 + 1];
+                        if ((b4 & 192) == 128) {
+                            byte b5 = bArr[i9 + 2];
+                            if ((b5 & 192) == 128) {
+                                int i13 = (b5 & 63) | ((b2 & 15) << 12) | ((b4 & 63) << 6);
+                                if (i13 < 2048) {
+                                    throw new android.ext.b1$v(str + ": overlong MUTF-8");
+                                }
+                                cArr[i10] = (char) i13;
+                                i9 = i14;
+                                continue;
+                            }
+                        }
+                    }
+                    throw new android.ext.b1$v(str + ": bad MUTF-8");
                 }
                 if (i9 < i2 && bArr[i9] == 0) {
                     return new android.ext.b1$u(new java.lang.String(cArr), i6, (i9 - i) + 1);
@@ -3354,10 +3342,8 @@ public class b1 {
                 return strTrim;
             }
         };
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
         return null;
     }
@@ -3534,26 +3520,20 @@ public class b1 {
         if (randomAccessFile == null) {try {
 
             randomAccessFile = new java.io.RandomAccessFile(V(i), "rw");
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }try {
 
             android.ext.e1.d("RAF new: " + i + ' ' + randomAccessFile.getFD());
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
             this.f592a[i] = randomAccessFile;
         }try {
 
         android.ext.e1.d("RAF get: " + i + ' ' + randomAccessFile.getFD());
-} catch (java.lang.RuntimeException ggEx) {
-    throw ggEx;
 } catch (java.lang.Throwable ggEx2) {
-    throw new java.lang.RuntimeException(ggEx2);
+    throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
 }
         return randomAccessFile;
     }

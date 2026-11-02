@@ -456,10 +456,8 @@ public class HexConverter extends android.fix.ImageButtonView implements android
             java.lang.String str8;
             try {
                 str8 = ':' + new java.lang.String(bArrG, 0, i7 + 1, "UTF-8");
-            } catch (java.lang.RuntimeException ggEx) {
-                throw ggEx;
             } catch (java.lang.Throwable ggEx2) {
-                throw new java.lang.RuntimeException(ggEx2);
+                throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
             }
             arrayList.add("UTF-8: " + str8);
             arrayList2.add(str8);
@@ -468,10 +466,8 @@ public class HexConverter extends android.fix.ImageButtonView implements android
             }java.lang.String str9;
             try {
             str9 = ';' + new java.lang.String(bArrG, 0, i7 + 1, "UTF-16LE");;
-            } catch (java.lang.RuntimeException ggEx) {
-                throw ggEx;
             } catch (java.lang.Throwable ggEx2) {
-                throw new java.lang.RuntimeException(ggEx2);
+                throw android.ext.GgNoop.<java.lang.RuntimeException>rethrow(ggEx2);
             }
             arrayList.add("UTF-16LE: " + str9);
             arrayList2.add(str9);
