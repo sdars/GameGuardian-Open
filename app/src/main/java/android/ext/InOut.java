@@ -243,6 +243,7 @@ public class InOut {
                     try {
                         this.j.add(java.util.Arrays.copyOf(this.f180g, this.h));
                         if (this.j.size() > 40) {
+                            this.j.remove(0);
                         }
                     } catch (java.lang.Throwable th_c_c_c) {
                         throw th_c_c_c;

@@ -92,8 +92,10 @@ public abstract class t1 {
                 if (cCharAt == 'a') {
                     return 4;
                 }
-                if (cCharAt != 't') {
+                if (cCharAt == 't') {
+                    return 2;
                 }
+                return 0;
             }
             return 2;
         }
@@ -161,35 +163,26 @@ public abstract class t1 {
 
     /* JADX WARN: Code duplicated, block: B:24:0x005e  */
     private static android.ext.t1$b c(android.ext.t1$b t1_b, int i, int i2) {
-        long jFloatToRawIntBits = 0L;
         int i3 = i2 & 127;
-        if (i3 == 1 || i3 == 2 || i3 == 4 || i3 == 8) {
+        if (i3 == 1 || i3 == 2 || i3 == 4 || i3 == 8 || i3 == 32) {
             t1_b.f1261a = i;
             t1_b.f1263c = i3;
-        } else {
-            int i4 = 16;
-            if (i3 == 16) {
-                jFloatToRawIntBits = java.lang.Float.floatToRawIntBits(i);
-                if (jFloatToRawIntBits < 0) {
-                    jFloatToRawIntBits = (jFloatToRawIntBits & 2147483647L) + 2147483648L;
-                }
-            } else if (i3 != 32) {
-                i4 = 64;
-                if (i3 != 64) {
-                    if (i3 != 127) {
-                        android.ext.e1.p("Unknown flags: " + i3 + " we use Auto parsing");
-                    }
-                    t1_b.f1261a = i;
-                    t1_b.f1263c = 127;
-                } else {
-                    jFloatToRawIntBits = java.lang.Double.doubleToRawLongBits(i);
-                }
-            } else {
-                t1_b.f1261a = i;
-                t1_b.f1263c = i3;
+        } else if (i3 == 16) {
+            long jFloatToRawIntBits = java.lang.Float.floatToRawIntBits(i);
+            if (jFloatToRawIntBits < 0) {
+                jFloatToRawIntBits = (jFloatToRawIntBits & 2147483647L) + 2147483648L;
             }
             t1_b.f1261a = jFloatToRawIntBits;
-            t1_b.f1263c = i4;
+            t1_b.f1263c = 16;
+        } else if (i3 == 64) {
+            t1_b.f1261a = java.lang.Double.doubleToRawLongBits(i);
+            t1_b.f1263c = 64;
+        } else {
+            if (i3 != 127) {
+                android.ext.e1.p("Unknown flags: " + i3 + " we use Auto parsing");
+            }
+            t1_b.f1261a = i;
+            t1_b.f1263c = 127;
         }
         t1_b.f1262b = i < 0;
         return t1_b;
@@ -427,6 +420,7 @@ public abstract class t1 {
         java.lang.StringBuilder sb = null;
         int iN = 0;
         int i2 = 0;
+        int i6 = 3;
         android.ext.t1$b t1_bY;
         int i3;
         java.lang.Object[] objArrK;
@@ -437,7 +431,6 @@ public abstract class t1 {
         java.lang.String str2;
         android.ext.t1$b t1_b2 = t1_b == null ? new android.ext.t1$b() : t1_b;
         int length = str.length();
-        int i6 = 3;
         if (length == 1 || length == 2 || (length == 3 && str.charAt(0) == '-')) {
             int i7 = str.charAt(0) == '-' ? 1 : 0;
             int i8 = length - 1;
@@ -445,7 +438,7 @@ public abstract class t1 {
             if ('0' <= cCharAt && cCharAt <= '9') {
                 char cCharAt2 = i8 <= i7 ? '0' : str.charAt(length - 2);
                 if ('0' <= cCharAt2 && cCharAt2 <= '9') {
-                    int i9 = ((cCharAt2 * '\n') + cCharAt) - 528;
+                    int i9 = ((cCharAt2 * 10) + cCharAt) - 528;
                     if (i7 == 1) {
                         i9 = -i9;
                     }
@@ -460,12 +453,12 @@ public abstract class t1 {
             iC = C(strB);
             if (iC != 0) {
                 char cCharAt3 = strB.charAt(1);
-                if (cCharAt3 == 'T') {
-                    java.lang.String strTrim = strB.substring(2).trim();
-                    sb = new java.lang.StringBuilder();
-                    iN = android.ext.n.p(null, j, strTrim);
-                } else if (cCharAt3 == 'A') {
-                    if (strB.charAt(2) == '8') {
+                if (cCharAt3 == 'T' || cCharAt3 == 'A') {
+                    if (cCharAt3 == 'T') {
+                        java.lang.String strTrim = strB.substring(2).trim();
+                        sb = new java.lang.StringBuilder();
+                        iN = android.ext.n.p(null, j, strTrim);
+                    } else if (strB.charAt(2) == '8') {
                         java.lang.String strTrim2 = strB.substring(3).trim();
                         sb = new java.lang.StringBuilder();
                         iN = android.ext.m.k(null, null, j, strTrim2);
@@ -474,95 +467,46 @@ public abstract class t1 {
                         sb = new java.lang.StringBuilder();
                         iN = android.ext.n.n(null, j, strTrim3);
                     }
+                    sb.append(java.lang.Integer.toHexString(iN).toUpperCase(java.util.Locale.US));
+                    sb.append('h');
+                    strB = sb.toString();
                 }
-                sb.append(java.lang.Integer.toHexString(iN).toUpperCase(java.util.Locale.US));
-                sb.append('h');
-                strB = sb.toString();
             } else {
                 char cCharAt4 = strB.length() > 0 ? strB.charAt(strB.length() - 1) : '0';
-                if (cCharAt4 == 'a') {
-                    if (iC == 0) {
-                        iC = 127;
-                    }
-                    if (z) {
-                        throw j(strB, str, 0, false);
-                    }
-                    strB = strB.substring(0, strB.length() - 1);
+                int iSuffix = 0;
+                switch (cCharAt4) {
+                    case 'a':
+                        iSuffix = 127;
+                        break;
+                    case 'b':
+                        iSuffix = 1;
+                        break;
+                    case 'w':
+                        iSuffix = 2;
+                        break;
+                    case 'd':
+                        iSuffix = 4;
+                        break;
+                    case 'x':
+                        iSuffix = 8;
+                        break;
+                    case 'f':
+                        iSuffix = 16;
+                        break;
+                    case 'q':
+                        iSuffix = 32;
+                        break;
+                    case 'e':
+                        iSuffix = 64;
+                        break;
+                    default:
+                        iSuffix = 0;
+                        break;
+                }
+                if (iSuffix == 0) {
+                    iC = i & 127;
                 } else {
-                    if (cCharAt4 != 'b') {
-                        if (cCharAt4 != 'q') {
-                            if (cCharAt4 != 'w') {
-                                if (cCharAt4 != 'x') {
-                                    switch (cCharAt4) {
-                                        case 'd':
-                                            break;
-                                        case 'e':
-                                            break;
-                                        case 'f':
-                                            break;
-                                        default:
-                                            iC = i & 127;
-                                            break;
-                                    }
-                                } else if (iC == 0) {
-                                    iC = 8;
-                                }
-                                if (iC == 0) {
-                                    iC = 16;
-                                }
-                                if (iC == 0) {
-                                    iC = 32;
-                                }
-                            }
-                            if (iC == 0) {
-                                iC = 4;
-                            }
-                            if (iC == 0) {
-                                iC = 8;
-                            }
-                            if (iC == 0) {
-                                iC = 16;
-                            }
-                            if (iC == 0) {
-                                iC = 32;
-                            }
-                        } else if (iC == 0) {
-                            iC = 32;
-                        }
-                        if (iC == 0) {
-                            iC = 64;
-                        }
-                        if (iC == 0) {
-                            iC = 127;
-                        }
-                        if (z) {
-                            throw j(strB, str, 0, false);
-                        }
-                        strB = strB.substring(0, strB.length() - 1);
-                    } else if (iC == 0) {
-                        iC = 1;
-                    }
-                    if (iC == 0) {
-                        iC = 2;
-                    }
-                    if (iC == 0) {
-                        iC = 4;
-                    }
-                    if (iC == 0) {
-                        iC = 8;
-                    }
-                    if (iC == 0) {
-                        iC = 16;
-                    }
-                    if (iC == 0) {
-                        iC = 32;
-                    }
-                    if (iC == 0) {
-                        iC = 64;
-                    }
-                    if (iC == 0) {
-                        iC = 127;
-                    }
+                    iC = iSuffix;
                     if (z) {
                         throw j(strB, str, 0, false);
                     }
@@ -570,67 +514,27 @@ public abstract class t1 {
                 }
             }
         }
-        if (iC != 1) {
-            if (iC == 2) {
-                i2 = 3;
-            } else if (iC == 4 || iC == 8) {
-                i2 = 3;
-                if (i2 == 3) {
-                    i6 = 2;
-                } else {
-                    i6 = i2;
-                }
-            } else {
-                if (iC == 16) {
-                    return w(t1_b2, strB, str);
-                }
-                if (iC != 32 && iC != 36) {
-                    if (iC == 64) {
-                        return v(t1_b2, strB, str);
-                    }
-                    if (iC != 127) {
-                        android.ext.e1.p("Unknown flags: " + iC + " we use Auto parsing");
-                    }
-                    return q(t1_b2, strB, str);
-                }
-            }
-            t1_bY = y(t1_b2, strB, str);
-            if (iC != 0) {
-                i3 = t1_bY.f1263c & iC;
-                t1_bY.f1263c = i3;
-                if (i3 == 0) {
-                    objArrK = k();
-                    i4 = i6 * 2;
-                    i5 = i4 + 1;
-                    strF = android.ext.t2.f(android.ext.b2.g(" [__d__; __d__]."), objArrK[i4], objArrK[i5]);
-                    java.lang.StringBuilder sb2 = new java.lang.StringBuilder();
-                    sb2.append(android.ext.t2.f(z(catch_.me_.if_.you_.can_.R.string.number_out_of_range), str));
-                    if (strF == null) {
-                        str2 = " possibleRange for " + i6;
-                    } else {
-                        str2 = strF;
-                    }
-                    sb2.append(str2);
-                    t1_a = new android.ext.t1$a(sb2.toString());
-                    t1_a.c(str);
-                    if (strF != null) {
-                        throw t1_a;
-                    }
-                    t1_a.b(objArrK[i4]);
-                    t1_a.b(objArrK[i5]);
-                    throw t1_a;
-                }
-            }
-            return t1_bY;
+        if (iC == 16) {
+            return w(t1_b2, strB, str);
         }
-        i2 = 0;
-        if (i2 == 3) {
-            i2 = 1;
+        if (iC == 64) {
+            return v(t1_b2, strB, str);
         }
-        if (i2 == 3) {
+        if (iC == 127) {
+            return q(t1_b2, strB, str);
+        }
+        if (iC != 1 && iC != 2 && iC != 4 && iC != 8 && iC != 32 && iC != 36) {
+            android.ext.e1.p("Unknown flags: " + iC + " we use Auto parsing");
+            return q(t1_b2, strB, str);
+        }
+        if (iC == 1) {
+            i6 = 0;
+        } else if (iC == 2) {
+            i6 = 1;
+        } else if (iC == 4 || iC == 8) {
             i6 = 2;
         } else {
-            i6 = i2;
+            i6 = 3;
         }
         t1_bY = y(t1_b2, strB, str);
         if (iC != 0) {
@@ -641,21 +545,20 @@ public abstract class t1 {
                 i4 = i6 * 2;
                 i5 = i4 + 1;
                 strF = android.ext.t2.f(android.ext.b2.g(" [__d__; __d__]."), objArrK[i4], objArrK[i5]);
-                java.lang.StringBuilder sb3 = new java.lang.StringBuilder();
-                sb3.append(android.ext.t2.f(z(catch_.me_.if_.you_.can_.R.string.number_out_of_range), str));
+                java.lang.StringBuilder sb2 = new java.lang.StringBuilder();
+                sb2.append(android.ext.t2.f(z(catch_.me_.if_.you_.can_.R.string.number_out_of_range), str));
                 if (strF == null) {
                     str2 = " possibleRange for " + i6;
                 } else {
                     str2 = strF;
                 }
-                sb3.append(str2);
-                t1_a = new android.ext.t1$a(sb3.toString());
+                sb2.append(str2);
+                t1_a = new android.ext.t1$a(sb2.toString());
                 t1_a.c(str);
                 if (strF != null) {
-                    throw t1_a;
+                    t1_a.b(objArrK[i4]);
+                    t1_a.b(objArrK[i5]);
                 }
-                t1_a.b(objArrK[i4]);
-                t1_a.b(objArrK[i5]);
                 throw t1_a;
             }
         }
@@ -1021,7 +924,7 @@ public abstract class t1 {
                         jS = java.lang.Long.reverseBytes(jS);
                         int i3 = (length >> 1) * 8;
                         if (i3 < 64) {
-                            jS = (jS >> (64 - i3)) & ((1 << i3) - 1);
+                            jS = (jS >> (64 - i3)) & ((1L << i3) - 1L);
                         }
                     }
                 } catch (java.lang.NumberFormatException e2) {

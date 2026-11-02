@@ -12,7 +12,7 @@ resulting APK installs and runs.
 | Package / version | `catch_.me_.if_.you_.can_` / `101.4` (versionCode `16155`) |
 | Java sources | 1139 files, 488 944 lines |
 | Smali in the build | none - `app/src/main/java` is the only input |
-| Release APK | `release/GameGuardian-101.4-open.apk` (sha256 `aff559456788f40ebc6ad5c6eb2cd0e35a8917674b124603fbff3a1e37277fcc`) |
+| Release APK | `release/GameGuardian-101.4-open.apk` (sha256 `7dc76618aef82f59431e56b03b8e9c399acd50554847e2dcedee8023db814375`) |
 
 ---
 

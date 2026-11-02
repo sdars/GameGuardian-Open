@@ -35,7 +35,7 @@ The APK itself is **not** part of this repository.
 | | |
 |---|---|
 | file | `GameGuardian-101.4-open.apk` |
-| sha256 | `aff559456788f40ebc6ad5c6eb2cd0e35a8917674b124603fbff3a1e37277fcc` |
+| sha256 | `7dc76618aef82f59431e56b03b8e9c399acd50554847e2dcedee8023db814375` |
 | size | 17 896 103 bytes |
 | signing certificate | CN=GameGuardian |
 | certificate SHA-256 | `ac5f2382db5845fcab78fd775faea3653c09e18b80e4244ffddd323d1c4aa374` |
