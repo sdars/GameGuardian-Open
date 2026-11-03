@@ -1,0 +1,55 @@
+diff --git a/app/src/main/java/android/ext/z1.java b/app/src/main/java/android/ext/z1.java
+index 17decaf..ae9f4ff 100644
+--- a/app/src/main/java/android/ext/z1.java
++++ b/app/src/main/java/android/ext/z1.java
+@@ -863,15 +863,18 @@ public class z1 {
+                         st.v18i = 0;
+                         st.v18j = 0L;
+                         st.v18d = 0.0;
++                        android.ext.e1.d("PLDBG raw pid=" + st.v15i + " uid=" + st.v17i + " x64=" + st.v20i + " a=" + st.v21i + " b=" + st.v19i + " c=" + st.v14i + " cmd=" + st.v18o);
+                     case 72:
+                         st.pc = 72;
+                         if (st.v15i == st.v0i) {
++                            android.ext.e1.d("PLDBG skip mypid " + st.v15i);
+                             st.pc = 43;
+                             continue;
+                         }
+                     case 73:
+                         st.pc = 73;
+                         if (st.v15i == st.v11i) {
++                            android.ext.e1.d("PLDBG skip target " + st.v15i);
+                             st.pc = 43;
+                             continue;
+                         }
+@@ -883,6 +886,7 @@ public class z1 {
+                         }
+                     case 75:
+                         st.pc = 75;
++                        android.ext.e1.d("PLDBG skip b0 " + st.v15i);
+                         st.pc = 43;
+                         continue;
+                     case 76:
+@@ -928,6 +932,7 @@ public class z1 {
+                     case 84:
+                         st.pc = 84;
+                         if (st.v1o == null) {
++                            android.ext.e1.d("PLDBG skip null " + st.v15i);
+                             st.pc = 43;
+                             continue;
+                         }
+@@ -965,6 +970,7 @@ public class z1 {
+                         }
+                     case 91:
+                         st.pc = 91;
++                        android.ext.e1.d("PLDBG skip ownpkg " + st.v15i + " pkg=" + st.v2o);
+                         st.pc = 43;
+                         continue;
+                     case 92:
+@@ -1013,6 +1019,7 @@ public class z1 {
+                         st.tmpI = (((java.util.List) st.v8o).add(st.v2o)) ? 1 : 0;
+                         st.tmpJ = 0L;
+                         st.tmpO = null;
++                        android.ext.e1.d("PLDBG add pid=" + st.v15i + " x64=" + st.v20i + " pkg=" + ((android.ext.z1$c) st.v15o).f1427c + " label=" + ((android.ext.z1$c) st.v15o).f1428d);
+                     case 100:
+                         st.pc = 100;
+                         if (st.v3i == 0) {

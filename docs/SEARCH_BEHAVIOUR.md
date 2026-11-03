@@ -219,3 +219,49 @@ The one class that was missing before this build was
 `setClassName(pkg, pkg + ".Receiver")`, so every tap on a notification
 action ended in a `ClassNotFoundException`.  It is back as
 `app/src/main/java/catch_/me_/if_/you_/can_/Receiver.java`.
+
+## 5. "Why does the process list only show [x64] entries?"
+
+`[x64]` is a label, not a filter.  It is printed by `android.ext.z1$d.l()`
+whenever the daemon reported the target as a 64 bit process, and a 32 bit
+process is shown *without* that tag.  Measured on the device with a
+purpose built pair of probe apps that differ in nothing but the ABI of the
+packaged library:
+
+| probe | packaged ABI | process exe | ELF class | row in the list |
+|---|---|---|---|---|
+| `com.gg.abitest` | `armeabi-v7a` | `/system/bin/app_process32` | `ELFCLASS32` | `[2424] GG32Probe [105 MB]` |
+| `com.gg.abi64`  | none (pure Java) | `/system/bin/app_process64` | `ELFCLASS64` | `[3363] GG32Probe [x64] [118 MB]` |
+
+The daemon does send the 32 bit process, the reconstruction keeps it.  With
+the instrumentation in `tools/debug_pldbg.patch` applied the loop in
+`android.ext.z1` logs
+
+```
+PLDBG raw pid=2424 uid=10228 x64=0 a=101804 b=0 c=0 cmd=com.gg.abitest
+PLDBG add pid=0 x64=0 pkg=com.gg.abitest label=GG32Probe
+```
+
+which is the entry that ends up in the dialog as `[2424] GG32Probe`.
+
+Two things make the list look 64 bit only on this phone:
+
+* the list contains **app processes only**.  The source of the list is
+  `ActivityManager.getRunningAppProcesses()` plus the process table of the
+  daemon; the original smali does exactly the same
+  (`build/puresrc/original/android/ext/z1.smali`, line 1167 and 1259, and
+  the `w.f()` / `w.e()` reads in the loop at 1246-1259).  The 22 32 bit
+  processes of this device are all native system services without a package
+  (`mediaserver`, `cameraserver`, `drmserver`, `omx@1.0-service`,
+  `audio@2.0-service`, `wfdhdcphalservice`, `wfdvndservice`,
+  `wifidisplayhalservice`, 13 `usap32` helpers, `webview_zygote`), so they
+  never appear in the list - not in the original either.
+* of the 184 installed packages only one is 32 bit
+  (`com.android.webview`, `primaryCpuAbi=armeabi-v7a`); 31 are
+  `arm64-v8a` and the remaining 152 carry no native code at all and are
+  therefore started by the 64 bit zygote.  Every app row is `[x64]` for
+  that reason alone.
+
+Note when reading the list with `uiautomator`: a fling swipe of 700 px skips
+rows, so a coarse capture of the dialog looks like it is missing entries.
+Scrolling one row at a time shows all 27 rows of that list.
