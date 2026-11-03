@@ -6,6 +6,7 @@
 The token is taken from the origin url of the repository.
 """
 import json
+import os
 import subprocess
 import sys
 import urllib.request
@@ -22,7 +23,8 @@ def main():
         sys.exit("usage: gh_update_release_body.py <release-id> <body-file>")
     release_id, body_file = sys.argv[1], sys.argv[2]
     body = open(body_file, encoding="utf-8").read()
-    url = ("https://api.github.com/repos/sdars/GameGuardian-Open/releases/"
+    repo = os.environ.get("GG_REPO", "sdars/GameGuardian-Open")
+    url = ("https://api.github.com/repos/" + repo + "/releases/"
            + release_id)
     data = json.dumps({"body": body}).encode()
     req = urllib.request.Request(url, data=data, method="PATCH", headers={

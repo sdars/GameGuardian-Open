@@ -8,6 +8,7 @@
 set -uo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+REPO="${GG_REPO:-sdars/GameGuardian-Open}"
 cd "$ROOT"
 
 RELEASE_ID="${1:?usage: upload_release_asset.sh <release-id> [asset-file]}"
@@ -26,7 +27,7 @@ curl --fail --silent --show-error \
     -H "Authorization: token $TOKEN" \
     -H "Content-Type: application/octet-stream" \
     --data-binary "@$ASSET" \
-    "https://uploads.github.com/repos/sdars/GameGuardian-Open/releases/$RELEASE_ID/assets?name=$NAME" \
+    "https://uploads.github.com/repos/$REPO/releases/$RELEASE_ID/assets?name=$NAME" \
     -o /tmp/gg_release_asset.json
 echo "rc=$?"
 python3 - <<'PY'

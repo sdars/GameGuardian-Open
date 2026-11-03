@@ -2,11 +2,12 @@
 # Show the releases and tags of the repository (token comes from the origin url).
 set -uo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+REPO="${GG_REPO:-sdars/GameGuardian-Open}"
 cd "$ROOT"
 TOKEN="$(git remote get-url origin | sed -n 's#https://\([^@]*\)@.*#\1#p')"
 echo "== releases =="
 curl -s -H "Authorization: token $TOKEN" \
-    https://api.github.com/repos/sdars/GameGuardian-Open/releases \
+    https://api.github.com/repos/$REPO/releases \
     | python3 -c 'import json,sys
 d=json.load(sys.stdin)
 if isinstance(d,list):
@@ -18,7 +19,7 @@ else:
     print(d)'
 echo "== tags =="
 curl -s -H "Authorization: token $TOKEN" \
-    https://api.github.com/repos/sdars/GameGuardian-Open/tags \
+    https://api.github.com/repos/$REPO/tags \
     | python3 -c 'import json,sys
 d=json.load(sys.stdin)
 print([t["name"] for t in d] if isinstance(d,list) else d)'

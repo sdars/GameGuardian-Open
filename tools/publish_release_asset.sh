@@ -12,12 +12,13 @@
 set -uo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+REPO="${GG_REPO:-sdars/GameGuardian-Open}"
 cd "$ROOT"
 
 RELEASE_ID="${1:?usage: publish_release_asset.sh <release-id> [asset-file]}"
 ASSET="${2:-$ROOT/release/GameGuardian-101.4-open.apk}"
 NAME="$(basename "$ASSET")"
-API="https://api.github.com/repos/sdars/GameGuardian-Open"
+API="https://api.github.com/repos/$REPO"
 
 TOKEN="$(git remote get-url origin | sed -n 's#https://\([^@]*\)@.*#\1#p')"
 if [ -z "$TOKEN" ]; then
@@ -49,7 +50,7 @@ curl --fail --silent --show-error \
     -H "Authorization: token $TOKEN" \
     -H "Content-Type: application/octet-stream" \
     --data-binary "@$ASSET" \
-    "https://uploads.github.com/repos/sdars/GameGuardian-Open/releases/$RELEASE_ID/assets?name=$NAME" \
+    "https://uploads.github.com/repos/$REPO/releases/$RELEASE_ID/assets?name=$NAME" \
     -o /tmp/gg_release_asset.json
 echo "    rc=$?"
 
