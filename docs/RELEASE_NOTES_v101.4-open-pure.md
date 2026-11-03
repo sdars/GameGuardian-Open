@@ -9,7 +9,7 @@ smali assembler.  `app/src/main/java` is the only input of the APK.
 | | |
 |---|---|
 | asset | `GameGuardian-101.4-open.apk` |
-| sha256 | `7dc76618aef82f59431e56b03b8e9c399acd50554847e2dcedee8023db814375` |
+| sha256 | `c5ebee128241f47861d6a81edc43529895b8bd9ce396aa9582722e1581cf0e00` |
 | size | 17 896 103 bytes |
 | java sources | 1139 files, 488 944 lines |
 | certificate | CN=GameGuardian, v1 signature alias `CERT` |
@@ -40,6 +40,13 @@ smali assembler.  `app/src/main/java` is the only input of the APK.
   type produces the original range message.
 * the region map of `android.ext.InOut` holds at most 40 entries and drops
   the oldest one instead of growing without a limit.
+* the text/hex search works again: `android.ext.t1.h()` has the four way
+  dispatch of the original smali again (`;` = UTF-16LE text, `H`/`h` = hex,
+  `Q`/`q` = quoted sections, everything else = UTF-8 text).  Before
+  this the `:` and `h` prefixes were parsed as hex, so every text
+  search ended in a `NumberFormatException` before the request even
+  reached the daemon, and the `;` branch sent UTF-8 bytes while the
+  daemon was told UTF-16LE.
 
 ## The value search on a real device
 
@@ -52,10 +59,25 @@ smali assembler.  `app/src/main/java` is the only input of the APK.
   types (`777` with `Auto` -> `0x7e` -> 182 hits, `777` with `Dword` ->
   `0x20000004` -> 29 hits, `305419896` with `Dword` -> 0 hits because the
   value is not in the attached process),
+* the text search reaches the daemon and comes back with hits:
+  `:Trebuchet` (UTF-8) -> 1467 hits, `;Trebuchet` (UTF-16LE, 18 bytes)
+  -> 180 hits, `hDEADBEEF` (hex) -> the request leaves as raw bytes,
+* 32 bit values are searched with their own mask and are tagged with their
+  own type letter in the result list: `777` with `Dword` ->
+  `0x20000004` -> 38 hits tagged `D`, `777` with `Word` ->
+  `0x20000002` -> 136 hits tagged `W`, `77` with `Byte` ->
+  `0x20000001` -> 33205 hits tagged `B`,
 * the dark input field (`#0d0d0d`) is the theme of the original
   (`Theme.Material` -> `@drawable/edit_text_material`), the same colour is
   measured in the original 101.4 APK, in the commercial 499.6 build and in
-  this build.
+  this build.  The whole resource tree of the original APK and of this build
+  is byte identical (`diff -rq` of the two `res` directories is empty).
+
+```
+bash tools/test/run_t1_parse_test.sh
+  -> ALL PASS (24 cases) - the parser is compared with a transcription of
+     the original smali, byte for byte
+```
 
 ## Verification
 
