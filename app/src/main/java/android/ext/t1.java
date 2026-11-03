@@ -253,7 +253,6 @@ public abstract class t1 {
     }
 
     public static byte[] h(java.lang.CharSequence charSequence) {
-        boolean z = false;
         java.lang.String strSubstring;
         if (charSequence.length() < 1) {
             return gg_d.b.f1513c;
@@ -261,58 +260,60 @@ public abstract class t1 {
         char cCharAt = charSequence.charAt(0);
         byte[] bArrCopyOf = gg_d.b.f1513c;
         boolean z2 = !(charSequence instanceof java.lang.String) && (charSequence instanceof android.text.Editable);
-        if (cCharAt != ';') {
-            if (cCharAt != 'H') {
-                if (cCharAt != 'Q') {
-                    if (cCharAt != 'h') {
-                        z = cCharAt == 'q';
-                    }
-                }
-                int i = 1;
-                char c2 = 0;
-                int i2 = 1;
-                while (i < charSequence.length()) {
-                    char cCharAt2 = charSequence.charAt(i);
-                    if (c2 != 0 ? cCharAt2 != c2 : !(cCharAt2 == '\'' || cCharAt2 == '\"')) {
-                        strSubstring = i == charSequence.length() - 1 ? charSequence.toString().substring(i2) : null;
-                        cCharAt2 = c2;
-                    } else {
-                        strSubstring = i2 != i ? charSequence.toString().substring(i2, i) : null;
-                        if (c2 != 0) {
-                            cCharAt2 = 0;
-                        }
-                        i2 = i + 1;
-                    }
-                    if (strSubstring != null && strSubstring.length() > 0) {
-                        if (c2 != 0) {
-                            byte[] bytes = strSubstring.getBytes(i(c2 == '\"'));
-                            if (z2) {
-                                java.lang.String strTrim = android.ext.InOut.b(bytes, 0, bytes.length).trim();
-                                ((android.text.Editable) charSequence).replace((i - strSubstring.length()) - 1, i + 1, strTrim);
-                                int length = strTrim.length() - (strSubstring.length() + 2);
-                                i += length;
-                                i2 += length;
-                            } else {
-                                int length2 = bArrCopyOf.length;
-                                bArrCopyOf = java.util.Arrays.copyOf(bArrCopyOf, bytes.length + length2);
-                                java.lang.System.arraycopy(bytes, 0, bArrCopyOf, length2, bytes.length);
-                            }
-                        } else if (!z2) {
-                            bArrCopyOf = a(bArrCopyOf, strSubstring);
-                        }
-                    }
-                    i++;
-                    c2 = cCharAt2;
-                }
-                return bArrCopyOf;
-            }
+        if (cCharAt == ';') {
+            return t1_text(charSequence, true, z2);
+        }
+        if (cCharAt == 'H' || cCharAt == 'h') {
             return a(bArrCopyOf, charSequence.toString().substring(1));
         }
-        byte[] bytes2 = charSequence.toString().substring(1).getBytes(i(z));
-        if (z2) {
-            ((android.text.Editable) charSequence).replace(1, charSequence.length(), ' ' + android.ext.InOut.b(bytes2, 0, bytes2.length).trim());
+        if (cCharAt == 'Q' || cCharAt == 'q') {
+            int i = 1;
+            char c2 = 0;
+            int i2 = 1;
+            while (i < charSequence.length()) {
+                char cCharAt2 = charSequence.charAt(i);
+                if (c2 != 0 ? cCharAt2 != c2 : !(cCharAt2 == '\'' || cCharAt2 == '\"')) {
+                    strSubstring = i == charSequence.length() - 1 ? charSequence.toString().substring(i2) : null;
+                    cCharAt2 = c2;
+                } else {
+                    strSubstring = i2 != i ? charSequence.toString().substring(i2, i) : null;
+                    if (c2 != 0) {
+                        cCharAt2 = 0;
+                    }
+                    i2 = i + 1;
+                }
+                if (strSubstring != null && strSubstring.length() > 0) {
+                    if (c2 != 0) {
+                        byte[] bytes = strSubstring.getBytes(i(c2 == '\"'));
+                        if (z2) {
+                            java.lang.String strTrim = android.ext.InOut.b(bytes, 0, bytes.length).trim();
+                            ((android.text.Editable) charSequence).replace((i - strSubstring.length()) - 1, i + 1, strTrim);
+                            int length = strTrim.length() - (strSubstring.length() + 2);
+                            i += length;
+                            i2 += length;
+                        } else {
+                            int length2 = bArrCopyOf.length;
+                            bArrCopyOf = java.util.Arrays.copyOf(bArrCopyOf, bytes.length + length2);
+                            java.lang.System.arraycopy(bytes, 0, bArrCopyOf, length2, bytes.length);
+                        }
+                    } else if (!z2) {
+                        bArrCopyOf = a(bArrCopyOf, strSubstring);
+                    }
+                }
+                i++;
+                c2 = cCharAt2;
+            }
+            return bArrCopyOf;
         }
-        return bytes2;
+        return t1_text(charSequence, false, z2);
+    }
+
+    private static byte[] t1_text(java.lang.CharSequence charSequence, boolean z, boolean z2) {
+        byte[] bytes = charSequence.toString().substring(1).getBytes(i(z));
+        if (z2) {
+            ((android.text.Editable) charSequence).replace(1, charSequence.length(), ' ' + android.ext.InOut.b(bytes, 0, bytes.length).trim());
+        }
+        return bytes;
     }
 
     public static java.nio.charset.Charset i(boolean z) {

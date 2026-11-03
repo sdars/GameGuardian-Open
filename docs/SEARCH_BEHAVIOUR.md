@@ -4,7 +4,64 @@ All numbers below were produced on a MI8 / Android 10 / APatch device with the
 reconstruction installed and the `Trebuchet [x64]` process attached, and were
 read back from the daemon log (`adb logcat | grep -a android-daemon`) and from
 the pixels of the screen.  The scripts that reproduce them are
-`tools/verify_search.sh` and `tools/probe_type.sh`.
+`tools/verify_search.sh`, `tools/verify_search_types.sh` and
+`tools/probe_type.sh`.
+
+## 0. The text search was broken and is fixed now
+
+The reconstruction of `android.ext.t1.h(CharSequence)` had the wrong
+dispatch.  The original smali
+(`build/puresrc/original/android/ext/t1.smali`, method
+`h(Ljava/lang/CharSequence;)[B`, lines 1007-1336) has four branches:
+
+| first character | meaning | original smali |
+|---|---|---|
+| `;` | text, UTF-16LE | `:cond_d2` -> `:goto_d3` with `v2 = 1` |
+| `H` / `h` | hex bytes | `:cond_c5` -> `a([B, String)` |
+| `Q` / `q` | quoted sections | `:cond_33` |
+| anything else (e.g. `:`) | text, UTF-8 | `:goto_d3` with `v2 = 0` |
+
+The faulty version sent `:` and `h` into the quoted branch, where the text
+between the quotes is parsed as hex, so every text search died with
+
+```java.lang.NumberFormatException: For input string: "Tr"
+    at java.lang.Integer.parseInt(Integer.java:615)
+    at android.ext.t1.a(t1.java:116)
+    at android.ext.t1.h(t1.java:301)
+    at android.ext.i2.o(i2.java:112)
+```
+
+and the `;` branch used UTF-8 instead of UTF-16LE, so the daemon was told
+"UTF-16LE" but got UTF-8 bytes and found nothing.
+
+`app/src/main/java/android/ext/t1.java` now has the four way dispatch and the
+helper `t1_text(CharSequence, boolean, boolean)`.  The JVM harness
+`tools/test/run_t1_parse_test.sh` compares the result with a transcription of
+the original smali, byte for byte:
+
+```
+OK   ":Trebuchet"                 got=547265627563686574 want=547265627563686574
+OK   ";Trebuchet"                 got=540072006500620075006300680065007400 want=540072006500620075006300680065007400
+OK   "Hdeadbeef"                  got=DEADBEEF want=DEADBEEF
+OK   "Q'utf8'"utf16""             got=7574663875007400660031003600 want=7574663875007400660031003600
+ALL PASS (24 cases)
+```
+
+On the device the same searches now reach the daemon and come back with
+hits:
+
+```
+searchText: [9] = 54 'T' 54 75 'u' 75  in 0-ffffffffffffffff, 0
+searchText: 'Trebuchet' 9 1 0-ffffffffffffffff
+::searchDone: 1467, 1467 0            # ":Trebuchet", text UTF-8
+
+searchText: [18] = "Trebuchet" in 0-ffffffffffffffff, 0
+searchText: 'T' 18 2 0-ffffffffffffffff
+::searchDone: 180, 180 0              # ";Trebuchet", text UTF-16LE (18 bytes)
+
+searchText: [13] = DE ... in 0-ffffffffffffffff, 0
+::searchDone: 0, 0 0                  # "hDEADBEEF ...", hex
+```
 
 ## 1. "Why do most values not search?"
 
@@ -20,8 +77,8 @@ searchNumber: 777; 0, 2000007e 0-ffffffffffffffff
 and the dialog shows the range button `在全部内存中` ("in all memory") and the
 full value range of every type (`D: Dword (-2,147,483,648 - 4,294,967,295)`).
 
-A search returns nothing for one of four reasons, all of them visible on the
-device:
+A search returns nothing for one of these reasons, all of them visible on the
+device (the first one, the broken text dispatch, is fixed - see section 0):
 
 | reason | evidence |
 |---|---|
@@ -69,6 +126,22 @@ Measured pixels of the same dialog on the same device:
 | type button | `#5a595b` | `#5a595b` |
 | dialog background | `#424242` | `#424242` |
 
+The whole resource tree of the original APK and of this build is identical,
+so nothing can have changed there:
+
+```
+$ diff -rq tmp/analysis/2026-11-01/apktool_src/res app/src/main/res
+(no output)
+```
+
+Measured again on the release build of 2026-11-03 (the value field of the
+search dialog, `:Trebuchet`, screen 720x1280):
+
+```
+value field background   #0d0d0d     (3896 of 4096 sampled pixels)
+dialog background        #424242
+```
+
 The dark field is the original design.  A lighter field is a one line style
 change (`res/values/styles.xml`, `FixTheme`), it is not a reconstruction
 fault.
@@ -96,6 +169,16 @@ searchNumber: 305419896;    0, 20000004   # Dword only, value absent            
 searchNumber: 5000000000;   0, 20000070   # Auto, value does not fit into 32 bit      -> Float|Qword|Double
 ```
 
+Repeated on the release build of 2026-11-03 with
+`tools/verify_search_types.sh`:
+
+```
+searchNumber: 777;   0, 2000007e   # A: Auto   (Word|Dword|Xor|Float|Qword|Double) -> 257 hits
+searchNumber: 777;   0, 20000004   # D: Dword  (32 bit only)                      ->  38 hits
+searchNumber: 777;   0, 20000002   # W: Word   (16 bit only)                      -> 136 hits
+searchNumber: 77;    0, 20000001   # B: Byte   (8 bit only)                       -> 33205 hits
+```
+
 The result list tags every row with the type it was found as (`D` = Dword,
 `W` = Word, `B` = Byte, `Q` = Qword), for the 32 bit run above:
 
@@ -108,6 +191,15 @@ The result list tags every row with the type it was found as (`D` = Dword,
 The **address** column is 64 bit because the attached process is a 64 bit
 process - an address is a position in the memory of the target and has
 nothing to do with the width of the searched value.
+
+The Auto run of 2026-11-03 lists the mixed widths side by side:
+
+```
+12D5D94C   776.66662597656   F   Jh
+13005994   776.66662597656   F   Jh
+1303E7D0   0                 D   Jh
+1303E7D0   777               W   Jh
+```
 
 ## 4. Class coverage of the build
 
