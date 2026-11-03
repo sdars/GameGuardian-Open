@@ -9,7 +9,7 @@ smali assembler.  `app/src/main/java` is the only input of the APK.
 | | |
 |---|---|
 | asset | `GameGuardian-101.4-open.apk` |
-| sha256 | `c5ebee128241f47861d6a81edc43529895b8bd9ce396aa9582722e1581cf0e00` |
+| sha256 | `bd584b9c5493e860773e80f405e4ccfef28e74ca99f898d08ee79b60a8fd4075` |
 | size | 17 896 103 bytes |
 | java sources | 1139 files, 488 944 lines |
 | certificate | CN=GameGuardian, v1 signature alias `CERT` |
@@ -47,6 +47,13 @@ smali assembler.  `app/src/main/java` is the only input of the APK.
   search ended in a `NumberFormatException` before the request even
   reached the daemon, and the `;` branch sent UTF-8 bytes while the
   daemon was told UTF-16LE.
+* the layout flag of a row is read the way the original reads it:
+  `Config.q & (1 << Tools.d1())` is **set** when the bit is set, the
+  reconstruction had the test inverted (`== 0` instead of `!= 0`) in
+  `android.ext.AddressArrayAdapter` and in `android.ext.SavedListAdapter`.
+  `Config.q` is the bit mask of `config_use_small_list_items`: bit `0` is the
+  portrait variant and bit `1` the landscape variant, and the flag decides
+  whether a row is drawn in the compact or in the tall variant.
 
 ## The value search on a real device
 
@@ -78,6 +85,133 @@ bash tools/test/run_t1_parse_test.sh
   -> ALL PASS (24 cases) - the parser is compared with a transcription of
      the original smali, byte for byte
 ```
+
+## The three reports of this round
+
+### 1. "The input field behind `address:` is black"
+
+It is black in the original as well - the field is not a bug, it is the
+theme.  The two builds were screenshotted on the same device with the same
+search dialog open and compared pixel by pixel (`tools/diff_region.py`):
+
+```
+region                                     original        this build
+the value field 195,212-580,271           identical       identical
+the label "value" 44,217-95,266          identical       identical
+the "=" spinner 95,194-191,290           identical       identical
+the whole dialog 32,107-688,1229          1.03 % differ,
+                                           difference bbox (32,107)-(428,196)
+```
+
+The only pixels that differ are the first two characters of the headline of
+the dialog (antialiasing), not the input field.  The colour of the field
+itself is `#0d0d0d`, the colour of `@drawable/edit_text_material` of
+`Theme.Material`, and it is measured in the original 101.4 APK, in the
+commercial 499.6 build and in this build.  Screenshots:
+`build/new_orig_dlg.png` and `build/new_ours_dlg.png`.
+
+### 2. "The rows of the result list are too narrow"
+
+The pitch of the rows is 98 px, the same as in the original 101.4.  Before
+this release the reconstruction drew them with 66 px - the row was drawn in
+the compact variant because one bit of the row was read inverted:
+
+```
+original 101.4      this build before the fix   this build now
+row 1  top  333     row 1  top  317             row 1  top  333
+row 2  top  431     row 2  top  383             row 2  top  431
+row 3  top  529     row 3  top  449             row 3  top  529
+row 4  top  627     row 4  top  515             row 4  top  627
+row 5  top  725     row 5  top  581             row 5  top  725
+row 6  top  823     row 6  top  647             row 6  top  823
+row 7  top  921     row 7  top  713             row 7  top  921
+                  98 px per row                66 px per row   98 px per row
+```
+
+The type and the area column sit on the same place as in the original:
+`D` at `[594,510][624,548]` and `Ca` at `[579,548][624,586]` in both.
+The fix is the test of the layout flag of the row
+(`Config.q & (1 << Tools.d1())`), it is now `!= 0` as in the original smali.
+
+### 3. "There is no speedhack"
+
+There is one, and it behaves exactly like the original.  Both applications
+were driven through the same lua script against the same target
+(`com.gg.abitest`, pid 2424, 32 bit) on the same device:
+
+```lua
+print("SPEED_BEFORE " .. tostring(gg.getSpeed()))
+local r = gg.setSpeed(2)
+print("SETSPEED_RET " .. tostring(r))
+print("SPEED_AFTER " .. tostring(gg.getSpeed()))
+```
+
+| | original 101.4 | this build |
+|---|---|---|
+| daemon config | `Sended config: 2147483647 110000010000000011 1111...1111 33000 262207 ...` | identical |
+| daemon hook | `hook 2 installed: 132`, `Send code: 11`, `Send code: 18` | `elf_hook_sections32 Find 0/1`, `find all`, `Send code: 18` |
+| `gg.setSpeed(2)` | `SETSPEED_RET true` | `SETSPEED_RET true` |
+| `gg.getSpeed()` | `SPEED_AFTER 2.0` | `SPEED_AFTER 2.0` |
+| long press on the icon | `Fake long click: 350` / `Real long click: true` | identical |
+
+The same run against the apk that is published here (the self install of
+this build created `com.hdzj.yopvkq` on the device):
+
+```
+E/AndroidService(13085): script: SPEED_BEFORE 1.0
+I/android-daemon(20200): elf_hook_sections32 Find 0 '0x5d9fc6be6c': c1f3a638, 0, 2e638, 183, 1
+I/android-daemon(20200): elf_hook_sections32 Find 1 '0x5d9fc67177': c1f36be8, 0, 2abe8, 180, 1
+I/android-daemon(20200): find all
+E/android-daemon(20200): Send code: 18
+E/AndroidService(13085): script: SETSPEED_RET true
+E/AndroidService(13085): script: SPEED_AFTER 2.0
+E/AndroidService(13085): Sended config: 2147483647 110000010000000011 1111...1111 33000 262207 ...
+```
+
+(`build/logs/speed_new.log`, the script is
+`/storage/emulated/0/Notes/com.gg.abitest.lua`, the target is
+`com.gg.abitest`, pid 2424, 32 bit.)
+
+The daemon that installs the hook is the binary of the original APK:
+`res/raw/ydw0` of this release and of the original APK have the same sha256
+(`3535a0261b749ae8ddc9fd1215527b64ac2ba9c9b14ee3602458f3c15f4e9433`).
+The panel of the speedhack is opened by a long press on the floating icon
+(`HotFrame.onLongClick` -> `MainService.onLongClick` -> `HotPoint.x()` ->
+`HotPoint$d` -> `speed_inc` / `speed_dec` / `speed_text`); `MainService.T()`
+(`>>`) and `MainService.u0()` (`<<`) end in `MainService.o1(true)` ->
+`MainService.S0(byte, double)` -> `f0.F0(cmd, num, den)`, the same call the
+lua API uses.
+
+The gesture has to hit the icon itself: the icon is a 96 x 96 px window, the
+panel of the app covers the same area while it is open, and a long press on
+the panel is a long press on the panel.
+
+### The script path of the script runner
+
+The self install copies the preferences of the package it replaces
+(`android.ext.x2.n()`) and keeps the *type* of every entry.  The original
+stores `script-path` as a long, so opening the script dialog throws
+
+```
+java.lang.ClassCastException: java.lang.Long cannot be cast to java.lang.String
+    at android.ext.f2.getString(...)
+    at android.ext.v1.b(v1.java:31)
+    at android.ext.v1.a(v1.java:19)
+    at android.ext.o0$b.onClick(o0$b.java:154)
+```
+
+catches it and falls back to the default path.  This build gets the same
+preferences with an empty string instead of a long, the dialog shows
+`//<package>.lua` and the file is not found (`文件未找到`).  The behaviour is
+the one of the original, only the carried over value differs.  The tool
+
+```
+bash tools/fix_script_path.sh com.fqqvbgr /storage/emulated/0/Notes
+```
+
+writes the directory back into the preference file, after that the script
+runner shows `/storage/emulated/0/Notes/com.gg.abitest.lua` and the speedhack
+script above runs.
 
 ## Verification
 

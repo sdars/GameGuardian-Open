@@ -146,6 +146,24 @@ The dark field is the original design.  A lighter field is a one line style
 change (`res/values/styles.xml`, `FixTheme`), it is not a reconstruction
 fault.
 
+The two applications were opened side by side on the same device with the
+same search dialog on the screen and compared pixel by pixel
+(`tools/diff_region.py`, screenshots `build/new_orig_dlg.png` and
+`build/new_ours_dlg.png`):
+
+```
+region                                original vs. this build
+the value field 195,212-580,271      identical
+the label "value" 44,217-95,266     identical
+the "=" spinner 95,194-191,290      identical
+the whole dialog 32,107-688,1229     1.03 % different,
+                                     difference bbox (32,107)-(428,196)
+```
+
+The only pixels that differ are the first two characters of the title of the
+dialog - the antialiasing of the headline, not the input field:
+`build/cmp_orig_title.png` against `build/cmp_ours_title.png`.
+
 ## 3. "Is 32 bit really searched?"
 
 Yes.  The type list of the dialog offers every width:
@@ -265,3 +283,222 @@ Two things make the list look 64 bit only on this phone:
 Note when reading the list with `uiautomator`: a fling swipe of 700 px skips
 rows, so a coarse capture of the dialog looks like it is missing entries.
 Scrolling one row at a time shows all 27 rows of that list.
+
+## 6. "The rows of the result list are too close together"
+
+The row height of the result list is fixed by the layout of the panel, not by
+the adapter.  The original 101.4 and the release build were measured with the
+same search (`999`, type `Dword`) on the same device; the `address` text view
+of every row of the result list:
+
+```
+original 101.4              release build (before the fix)   release build (now)
+row 1  address top  333     row 1  address top  317         row 1  address top  333
+row 2  address top  431     row 2  address top  383         row 2  address top  431
+row 3  address top  529     row 3  address top  449         row 3  address top  529
+row 4  address top  627     row 4  address top  515         row 4  address top  627
+row 5  address top  725     row 5  address top  581         row 5  address top  725
+row 6  address top  823     row 6  address top  647         row 6  address top  823
+row 7  address top  921     row 7  address top  713         row 7  address top  921
+                          -> 98 px per row            -> 66 px per row   -> 98 px per row
+```
+
+The dumps are `build/logs/o_now.xml` (original), `build/logs/our_search_page.xml`
+(the reconstruction before the fix) and `build/search_new/rs2.xml` (the
+release build that is published now).  The type and the area column sit on
+the same place as in the original:
+
+```
+original                        release build
+type letter  D  [594,510][624,548]   D  [594,510][624,548]
+area letter  Ca [579,548][624,586]   Ca [579,548][624,586]
+```
+
+The reason for the 66 px was a bit of the row that was read inverted in the
+reconstruction: the layout flag of the row.  `Config.q` is the bit mask of the setting
+`config_use_small_list_items` (`Config.java:1694`): bit `0` is the portrait
+variant, bit `1` the landscape variant, bit `2`/`3` the same for the saved
+list and bit `4`/`5` for the config list.  `Tools.d1()` returns `1` when the
+device is in landscape (`Tools.U1()` reads `configuration.orientation == 2`),
+so `Config.q & (1 << Tools.d1())` is the portrait/landscape bit of the
+result row and it decides whether the row is drawn in the compact or in the
+tall variant (`d3Var2.o.setOrientation(...)` and the height of the row
+`d3Var2.f661a.getLayoutParams().height = z2 ? -2 : Tools.H()`).
+The original smali
+(`build/puresrc/original/android/ext/AddressArrayAdapter.smali`, lines 172-186)
+computes
+
+```
+sget v0, Landroid/ext/Config;->q:I
+invoke-static {}, Landroid/ext/Tools;->d1()I
+shl-int v1, 0x1, v1
+and-int/2addr v0, v1
+if-eqz v0, :cond_1a     # -> v2 = 0
+                        # -> v2 = 1
+```
+
+so the flag is set when the bit **is** set.  The reconstruction had
+`== 0` and is now `!= 0` in `android.ext.AddressArrayAdapter` and in
+`android.ext.SavedListAdapter` (`Config.q & (1 << (Tools.d1() + 2))`).  The
+compiled dex of the published apk carries the same instruction sequence as
+the original smali (`build/apkcheck/smali/android/ext/AddressArrayAdapter.smali`,
+lines 178-196):
+
+```
+sget v0, Landroid/ext/Config;->q:I
+invoke-static {}, Landroid/ext/Tools;->d1()I
+const/4 v2, 0x1
+shl-int v1, v2, v1
+and-int/2addr v0, v1
+if-eqz v0, :cond_1b
+const/4 v0, 0x1
+goto :goto_1c
+:cond_1b
+const/4 v0, 0x0
+```
+
+## 7. "The speedhack does not work"
+
+It does, and it behaves exactly like the original.  Both applications were
+driven through the same script against the same target
+(`com.gg.abitest`, pid 2424, 32 bit) on the same device; the script is
+
+```lua
+print("SPEED_BEFORE " .. tostring(gg.getSpeed()))
+local r = gg.setSpeed(2)
+print("SETSPEED_RET " .. tostring(r))
+print("SPEED_AFTER " .. tostring(gg.getSpeed()))
+```
+
+and the script file is the one the app itself computes
+(`/storage/emulated/0/Notes/<package of the attached process>.lua`,
+`android.ext.v1.a()`).
+
+| | original 101.4 (`com.utnciuwv.ldcsra`) | this build (`com.fqqvbgr`) |
+|---|---|---|
+| daemon config | `Sended config: 2147483647 110000010000000011 1111...1111 33000 262207 ...` | identical |
+| daemon hook | `hook 2 installed: 132`, `Send code: 11`, `Send code: 18` | `elf_hook_sections32 Find 0/1`, `find all`, `Send code: 18` |
+| `gg.setSpeed(2)` | `SETSPEED_RET true` | `SETSPEED_RET true` |
+| `gg.getSpeed()` | `SPEED_AFTER 2.0` | `SPEED_AFTER 2.0` |
+
+The same run on the published apk (the package that the self install of this
+build created on the device, `com.hdzj.yopvkq`, apk sha256
+`bd584b9c5493e860773e80f405e4ccfef28e74ca99f898d08ee79b60a8fd4075`):
+
+```
+E/AndroidService(13085): script: SPEED_BEFORE 1.0
+I/android-daemon(20200): elf_hook_sections32 Find 0 '0x5d9fc6be6c': c1f3a638, 0, 2e638, 183, 1
+I/android-daemon(20200): elf_hook_sections32 Find 1 '0x5d9fc67177': c1f36be8, 0, 2abe8, 180, 1
+I/android-daemon(20200): find all
+E/android-daemon(20200): Send code: 18
+E/AndroidService(13085): script: SETSPEED_RET true
+E/AndroidService(13085): script: SPEED_AFTER 2.0
+E/AndroidService(13085): Sended config: 2147483647 110000010000000011 1111...1111 33000 262207 ...
+```
+
+(`build/logs/speed_new.log`, the script is
+`/storage/emulated/0/Notes/com.gg.abitest.lua`, the target is
+`com.gg.abitest`, pid 2424, 32 bit.)
+
+The daemon is the binary of the original APK: `res/raw/ydw0` of the release
+APK and of the original APK have the same sha256
+(`3535a0261b749ae8ddc9fd1215527b64ac2ba9c9b14ee3602458f3c15f4e9433`), so the
+speed hook itself is the original code.
+
+The **panel** of the speedhack is opened by a long press on the floating
+icon (`HotFrame.onLongClick` -> `MainService.onLongClick` ->
+`HotPoint.x()` -> `HotPoint$d` -> `speed_inc` / `speed_dec` / `speed_text`).
+Both applications log the same two lines for the same injected gesture
+(`input swipe 48 104 48 104 1500` on the icon):
+
+```
+Fake long click: 350        # 750 - ViewConfiguration.getLongPressTimeout()
+Real long click: true
+```
+
+and both open the speed panel window afterwards.  `MainService.T()` (`>>`,
+speed up) and `MainService.u0()` (`<<`, speed down) are wired to the two
+buttons of the panel and end in `MainService.o1(true)` ->
+`MainService.S0(byte, double)` -> `f0.F0(cmd, num, den)`, the same call the
+lua API uses.
+
+Note that the gesture has to hit the icon itself: the floating icon is a
+96 x 96 px window at the top left of the screen, the panel of the app (the
+window with the tabs) covers the same area while it is open, and a long
+press on the panel is a long press on the panel, not on the icon.
+
+## 8. The script path of the script runner
+
+The path of the script runner is built from two preferences
+(`android.ext.v1`):
+
+* `script-path` - the directory that holds the scripts, default
+  `<external storage>/Notes`,
+* `<package of the attached process>-script` - the full path of the script
+  of that package, default `<script-path>/<package>.lua`.
+
+Both preferences are filled by the **self install**: the app copies the
+preferences of the package it replaces (`android.ext.x2.n()`), and that copy
+keeps the *type* of every entry.  An entry that was stored as a long in the
+old package stays a long, so the original throws
+
+```
+java.lang.ClassCastException: java.lang.Long cannot be cast to java.lang.String
+    at android.ext.f2.getString(...)
+    at android.ext.v1.b(v1.java:31)
+    at android.ext.v1.a(v1.java:19)
+    at android.ext.o0$b.onClick(o0$b.java:154)
+```
+
+when the script dialog is opened, catches it and falls back to the default
+path.  This build gets the same preferences, only with an empty string
+instead of a long, so the dialog shows `//<package>.lua` and the file is not
+found (`文件未找到`).  The behaviour is the one of the original, the value is
+only carried over from a package that was installed before.
+
+`tools/fix_script_path.sh <package> [dir]` writes the directory back into
+the preference file:
+
+```
+$ bash tools/fix_script_path.sh com.fqqvbgr /storage/emulated/0/Notes
+script-path -> /storage/emulated/0/Notes
+    <string name="script-path">/storage/emulated/0/Notes</string>
+```
+
+After that the script runner shows
+`/storage/emulated/0/Notes/com.gg.abitest.lua` and the speedhack script
+above runs.
+
+## 9. The keypad of the search dialog
+
+The value search dialog does not use the keyboard of the system, the app
+draws its own (`android.ext.InternalKeyboard`, the view `kbd_frame` of
+`res/layout/keyboard.xml`).  It is a window of its own, so the soft keyboard
+of the IME never appears and `adb shell input text` has nothing to type
+into: the value has to be entered with the on screen keypad.
+
+The keypad that is drawn shows
+
+```
+1 2 3 [back] [CE]
+4 5 6 [back] [CE]
+1 2 3 [sign]
+0 . , [sign] [done]
+```
+
+but the touch is resolved by the internal IME of the app, whose keypad is
+`res/xml/keyboard.xml` and has seven columns per row
+(`1 2 3 4 5 : [back]` / `6 7 8 9 0 ; fx`).  The key that is pressed is
+therefore not the key that is drawn - the fourth and the fifth key of the
+drawn row insert `4` and `5` instead of the backspace and `CE`.  Measured on
+the release build (the value of the field is read back from the ui hierarchy
+after every tap):
+
+```
+tap 78,684 -> 1        tap 356,684 -> 4        tap 356,780 -> 9
+tap 170,684 -> 2       tap 450,684 -> 5        tap 450,780 -> 0
+tap 263,684 -> 3       tap 543,684 -> :        tap 263,780 -> 8
+```
+
+`tools/run_search_999.sh` uses that mapping, it searches `999` with the type
+`Dword` and dumps the result list.

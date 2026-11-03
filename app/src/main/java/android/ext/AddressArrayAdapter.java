@@ -63,7 +63,7 @@ public class AddressArrayAdapter extends android.ext.BaseAdapterIndexer implemen
             view = a(viewGroup);
         }
         boolean zC = false;
-        boolean z2 = (android.ext.Config.q & (1 << android.ext.Tools.d1())) == 0;
+        boolean z2 = (android.ext.Config.q & (1 << android.ext.Tools.d1())) != 0;
         android.ext.d3 d3Var = (android.ext.d3) view.getTag();
         if (d3Var.b()) {
             view = a(viewGroup);

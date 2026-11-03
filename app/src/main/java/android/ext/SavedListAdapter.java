@@ -137,7 +137,7 @@ public class SavedListAdapter extends android.ext.BaseAdapterIndexer implements 
             savedListAdapter$b = (android.ext.SavedListAdapter$b) view.getTag();
         }
         boolean zA = false;
-        boolean z = (android.ext.Config.q & (1 << (android.ext.Tools.d1() + 2))) == 0;
+        boolean z = (android.ext.Config.q & (1 << (android.ext.Tools.d1() + 2))) != 0;
         if (i >= this.f361a.l()) {
             h2Var = new android.ext.h2(0L, 0L, 4, "null for " + i);
         } else {
