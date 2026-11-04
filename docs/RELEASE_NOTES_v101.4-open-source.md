@@ -1,6 +1,12 @@
 Clean-room **Java reconstruction of GameGuardian 101.4**
 (`catch_.me_.if_.you_.can_`, versionCode `16155`).
 
+> **This release is superseded by
+> [`v101.4-open-source.1`](RELEASE_NOTES_v101.4-open-source.1.md)** - it fixes
+> the int shift that made every value of a value search render as `0` and the
+> opcode column of the memory list wrong, and the shifted copy of the
+> preferences of the self install.
+
 Every class of the original APK is present as Java source - including the
 four methods that defeat every Java decompiler.  The project compiles with
 Gradle and nothing else: there is **no smali in the build**, no baksmali, no

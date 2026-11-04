@@ -4,9 +4,10 @@
 > [`sdars/GameGuardian-Open-Source`](https://github.com/sdars/GameGuardian-Open-Source).**
 > That repository is independent (not a fork), it carries every branch
 > (`main`, `open-source`, `feature/gg-101.4-opensource`), every tag
-> (`v101.4-open`, `v101.4-open-pure`, `v101.4-open-source`) and the compiled
+> (`v101.4-open`, `v101.4-open-pure`, `v101.4-open-source`,
+> `v101.4-open-source.1`) and the compiled
 > APK as release asset:
-> <https://github.com/sdars/GameGuardian-Open-Source/releases/tag/v101.4-open-source>
+> <https://github.com/sdars/GameGuardian-Open-Source/releases/tag/v101.4-open-source.1>
 
 This repository is a clean-room **Java reconstruction of GameGuardian 101.4**
 (`catch_.me_.if_.you_.can_`, versionCode `16155`).  Every class of the original
@@ -20,8 +21,9 @@ resulting APK installs and runs.
 | Package / version | `catch_.me_.if_.you_.can_` / `101.4` (versionCode `16155`) |
 | Java sources | 1139 files, 488 944 lines |
 | Smali in the build | none - `app/src/main/java` is the only input |
-| Release APK | `release/GameGuardian-101.4-open.apk` (sha256 `bd584b9c5493e860773e80f405e4ccfef28e74ca99f898d08ee79b60a8fd4075`) |
-| Release download | <https://github.com/sdars/GameGuardian-Open-Source/releases/tag/v101.4-open-source> |
+| Release APK | `release/GameGuardian-101.4-open.apk` (sha256 `9f66496415c9804495cd696158007f5f574cb6d8775e32b6a46dbea88036a4ca`) |
+| Release download | <https://github.com/sdars/GameGuardian-Open-Source/releases/tag/v101.4-open-source.1> |
+| Release notes | [`docs/RELEASE_NOTES_v101.4-open-source.1.md`](docs/RELEASE_NOTES_v101.4-open-source.1.md) |
 
 ---
 
