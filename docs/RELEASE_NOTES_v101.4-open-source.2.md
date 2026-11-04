@@ -155,6 +155,22 @@ E/android-daemon( 5359): Send code: 18
 
 No `Report Error` in the log of the run.
 
+The value search of the published asset returns the same rows as the
+original - `F5104A40`, `F51A8160`, `F5201EC8`, each of them `999`, `D`,
+`Ca` - and the memory list shows the real disassembly (`0D;`, `0.0F;`,
+`PS`):
+
+```
+sendSearchNumber: 999; 0 x0 as 20000004 in 0-ffffffffffffffff, 0
+searchNumber: 999; 0, 20000004 0-ffffffffffffffff
+::searchDone: 5, 5 0
+```
+
+The number of hits changes between two runs, because the heap of the target
+process changes while it runs - the original itself found `4` hits in one
+run and `3` in the next one, the reconstruction found `5`; the three rows
+above are in every run.
+
 ## 5. Build
 
 ```
