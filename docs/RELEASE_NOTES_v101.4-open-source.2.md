@@ -132,7 +132,30 @@ the app and of the daemon.  `tools/speed_panel_readback.py` does the same and
 additionally renders the text view of the speed from the screenshot, before
 and after the button.
 
-## 4. Build
+## 4. The published asset on the device
+
+The asset of the release was downloaded again, installed on the device and
+driven through the same gesture - the app installs itself under a randomised
+package name, so the package of the run was `com.fifunrftosjpvh`:
+
+```
+$ curl -sL -o gg_release_v2.apk https://github.com/sdars/GameGuardian-Open-Source/releases/download/v101.4-open-source.2/GameGuardian-101.4-open.apk
+$ sha256sum gg_release_v2.apk
+1cd54d353e2327359b56b4c057e819b6eb0b8c612be558283b48039d1ff9de46  gg_release_v2.apk
+
+$ adb shell su -c 'ls -l /data/user/0/com.fifunrftosjpvh/files/GG-LzTW/'
+lib01.so   24476   lib02.so   10408   lib05.so   10312   lib08.so   24892
+lib5.so  4075552   lib6.so   147552   lib9.so   143960   libg.so    10872
+libh.so     8208   libl.so    11608   libn.so     8672   sh.jar      2294
+version.gg    11
+
+E/AndroidService( 2480): >>
+E/android-daemon( 5359): Send code: 18
+```
+
+No `Report Error` in the log of the run.
+
+## 5. Build
 
 ```
 ./gradlew :app:assembleRelease      # -> app/build/outputs/apk/release/app-release.apk
