@@ -174,6 +174,67 @@ def pull(remote, local, timeout=180):
     return len(data)
 
 
+def attach(tag, pkg, pid, memory_tab=False):
+    """start the package, open its panel and attach the target process.
+
+    The panel of the app and the list of the processes are two windows: as
+    long as no target is attached the app shows the list of the processes, and
+    the panel comes up after one of them has been picked.  The list is long,
+    so it is scrolled until the target is on the screen.
+    """
+    others = ['com.utnciuwv.ldcsra', 'com.wrw', pkg]
+    try:
+        with open(os.path.join(ROOT, 'build', 'deploy.state')) as fh:
+            others += [line.strip() for line in fh if line.strip()]
+    except OSError:
+        pass
+    for other in others:
+        sh('am force-stop %s' % other)
+    adb('logcat', '-c')
+    sh('am start -n %s/.MainActivity' % pkg)
+    time.sleep(12)
+    xml = dump(tag, 'main')
+    for n in nodes(xml):
+        if n['text'].strip() == '开始':
+            x, y = centre(n)
+            tap(x, y)
+            time.sleep(8)
+            break
+    for attempt in range(14):
+        xml = dump(tag, 'main%d' % attempt)
+        if find(xml, rid='toolbar_row'):
+            break
+        row = None
+        for n in nodes(xml):
+            if ('[%s]' % pid) in n['text']:
+                row = n
+                break
+        if row is not None:
+            x, y = centre(row)
+            tap(x, y)
+            time.sleep(8)
+            continue
+        if find(xml, rid='select_dialog_listview'):
+            sh('input swipe 360 1000 360 400 400')
+            time.sleep(3)
+        else:
+            tap(48, 72)
+            time.sleep(6)
+    if not find(xml, rid='toolbar_row'):
+        print('!! the panel did not open', flush=True)
+        return None
+    nm = find(xml, rid='app_name')
+    print('    attached: %r' % (nm['text'] if nm else '?'), flush=True)
+    if memory_tab:
+        mt = find(xml, rid='memory_tab_icon')
+        if mt:
+            x, y = centre(mt)
+            tap(x, y)
+            time.sleep(6)
+        xml = dump(tag, 'mem')
+    return xml
+
+
 if __name__ == '__main__':
     if len(sys.argv) > 1:
         r = adb(*sys.argv[1:])

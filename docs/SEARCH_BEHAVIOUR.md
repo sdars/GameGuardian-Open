@@ -427,6 +427,103 @@ Note that the gesture has to hit the icon itself: the floating icon is a
 window with the tabs) covers the same area while it is open, and a long
 press on the panel is a long press on the panel, not on the icon.
 
+### The two buttons of the panel answered with `{107}`
+
+The lua path of the section above works, but the two buttons of the speed
+panel of the floating icon answered with `{107}` - *"此进程不支持变速"* - on
+every target, while the original answers the same gesture on the same target
+on the same device.  The daemon is not the reason: the binary of the daemon
+is the one of the original APK (same sha256).  The reason is that the
+reconstruction did not unpack the **hook payload**.
+
+The daemon of the app is not one file.  `android.ext.e0.d(char)` unpacks a
+set of helper libraries next to the daemon, and the daemon copies the hook
+payload out of that directory into the target before it patches it.  The set
+belongs to the architecture of the daemon that the device uses:
+
+| daemon | arch | helpers |
+|---|---|---|
+| `lib5.so` | 105 (arm64) | `lib5`, `lib08`, `lib6`, `libg`, `libl`, **`lib9`**, **`libh`**, **`libn`** |
+| `lib7.so` / `lib8.so` | 104 | `lib7` / `lib8`, **`lib9`**, **`libh`**, **`libn`** |
+| `liba.so` / `libb.so` | 103 | `liba` / `libb`, `libd`, `libi`, `libo` |
+| `lib0.so` / `lib1.so` | 101 | `lib0` / `lib1`, `lib3`, `libe`, `libj` |
+| `lib2.so` | 102 | `lib2`, `lib01`, `lib4`, `libf`, `libk`, `lib3`, `libe`, `libj` |
+
+In the original dex the block of the 64 bit arm daemon falls through into the
+block of `'7'`/`'8'`, so that the three libraries of the hook are unpacked as
+well:
+
+```
+build/verify/orig9063_smali/android/ext/e0.smali, method d(C)V
+    :cond_52                          <-- c2 == '5'
+    const-string p1, "08"
+    ... invoke-static {p1}, Landroid/ext/e0;->b(C)V   <-- b('l')
+    :cond_68                          <-- c2 == '7' or '8', reached by fall through
+    const/16 p1, 0x39                 <-- b('9')
+    const/16 p1, 0x68                 <-- b('h')
+    sput-char p1, Landroid/ext/e0;->e:C
+    const/16 p1, 0x6e                 <-- b('n')
+```
+
+The decompiler that the pure source tree was written from lost that fall
+through, so the reconstruction unpacked `lib5.so`, `lib08.so`, `lib6.so`,
+`libg.so` and `libl.so` - and never `lib9.so`, `libh.so` and `libn.so`.  The
+daemon then failed to copy its hook payload into the target and answered
+with the error code 107, which `MainService` turns into `speedhack_fail`:
+
+```
+E/android-daemon: lib chmod '/data/user/0/com.saweyhfbpyrcxakywsq/files/GG-Lazz/lib9.so' -1 2: No such file or directory
+I/android-daemon: Copy lib cp: 2, No such file or directory; /data/app/com.gg.abitest-.../lib/arm/_lib9.so; /data/user/0/com.saweyhfbpyrcxakywsq/files/GG-Lazz/lib9.so
+I/android-daemon: elf_hook_sections32 Find 0 '0x55a6bc4bfa': 0, 0, 0, 137, 1
+E/android-daemon: Report Error: 107
+```
+
+`app/src/main/java/android/ext/e0.java` follows the original again; the
+directory of the app is now identical to the one of the original, file by
+file (only the name of the directory is random):
+
+```
+original 101.4 (com.utnciuwv.ldcsra, GG-mikB)   this build (com.lpj, GG-kPwZ)
+lib01.so   24476   lib02.so   10408   lib05.so   10312   lib08.so   24892
+lib5.so  4075552   lib6.so   147552   lib9.so   143960   libg.so    10872
+libh.so     8208   libl.so    11608   libn.so     8672   sh.jar      2294
+version.gg    11
+```
+
+and the same gesture on the same target gives the same daemon trace (the
+searched name of the section is mixed with a random key per run, the
+addresses are not):
+
+```
+original 101.4                                  this build
+elf_hook_sections32 Find 0 '0x5ae5c94e6c':      elf_hook_sections32 Find 0 '0x6290506e6c':
+    bed70638, 0, 2e638, 183, 1                      bed70638, 0, 2e638, 183, 1
+elf_hook_sections32 Find 1 '0x5ae5c90177':      elf_hook_sections32 Find 1 '0x6290502177':
+    bed6cbe8, 0, 2abe8, 180, 1                      bed6cbe8, 0, 2abe8, 180, 1
+find all                                         find all
+_reader: bed70638, _config: bed6cbe8             _reader: bed70638, _config: bed6cbe8
+Send code: 18                                    Send code: 18
+>>                                               >>
+Send code: 18                                    Send code: 18
+```
+
+No `Report Error` is written in the whole log of the run any more.
+
+`tools/speed_panel_ab.py <package> <tag> <pid>` drives that gesture and prints
+the log of the app and of the daemon, `tools/speed_panel_readback.py` does the
+same and renders the text view of the speed (`speed_text` of
+`res/layout/hot_point_view.xml`) out of the screenshot before and after the
+button.
+
+The panel of the reconstruction is pixel identical to the panel of the
+original - the screenshots of the expanded panel were compared pixel by pixel,
+before and after the fast forward button was pressed:
+
+```
+panel pixels before ours vs original: 0/31488 differ (0.000%)
+panel pixels after  ours vs original: 0/31488 differ (0.000%)
+```
+
 ## 8. The script path of the script runner
 
 The path of the script runner is built from two preferences

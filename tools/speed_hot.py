@@ -32,56 +32,29 @@ centre = adlib.centre
 
 def attach(pid):
     """open the process list of the floating panel and pick the target"""
-    tap(48, 104)
-    time.sleep(4)
-    xml = dump('x', 'procs')
-    node = None
-    for cand in nodes(xml):
-        if '[%s]' % pid in cand['text']:
-            node = cand
-            break
-    if node is None:
-        for _ in range(8):
-            sh('input swipe 360 1000 360 400 400')
-            time.sleep(2)
-            xml = dump('x', 'procs')
-            for cand in nodes(xml):
-                if '[%s]' % pid in cand['text']:
-                    node = cand
-                    break
-            if node:
-                break
-    print('== process: %s' % (node['text'] if node else 'NOT FOUND'))
-    if node:
-        x, y = centre(node)
-        tap(x, y)
-        time.sleep(8)
-    return node is not None
+    xml = adlib.attach('speed', PKG[0], pid)
+    return xml is not None
+
+
+PKG = ['']
 
 
 def main():
     pkg = sys.argv[1]
+    PKG[0] = pkg
     tag = sys.argv[2]
     pid = sys.argv[3]
     others = ['com.utnciuwv.ldcsra', 'com.fqqvbgr', 'com.xzqwitnufxpj', 'com.oyn',
               'com.uyileqmdfw', 'com.xplwru', 'com.zijosy', 'com.hdzj.yopvkq',
               'com.vygybmu', 'com.gdkmke', 'com.rhbqjlp']
-    for other in others:
-        if other != pkg:
-            sh('am force-stop ' + other)
-    sh('am force-stop ' + pkg)
-    time.sleep(2)
-    adb('logcat', '-c')
-    sh('am start -n %s/.MainActivity' % pkg)
-    time.sleep(10)
-    for _ in range(3):
-        node = find(dump(tag, 'welcome'), rid='btn_start_usage')
-        if node:
-            x, y = centre(node)
-            tap(x, y)
-            time.sleep(8)
-        if find(dump(tag, 'main'), rid='search_tab_icon'):
-            break
+    # the packages of the previous runs of the reconstruction are named
+    # randomly, they are listed in the state file of the deployment
+    try:
+        with open(os.path.join(ROOT, 'build', 'deploy.state')) as fh:
+            others += [line.strip() for line in fh if line.strip()]
+    except OSError:
+        pass
+    others.append('com.wrw')
     attach(pid)
     # the floating icon belongs to the overlay of the app
     xml = dump(tag, 'overlay')
@@ -121,7 +94,7 @@ def main():
         if node['text'].strip():
             print('   %-44s %s' % (node['text'][:44], node['bounds']))
     adb('shell', 'screencap -p /sdcard/hp_%s.png' % tag)
-    adb('pull', '/sdcard/hp_%s.png' % tag, os.path.join(OUT, 'hp_%s.png' % tag))
+    adlib.screencap('hp_%s' % tag)
     print('== the log of the app and the daemon')
     log = adb('logcat', '-d', '-v', 'time').stdout
     for line in log.splitlines():

@@ -72,49 +72,57 @@ public class e0 {
 
     /* JADX WARN: Failed to find 'out' block for switch in B:12:0x0017. Please report as an issue. */
     private void d(char c2) {
-        char c3 = 0;
         b(c2);
         try {
-            if (c2 != '5') {
-                if (c2 != '7' && c2 != '8') {
-                    if (c2 != 'a' && c2 != 'b') {
-                        switch (c2) {
-                            case '2':
-                                c("01");
-                                b('4');
-                                b('f');
-                                f729f = 'f';
-                                b('k');
-                            case '0':
-                            case '1':
-                                b('3');
-                                b('e');
-                                f728e = 'e';
-                                c3 = 'j';
-                                break;
-                        }
-                        android.ext.Tools.M("sh", new java.io.File(android.ext.Tools.q0(), "sh.jar"));
-                        return;
-                    }
-                    b('d');
-                    b('i');
-                    f728e = 'i';
-                    c3 = 'o';
-                }
-                b(c3);
-                android.ext.Tools.M("sh", new java.io.File(android.ext.Tools.q0(), "sh.jar"));
-                return;
+            if (c2 == '5') {
+                /*
+                 * The 64 bit arm daemon (arch 105) needs the full helper set:
+                 * lib5/lib08/lib6/libg/libl come first and the block falls
+                 * through into the '7'/'8' block, so lib9, libh and libn are
+                 * extracted as well.  lib9.so holds the hook payload the daemon
+                 * copies for the new style speed hack - without it the daemon
+                 * aborts the hook with error 107 and the speed panel reports
+                 * "this process does not support speed hack".
+                 */
+                c("08");
+                b('6');
+                b('g');
+                f729f = 'g';
+                b('l');
+                b('9');
+                b('h');
+                f728e = 'h';
+                b('n');
+            } else if (c2 == '7' || c2 == '8') {
+                b('9');
+                b('h');
+                f728e = 'h';
+                b('n');
+            } else if (c2 == 'a' || c2 == 'b') {
+                b('d');
+                b('i');
+                f728e = 'i';
+                b('o');
+            } else if (c2 == '0' || c2 == '1') {
+                b('3');
+                b('e');
+                f728e = 'e';
+                b('j');
+            } else if (c2 == '2') {
+                c("01");
+                b('4');
+                b('f');
+                f729f = 'f';
+                b('k');
+                /* the '2' block falls through into the '0'/'1' block */
+                b('3');
+                b('e');
+                f728e = 'e';
+                b('j');
             }
-            c("08");
-            b('6');
-            b('g');
-            f729f = 'g';
-            b('l');
             android.ext.Tools.M("sh", new java.io.File(android.ext.Tools.q0(), "sh.jar"));
-            return;
         } catch (java.lang.Throwable th) {
             android.ext.e1.l("JVM fail", th);
-            return;
         }
     }
 

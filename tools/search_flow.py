@@ -108,7 +108,7 @@ def main():
     # panel comes up after one of them has been picked
     print('==> attach the process %s' % pid, flush=True)
     xml = ''
-    for attempt in range(8):
+    for attempt in range(14):
         xml = adlib.dump(tag, 'main%d' % attempt)
         if node_by_id(xml, 'toolbar_row'):
             break
@@ -122,9 +122,16 @@ def main():
             tap_node(row, 'the target process')
             time.sleep(8)
             continue
-        log('the panel is not up yet, tap the floating icon')
-        adlib.tap(48, 72)
-        time.sleep(6)
+        if node_by_id(xml, 'select_dialog_listview') or node_by_text(xml, '选择应用进程'):
+            # the list of the processes is long, scroll it until the target
+            # is on the screen
+            log('the target is not on the screen, scroll the process list')
+            adlib.sh('input swipe 360 1000 360 400 400')
+            time.sleep(3)
+        else:
+            log('the panel is not up yet, tap the floating icon')
+            adlib.tap(48, 72)
+            time.sleep(6)
     if not node_by_id(xml, 'toolbar_row'):
         print('!! the panel did not open', flush=True)
         print_rows(xml, 'panel')
@@ -246,6 +253,23 @@ def main():
     log('found_count is %r' % (cnt['text'] if cnt else '?'))
     st = node_by_id(xml, 'status_bar')
     log('status_bar is %r' % (st['text'] if st else '?'))
+
+    # the memory editor of the first result shows the disassembly of the
+    # value that was found - that is the opcode column of the app
+    print('==> the memory editor of the first result', flush=True)
+    row = None
+    for n in adlib.nodes(xml):
+        if re.match(r'^[0-9A-Fa-f]{6,}$', n['text'].strip()):
+            row = n
+            break
+    if row is not None:
+        tap_node(row, 'the first result')
+        time.sleep(8)
+        ex = adlib.dump(tag, 'editor')
+        print_rows(ex, 'the memory editor')
+        adlib.screencap('%s_editor' % tag)
+    else:
+        print('    (no result row to open)', flush=True)
 
     print('==> the daemon log', flush=True)
     for line in adlib.logcat().splitlines():

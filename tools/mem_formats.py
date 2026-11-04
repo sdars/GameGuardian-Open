@@ -44,7 +44,7 @@ def attach(tag, pkg, pid):
             tap_node(n, '开始')
             time.sleep(8)
             break
-    for attempt in range(8):
+    for attempt in range(14):
         xml = adlib.dump(tag, 'main%d' % attempt)
         if find(xml, rid='toolbar_row'):
             break
@@ -57,8 +57,12 @@ def attach(tag, pkg, pid):
             tap_node(row, 'the target process')
             time.sleep(8)
             continue
-        adlib.tap(48, 72)
-        time.sleep(6)
+        if find(xml, rid='select_dialog_listview'):
+            adlib.sh('input swipe 360 1000 360 400 400')
+            time.sleep(3)
+        else:
+            adlib.tap(48, 72)
+            time.sleep(6)
     if not find(xml, rid='toolbar_row'):
         print('!! the panel did not open', flush=True)
         return None
