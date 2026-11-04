@@ -20,7 +20,7 @@ class ConfigListAdapter$g implements android.content.DialogInterface.OnClickList
         long j = android.ext.Config.f29b[i];
         for (int i2 = 0; i2 < length; i2++) {
             charSequenceArr[i2] = p1VarArr[i2].toString();
-            zArr[i2] = ((1 << i2) & j) != 0;
+            zArr[i2] = ((1L << i2) & j) != 0;
             drawableArr[i2] = p1VarArr[i2].c();
         }
         android.ext.ConfigListAdapter$g$a configListAdapter$g$a = new android.ext.ConfigListAdapter$g$a(this, zArr, i);

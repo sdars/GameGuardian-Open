@@ -52,10 +52,13 @@ OPCODE_FOLD = {
     'move-object': 'move', 'move-object/from16': 'move',
     'move-object/16': 'move',
     'return': 'return', 'return-wide': 'return', 'return-object': 'return',
-    'if-eq': 'if', 'if-ne': 'if', 'if-lt': 'if', 'if-ge': 'if',
-    'if-gt': 'if', 'if-le': 'if',
-    'if-eqz': 'ifz', 'if-nez': 'ifz', 'if-ltz': 'ifz', 'if-gez': 'ifz',
-    'if-gtz': 'ifz', 'if-lez': 'ifz',
+    # the polarity of a branch is part of the behaviour, so it must not be
+    # folded away: an inverted if-eqz/if-nez is exactly the kind of bug the
+    # comparison is looking for.
+    'if-eq': 'if-eq', 'if-ne': 'if-ne', 'if-lt': 'if-lt', 'if-ge': 'if-ge',
+    'if-gt': 'if-gt', 'if-le': 'if-le',
+    'if-eqz': 'ifz-eq', 'if-nez': 'ifz-ne', 'if-ltz': 'ifz-lt',
+    'if-gez': 'ifz-ge', 'if-gtz': 'ifz-gt', 'if-lez': 'ifz-le',
     'aget': 'aget', 'aget-wide': 'aget', 'aget-object': 'aget',
     'aput': 'aput', 'aput-wide': 'aput', 'aput-object': 'aput',
     'iget': 'iget', 'iget-wide': 'iget', 'iget-object': 'iget',
@@ -104,18 +107,33 @@ def norm_ref(text, drop_class=False):
     return text
 
 
+PKG_MAP = []
+
+
+def map_pkg(text):
+    """rewrite the package of the original dex (the game guardian build
+    renames its own application package randomly, so the ground truth dex
+    uses a different prefix than the reconstruction)."""
+    for old, new in PKG_MAP:
+        text = text.replace(old, new)
+    return text
+
+
 def norm_insn(op, rest):
     drop_class = op.startswith('invoke')
     if op.startswith(('iget', 'iput', 'sget', 'sput')):
         drop_class = True
     op = OPCODE_FOLD.get(op, op)
-    rest = rest.strip()
+    rest = map_pkg(rest.strip())
     if not rest:
         return op
     parts = [p.strip() for p in rest.split(',')]
     out = []
     for p in parts:
-        if re.fullmatch(r'[vp]\d+', p):
+        if p.startswith('{') and p.endswith('}'):
+            inner = [x.strip() for x in p[1:-1].split(',') if x.strip()]
+            out.append('{' + ','.join('r' if re.fullmatch(r'[vp]\d+', x) else x for x in inner) + '}')
+        elif re.fullmatch(r'[vp]\d+', p):
             out.append('r')
         elif re.fullmatch(r':\S+', p):
             out.append(':L')
@@ -130,7 +148,7 @@ def norm_insn(op, rest):
     return op + ' ' + ','.join(out)
 
 
-def parse_file(path):
+def parse_file(path, rename=None):
     methods = {}
     cur = None
     body = []
@@ -140,6 +158,8 @@ def parse_file(path):
             if s.startswith('.method '):
                 m = METHOD_RE.match(s)
                 cur = m.group(2) if m else s
+                if rename:
+                    cur = rename_method(cur, rename)
                 body = []
                 continue
             if s.startswith('.end method'):
@@ -161,7 +181,18 @@ def parse_file(path):
     return methods
 
 
-def load_tree(root):
+def rename_method(sig, rename):
+    """map the name of a method of the original dex onto the name that the
+    reconstruction uses (jadx renames the members that collide with a class
+    name, the map turns them back)."""
+    i = sig.find('(')
+    if i < 0:
+        return sig
+    name, rest = sig[:i], sig[i:]
+    return rename.get(name, name) + rest
+
+
+def load_tree(root, rename_all=False):
     tree = {}
     for dirpath, _dirs, files in os.walk(root):
         for name in files:
@@ -171,7 +202,13 @@ def load_tree(root):
             rel = os.path.relpath(path, root)[:-len('.smali')]
             rel = re.sub(r'(^|/)gg_([a-g])(/|$)',
                         lambda m: m.group(1) + m.group(2) + m.group(3), rel)
-            tree[rel] = parse_file(path)
+            rel = map_pkg(rel)
+            rename = None
+            if rename_all:
+                table = RENAMES.get('L' + rel + ';')
+                if table:
+                    rename = {v: k for k, v in table.items()}
+            tree[rel] = parse_file(path, rename)
     return tree
 
 
@@ -185,6 +222,16 @@ def has_handler(body):
 def main():
     argv = sys.argv[1:]
     detail = None
+    rename_orig = False
+    if '--rename-orig' in argv:
+        i = argv.index('--rename-orig')
+        rename_orig = True
+        argv = argv[:i] + argv[i + 1:]
+    if '--pkg-map' in argv:
+        i = argv.index('--pkg-map')
+        old, _, new = argv[i + 1].partition('=')
+        PKG_MAP.append((old, new))
+        argv = argv[:i] + argv[i + 2:]
     if '--detail' in argv:
         i = argv.index('--detail')
         detail = argv[i + 1]
@@ -193,7 +240,7 @@ def main():
         print('usage: smali_semdiff.py <ours-smali-dir> <orig-smali-dir>')
         return 2
     ours = load_tree(argv[0])
-    orig = load_tree(argv[1])
+    orig = load_tree(argv[1], rename_all=rename_orig)
 
     if detail:
         cls, _, sig = detail.partition('#')

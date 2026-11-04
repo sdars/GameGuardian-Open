@@ -168564,7 +168564,10 @@ ggst.ret = (java.lang.StringBuilder) ggst.appendableC;ggst.stop = true;return;
             return -1L;
         }
         int i9 = i3 & i5;
-        long j = (-1) >>> (64 - (i6 + 1));
+        /* the original dex shifts the long -1 (ushr-long): a java int
+           literal masks the distance to five bits, so a field of 32 bits
+           would get the mask 0xffffffff instead of 0xffffffff00000000. */
+        long j = (-1L) >>> (64 - (i6 + 1));
         long j2 = (j << (i4 - i9)) | (j >>> i9);
         long j3 = j2;
         for (int i10 = i4; i10 < 64; i10 += i4) {

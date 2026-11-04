@@ -41,11 +41,11 @@ final class StringLib$pack extends luaj.lib.VarArgFunction {
                     if (i4 < 8) {
                         int i7 = i4 * 8;
                         if (bY2 == 1) {
-                            long j = 1 << (i7 - 1);
+                            long j = 1L << (i7 - 1);
                             z = (-j) <= jF && jF < j;
                             str = "integer overflow";
                         } else {
-                            z = ((~((1 << i7) - 1)) & jF) == 0;
+                            z = ((~((1L << i7) - 1)) & jF) == 0;
                             str = "unsigned overflow";
                         }
                         x(z, i6, str);
@@ -75,7 +75,7 @@ final class StringLib$pack extends luaj.lib.VarArgFunction {
                 case 5:
                     luaj.LuaString luaStringH2 = varargs.H(i6);
                     iS1 = luaStringH2.s1();
-                    x(i4 >= stringLib$c.f1785a || ((long) iS1) < (1 << (i4 * 8)), i6, "string length (" + iS1 + ") does not fit in given size (" + i4 + " bytes)");
+                    x(i4 >= stringLib$c.f1785a || ((long) iS1) < (1L << (i4 * 8)), i6, "string length (" + iS1 + ") does not fit in given size (" + i4 + " bytes)");
                     luaj.lib.StringLib.b3(stringLib$c, aVar, (long) iS1);
                     aVar.c(luaStringH2);
                     i = i5 + iS1;

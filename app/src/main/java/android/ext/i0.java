@@ -8,7 +8,13 @@ public abstract class i0 {
 
     static {
         for (int i = 0; i < 3; i++) {
-            long j = (1 << ((1 << i) * 8)) - 1;
+            /* the original dex builds the mask with a 64 bit shift
+               (shl-long): for the 32 bit slot the shift distance is 32 and
+               only the long form yields 0x100000000.  A java int shift
+               masks the distance to five bits (1 << 32 == 1) which turns
+               the dword mask into 0 and makes every dword value render as
+               0. */
+            long j = (1L << ((1 << i) * 8)) - 1;
             long j2 = j >> 1;
             long j3 = ~j2;
             int i2 = i * 4;

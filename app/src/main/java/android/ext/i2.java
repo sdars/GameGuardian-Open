@@ -136,7 +136,7 @@ public class i2 extends android.ext.j2 implements android.view.View.OnClickListe
         int iG = iD & t1_b.f1263c;
         if (java.lang.Integer.bitCount(iG) > 1) {
             iG = android.ext.c.g(iG, jD, t1_b.f1262b);
-        } else if (!z && iG != 16 && iG != 64 && ((i4 == 134217728 || i4 == 67108864) && str3.indexOf(45) == -1 && (jD & (1 << ((android.ext.c.E(iG) * 8) - 1))) != 0)) {
+        } else if (!z && iG != 16 && iG != 64 && ((i4 == 134217728 || i4 == 67108864) && str3.indexOf(45) == -1 && (jD & (1L << ((android.ext.c.E(iG) * 8) - 1))) != 0)) {
             android.ext.e1.d("unsigned search 1: '" + str3 + "' " + java.lang.Integer.toHexString(iG) + ' ' + z + ' ' + java.lang.Integer.toHexString(i4));
             if (i4 == 134217728) {
                 str2 = str3 + "~0";
@@ -236,7 +236,7 @@ public class i2 extends android.ext.j2 implements android.view.View.OnClickListe
 
     private static void s(android.ext.i2$b i2_b, java.lang.String str) {
         int i = i2_b.f1015c & 127;
-        long jE = 1 << ((android.ext.c.E(i) * 8) - 1);
+        long jE = 1L << ((android.ext.c.E(i) * 8) - 1);
         if (java.lang.Integer.bitCount(i) != 1 || i == 16 || i == 64 || str.indexOf(45) != -1 || (i2_b.f1013a & jE) != 0 || (i2_b.f1014b & jE) == 0) {
             return;
         }

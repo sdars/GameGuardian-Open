@@ -345,7 +345,7 @@ public class StringLib extends luaj.lib.TwoArgFunction {
         if (i3 >= 8 || !z) {
             return j2;
         }
-        long j3 = 1 << ((i3 * 8) - 1);
+            long j3 = 1L << ((i3 * 8) - 1);
         return (j2 ^ j3) - j3;
     }
 

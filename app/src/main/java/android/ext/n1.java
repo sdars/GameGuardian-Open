@@ -289,7 +289,10 @@ class n1 extends android.ext.BaseAdapterLC implements android.ext.b3$a, android.
         if ((i & 1) != 0) {
             regionList$bB = null;
             if (z) {
-                j3 = iN3 != 8 ? j2 & ((1 << (iN3 * 8)) - 1) : j2;
+                /* the original dex masks with a 64 bit shift (shl-long):
+                   (1 << 32) is 1 in java, the dword mask has to be built
+                   with 1L << 32. */
+                j3 = iN3 != 8 ? j2 & ((1L << (iN3 * 8)) - 1) : j2;
                 str3 = android.ext.t2.e(iN3 * 2, j3) + "h;";
                 android.ext.z1$d z1_d = android.ext.MainService.instance.v0;
                 if (iN3 == 4 || (z1_d != null && z1_d.n && iN3 == 8)) {
@@ -315,7 +318,13 @@ class n1 extends android.ext.BaseAdapterLC implements android.ext.b3$a, android.
                 int i3 = iN3 * 8;
                 long jReverseBytes = java.lang.Long.reverseBytes(j3) >> (64 - i3);
                 if (iN3 != 8) {
-                    jReverseBytes &= (1 << i3) - 1;
+                    /* the original dex builds the mask with a 64 bit shift
+                       (shl-long): for a dword the distance is 32 and only
+                       the long form yields 0xffffffff.  With the int shift
+                       the distance is cut to five bits (1 << 32 == 1) and
+                       the mask becomes 0 - the reversed hex of every dword
+                       was shown as 0. */
+                    jReverseBytes &= (1L << i3) - 1;
                 }
                 str2 = android.ext.t2.e(iN3 * 2, jReverseBytes) + "r;";
             } else {
@@ -822,7 +831,7 @@ class n1 extends android.ext.BaseAdapterLC implements android.ext.b3$a, android.
         boolean z = false;
         if ((this.j & 1) != 0) {
             if (iW != 8) {
-                j2 &= (1 << (iW * 8)) - 1;
+                j2 &= (1L << (iW * 8)) - 1;
             }
             j = j2;
             sb = sb2;
@@ -838,7 +847,7 @@ class n1 extends android.ext.BaseAdapterLC implements android.ext.b3$a, android.
                 int i2 = iW * 8;
                 long jReverseBytes = java.lang.Long.reverseBytes(j) >> (64 - i2);
                 if (iW != 8) {
-                    jReverseBytes &= (1 << i2) - 1;
+                    jReverseBytes &= (1L << i2) - 1;
                 }
                 sb.append(android.ext.t2.e(iW * 2, jReverseBytes));
                 sb.append("\n");

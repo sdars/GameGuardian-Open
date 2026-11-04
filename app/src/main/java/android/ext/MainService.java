@@ -2344,7 +2344,7 @@ public class MainService extends android.ext.k2 implements android.view.View.OnC
                 try {
                     android.view.View childAt = wrapLayout.getChildAt(i3);
                     if (childAt != null) {
-                        childAt.setVisibility(((1 << i3) & j) != 0 ? 0 : 8);
+                        childAt.setVisibility(((1L << i3) & j) != 0 ? 0 : 8);
                     }
                 } catch (java.lang.ArrayIndexOutOfBoundsException unused) {
                 } catch (java.lang.Throwable th) {

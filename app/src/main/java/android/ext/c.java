@@ -132,7 +132,7 @@ public class c {
             int iE = E(i3);
             int i4 = iE * 8;
             long jReverseBytes = java.lang.Long.reverseBytes(j3) >> (64 - i4);
-            j3 = iE != 8 ? jReverseBytes & ((1 << i4) - 1) : jReverseBytes;
+            j3 = iE != 8 ? jReverseBytes & ((1L << i4) - 1) : jReverseBytes;
         }
         return android.ext.i0.d(j3, i3, true);
     }

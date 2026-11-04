@@ -89,7 +89,7 @@ public abstract class p1 implements android.view.View.OnClickListener {
         int i;
         int i2 = this.f1174d;
         if (i2 != -1 && (i = i2 / 64) >= 0 && i < 3) {
-            long j = 1 << (i2 % 64);
+            long j = 1L << (i2 % 64);
             long[] jArr = f1170e;
             long j2 = jArr[i];
             if ((j2 & j) == 0) {

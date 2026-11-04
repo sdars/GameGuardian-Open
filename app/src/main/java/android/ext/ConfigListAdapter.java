@@ -753,7 +753,7 @@ public class ConfigListAdapter extends android.widget.BaseAdapter implements and
         if (view == null || (id = view.getId()) == -1) {
             return;
         }
-        long j3 = 1 << (i2 % 63);
+        long j3 = 1L << (i2 % 63);
         long j4 = f47g;
         if ((j4 & j3) == 0) {
             f47g = j3 | j4;

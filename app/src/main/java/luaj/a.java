@@ -77,7 +77,7 @@ public class a {
         if (i >= 0 && i < 31) {
             long j2 = 4503599627370495L & j;
             int i2 = 52 - i;
-            if ((j2 & ((1 << i2) - 1)) == 0) {
+            if ((j2 & ((1L << i2) - 1)) == 0) {
                 int i3 = ((int) (j2 >> i2)) | (1 << i);
                 return luaj.LuaLong.I2((j >> 63) != 0 ? -i3 : i3);
             }

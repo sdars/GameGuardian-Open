@@ -46,7 +46,11 @@ public abstract class t1 {
             int i3 = iArr[i2 + 1];
             if (t1_b.f1262b) {
                 int i4 = (i3 * 8) - 1;
-                if ((t1_b.f1261a >> i4) == ((-1) >> i4)) {
+                /* the original dex shifts the long -1 (ushr-long): a java
+                   int literal would mask the distance to five bits and the
+                   comparison of the sign extension would fail for every
+                   value that is negative in the upper half. */
+                if ((t1_b.f1261a >> i4) == ((-1L) >> i4)) {
                     i |= iArr[i2];
                 }
             } else if (i3 == 8 || (t1_b.f1261a >> (i3 * 8)) == 0) {

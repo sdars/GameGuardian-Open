@@ -186,7 +186,17 @@ public abstract class b {
         int eventType = xmlPullParser.getEventType();
         do {
             if (eventType == 2) {
-                map.put(strArr[0], k(xmlPullParser, strArr, b_a));
+                /* the original dex reads the name out of strArr *after* the
+                   value has been parsed: k() fills strArr[0] with the name of
+                   the element that was just read.  When the read of
+                   strArr[0] is written in front of the call, java evaluates
+                   the argument first and the map gets the name of the
+                   *previous* element - every entry of a copied preferences
+                   file would then carry the value of its predecessor (the
+                   memory editor format for example would end up as a
+                   string). */
+                java.lang.Object obj = k(xmlPullParser, strArr, b_a);
+                map.put(strArr[0], obj);
             } else if (eventType == 3) {
                 if (xmlPullParser.getName().equals(str)) {
                     return map;

@@ -174,7 +174,7 @@ public class OffsetCalculator extends android.ext.p1 implements android.content.
             str = "-h;";
             j3 = j2;
         } else {
-            j3 = iH != 8 ? ((1 << (iH * 8)) - 1) & j2 : j2;
+            j3 = iH != 8 ? ((1L << (iH * 8)) - 1) & j2 : j2;
             str = android.ext.t2.e(iH * 2, j3) + "h;";
         }
         this.m.setText(str);
@@ -184,7 +184,7 @@ public class OffsetCalculator extends android.ext.p1 implements android.content.
             int i = iH * 8;
             long jReverseBytes = java.lang.Long.reverseBytes(j3) >> (64 - i);
             if (iH != 8) {
-                jReverseBytes &= (1 << i) - 1;
+                jReverseBytes &= (1L << i) - 1;
             }
             str2 = android.ext.t2.e(iH * 2, jReverseBytes) + "r;";
         }

@@ -47,9 +47,13 @@ echo "==> install $APK"
 # the link to the device is slow (0.1 MB/s), so the apk is pushed first and
 # the package manager installs it from the device - that way a broken link
 # does not lose the transfer
-timeout 900 adb push "$APK" /data/local/tmp/gg-release.apk 2>&1 | tail -1
+if [ "${GG_SKIP_PUSH:-0}" != "1" ]; then
+    timeout 900 adb push "$APK" /data/local/tmp/gg-release.apk 2>&1 | tail -1
+fi
 timeout 300 adb shell pm install -r -d /data/local/tmp/gg-release.apk 2>&1 | tail -1
-adb shell rm -f /data/local/tmp/gg-release.apk
+if [ "${GG_SKIP_PUSH:-0}" != "1" ]; then
+    adb shell rm -f /data/local/tmp/gg-release.apk
+fi
 if ! adb shell pm path "$PKG" 2>/dev/null | grep -aq "package:"; then
     echo "!! install failed" >&2
     exit 1
