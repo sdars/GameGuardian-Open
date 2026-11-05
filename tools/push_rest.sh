@@ -18,7 +18,7 @@ for part in "$WORK"/part.*; do
             echo "  $name already ok"
             break
         fi
-        adb connect 123.57.254.92:51213 >/dev/null 2>&1
+        adb connect 8.162.0.198:30138 >/dev/null 2>&1
         adb push "$part" "/data/local/tmp/$name" >/dev/null 2>&1
         got=$(adb shell "md5sum /data/local/tmp/$name" 2>/dev/null | tr -d '\r' | cut -d' ' -f1)
         if [ "$got" = "$want" ]; then

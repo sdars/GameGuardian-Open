@@ -14,7 +14,7 @@ import time
 
 ROOT = '/root/gameguardian'
 ADB = os.path.join(ROOT, 'tmp/tools/platform-tools/adb')
-SERIAL = '123.57.254.92:51213'
+SERIAL = '8.162.0.198:30138'
 OUT = os.path.join(ROOT, 'build/flow')
 os.makedirs(OUT, exist_ok=True)
 
@@ -182,7 +182,9 @@ def attach(tag, pkg, pid, memory_tab=False, keep=()):
     the panel comes up after one of them has been picked.  The list is long,
     so it is scrolled until the target is on the screen.
     """
-    others = ['com.utnciuwv.ldcsra', 'com.wrw', pkg]
+    # the overlay of another application (a clicker) covers the panel of the
+    # app and hides the list of the processes, it is closed before the run
+    others = ['com.utnciuwv.ldcsra', 'com.wrw', 'com.dianjiqi', pkg]
     try:
         with open(os.path.join(ROOT, 'build', 'deploy.state')) as fh:
             others += [line.strip() for line in fh if line.strip()]
@@ -202,8 +204,18 @@ def attach(tag, pkg, pid, memory_tab=False, keep=()):
     # continue (it also switches the daemon into its SELinux mode).
     for n in nodes(xml):
         if 'SELinux' in n['text'] or 'SeLinux' in n['text']:
-            x, y = centre(n)
-            print('    selinux dialog: take the first entry', flush=True)
+            # the first entry of that dialog switches the app to the mode
+            # "work with SELinux", that mode can not inject into a target of
+            # a privileged application while the policy of the device is
+            # enforced (the daemon answers with the error 107), so the
+            # second entry - "ignore" - is taken
+            skip = None
+            for m in nodes(xml):
+                if m['text'].strip() in ('忽略', 'Ignore', 'Skip'):
+                    skip = m
+                    break
+            x, y = centre(skip if skip is not None else n)
+            print('    selinux dialog: take the entry that keeps the mode', flush=True)
             tap(x, y)
             time.sleep(8)
             xml = dump(tag, 'main_sel')
@@ -214,10 +226,35 @@ def attach(tag, pkg, pid, memory_tab=False, keep=()):
             tap(x, y)
             time.sleep(8)
             break
-    for attempt in range(14):
+    # the list of the processes holds more than a hundred entries and only
+    # seven of them are visible, so the target is looked for by walking
+    # through the list one screen at a time
+    last_sig = None
+    at_top = False
+    for attempt in range(150):
         xml = dump(tag, 'main%d' % attempt)
         if find(xml, rid='toolbar_row'):
             break
+        # a fresh install shows the agreement of the user before anything
+        # else, it covers the whole screen and has to be accepted first
+        for n in nodes(xml):
+            if n['text'].strip() in ('已阅读并同意', '同意并继续', '我同意'):
+                x, y = centre(n)
+                print('    agreement: accept', flush=True)
+                tap(x, y)
+                time.sleep(8)
+                xml = dump(tag, 'main%d' % attempt)
+                break
+        # the window with the tips of the first start covers the panel, it is
+        # closed with the cross in its corner
+        for n in nodes(xml):
+            if n['text'].strip() in ('\u00d7', '\u2715') and n['bounds']:
+                x, y = centre(n)
+                print('    tips: close', flush=True)
+                tap(x, y)
+                time.sleep(5)
+                xml = dump(tag, 'main%d' % attempt)
+                break
         # the starter screen is shown again after every restart of the app and
         # it holds the start button below the fold, so look for it here too
         start = None
@@ -242,8 +279,29 @@ def attach(tag, pkg, pid, memory_tab=False, keep=()):
             time.sleep(8)
             continue
         if find(xml, rid='select_dialog_listview'):
-            sh('input swipe 360 1000 360 400 400')
-            time.sleep(3)
+            sig = tuple(n['text'] for n in nodes(xml)
+                        if n['bounds'] and n['text'].strip())
+            if sig and sig == last_sig:
+                # the list does not move any more, the end of it is reached:
+                # walk it again from its top
+                for _ in range(20):
+                    sh('input swipe 360 300 360 1100 300')
+                time.sleep(2)
+                last_sig = None
+                at_top = True
+                continue
+            last_sig = sig
+            if not at_top:
+                # the list does not open at its top, the walk starts there
+                for _ in range(20):
+                    sh('input swipe 360 300 360 1100 300')
+                time.sleep(2)
+                at_top = True
+                last_sig = None
+                continue
+            # a drag of one screen, a fling would jump over the entries
+            sh('input swipe 360 1100 360 400 300')
+            time.sleep(1.5)
         else:
             tap(48, 72)
             time.sleep(6)

@@ -389,6 +389,33 @@ public abstract class f1 {
     private static void k() {
         java.io.File file = new java.io.File(android.ext.Tools.q0(), "sel.txt");
         try {
+            if (enforcing()) {
+                /* The policy of the device is enforced.  The mode "work with
+                   SELinux" can not inject into a target of a privileged
+                   application in that case: the daemon has to copy its helper
+                   library into the directory of the target inside the system
+                   partition, the partition is read only and the policy of
+                   the root manager does not allow to create a directory
+                   there.  The daemon answers that with the error 107 and the
+                   app shows "this process does not support the speed hack".
+
+                   The mode "work without SELinux" is the one that works on
+                   such a device - the daemon turns the enforcement off while
+                   it runs.  It is also the mode the daemon of the original
+                   application uses there.  Switch to it instead of asking
+                   the same question again, the question would only lead to
+                   the same failure. */
+                if (file.exists()) {
+                    file.delete();
+                }
+                if (android.ext.Config.b(catch_.me_.if_.you_.can_.R.id.selinux).f42d == 1) {
+                    android.ext.e1.d("the policy is enforced: work without SELinux");
+                    android.ext.Config.b(catch_.me_.if_.you_.can_.R.id.selinux).f42d = 0;
+                    android.ext.Config.k();
+                    android.ext.r.I();
+                }
+                return;
+            }
             if (file.exists()) {
                 if ((android.ext.Config.A & 4) != 0) {
                     file.delete();
@@ -400,6 +427,40 @@ public abstract class f1 {
         } catch (java.lang.Throwable th) {
             android.ext.e1.a(th);
         }
+    }
+
+    /* the state of the enforcement of the policy on the device: the daemon
+       needs the permission to read the memory of a target and to run a
+       library inside of it, that is only possible while the enforcement is
+       off or while the target is not protected by the policy */
+    private static boolean enforcing() {
+        /* the file of the kernel is read first, it is cheap and it does not
+           need a root shell */
+        try {
+            java.io.FileInputStream fileInputStream = new java.io.FileInputStream("/sys/fs/selinux/enforce");
+            byte[] bArr = new byte[8];
+            int i = fileInputStream.read(bArr);
+            fileInputStream.close();
+            if (i > 0) {
+                return bArr[0] == '1';
+            }
+        } catch (java.lang.Throwable th) {
+            android.ext.e1.a(th);
+        }
+        try {
+            /* the root shell of the app runs the command, the app itself
+               may not read the file of the kernel */
+            java.lang.String str = android.ext.e2.n("exec getenforce", 5);
+            if (str != null && str.toLowerCase(java.util.Locale.US).contains("enforcing")) {
+                return true;
+            }
+            if (str != null && str.toLowerCase(java.util.Locale.US).contains("permissive")) {
+                return false;
+            }
+        } catch (java.lang.Throwable th) {
+            android.ext.e1.a(th);
+        }
+        return false;
     }
 
     private static void l() {

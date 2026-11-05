@@ -4,7 +4,7 @@
 set -uo pipefail
 ROOT=/root/gameguardian
 export PATH="$ROOT/tmp/tools/platform-tools:$PATH"
-S=123.57.254.92:51213
+S=8.162.0.198:30138
 
 echo "=== the activities of the original helper"
 adb -s $S shell "dumpsys package com.utnciuwv.ldcsra | grep -aE 'Activity|com.utnciuwv' | head -30" 2>&1 | tr -d '\r'

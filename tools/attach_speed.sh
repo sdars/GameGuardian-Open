@@ -13,7 +13,7 @@ TAG=${2:-sp}
 Y=${3:-601}
 LOG=$ROOT/build/logs
 mkdir -p "$LOG"
-A() { adb -s 123.57.254.92:51213 "$@"; }
+A() { adb -s 8.162.0.198:30138 "$@"; }
 
 dump() {
     A shell uiautomator dump /sdcard/d_$TAG.xml >/dev/null 2>&1

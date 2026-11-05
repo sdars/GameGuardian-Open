@@ -1,10 +1,20 @@
 # What the reconstruction changes on the device
 
-Short answer: **it does not change SELinux, the mount table, the APatch
-superuser list or /system.**  The only device state this project ever
-changed is the root grant for its own package (the same mechanism the
-original GameGuardian needs) and the files the app and the daemon unpack
-into `/data/local/tmp`, which is the original behaviour.
+Short answer: **the app does not touch SELinux itself, it does not change
+the mount table, the APatch superuser list or /system.**  The only device
+state this project ever changed is the root grant for its own package (the
+same mechanism the original GameGuardian needs) and the files the app and
+the daemon unpack into `/data/local/tmp`, which is the original behaviour.
+
+One thing has to be said plainly, because it is visible in `getenforce`:
+the **daemon** turns the enforcement of the policy off while it runs - and
+that is the mechanism of the original GameGuardian, the app only picks the
+mode.  The original app starts in that mode by default (the setting
+*"work without SELinux"* is the default value of the `selinux` entry of the
+configuration), the fix release 4 makes the reconstruction pick it
+automatically on a device that enforces the policy, see
+`docs/SELINUX_MODE.md`.  The enforcement is back after a reboot of the
+device.
 
 ## 1. Code audit
 
@@ -30,6 +40,17 @@ that is handed to the daemon:
 which is byte for byte the original `Config.r()` (`Config.smali`, the
 `selinux` string is at line 419).  The bit tells the injected code that it
 may run under a enforcing policy; the app itself never touches the policy.
+
+The daemon, on the other hand, calls `setenforce 0` itself when it runs in
+the mode *"work without SELinux"* - the kernel prints that:
+
+    I/SELinux (  550): avc:  received setenforce notice (enforcing=0)
+
+That call is inside the daemon binary, not in the source of the app.  The
+daemon of this repository is the daemon of the original application (the
+six binaries of `res/raw` are byte identical to the original ones, except
+the two instructions of the self test that the fix release 3 patches, see
+`docs/SPEED_HACK_EXEC_ONLY.md`).
 
 ## 2. Runtime A/B on the device
 
@@ -66,6 +87,19 @@ That is the state of the device, not something the app did:
 * `/proc/cmdline` shows the stock kernel command line
   (`androidboot.veritymode=enforcing`, `dm="system none ro,0 1 android-verity ..."`),
   the app does not patch the boot image.
+
+The daemon is the second reason: in the mode *"work without SELinux"* it
+turns the enforcement off while it runs, the kernel reports that as
+
+    I/SELinux (  550): avc:  received setenforce notice (enforcing=0)
+
+The device of the verification was in the state *Enforcing* after a reboot
+and the state *Permissive* while the daemon of the app was running.  The
+mode can be changed in the settings of the app (*"work with SELinux"*), but
+on a device that enforces the policy the injection into a privileged
+application does not work in that mode - the daemon answers with the error
+107 and the app shows *"this process does not support the speed hack"*.
+`docs/SELINUX_MODE.md` has the details and the log of the failure.
 
 ## 4. Device state that this project did change
 

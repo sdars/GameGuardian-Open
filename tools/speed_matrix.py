@@ -58,8 +58,13 @@ def one(pkg, tag, pid):
         adlib.tap(x, y)
         time.sleep(4)
     speed_panel_ab.PKG = pkg
-    win = speed_panel_ab.windows()
-    icon = speed_panel_ab.icon_window(win)
+    icon = None
+    for _ in range(8):
+        win = speed_panel_ab.windows()
+        icon = speed_panel_ab.icon_window(win)
+        if icon is not None:
+            break
+        time.sleep(4)
     if icon is None:
         print('   !! no floating icon', flush=True)
         return None
@@ -84,11 +89,33 @@ def one(pkg, tag, pid):
 
 def main():
     pkg, tag = sys.argv[1], sys.argv[2]
-    pids = sys.argv[3].split(',')
+    targets = []
+    for item in sys.argv[3].split(','):
+        item = item.strip()
+        if item:
+            targets.append(item)
     print('== %s (%s)' % (pkg, tag), flush=True)
-    for pid in pids:
+    for item in targets:
+        pid = item
+        if not item.isdigit():
+            # a package name: the process of it is looked up right before the
+            # run, the device restarts the processes of the apps
+            out = adlib.sh('pidof %s' % item, timeout=120).strip().split()
+            if not out:
+                print('== %s is not running' % item, flush=True)
+                continue
+            pid = out[0]
         print('== target %s' % pid, flush=True)
         v = one(pkg, tag, pid)
+        if v is None and not item.isdigit():
+            # the device restarts the processes of the apps, a target that
+            # could not be found in the list is looked up again
+            out = adlib.sh('pidof %s' % item, timeout=120).strip().split()
+            if out and out[0] != pid:
+                print('== target %s (the process was restarted)' % out[0],
+                      flush=True)
+                pid = out[0]
+                v = one(pkg, tag, pid)
         if v is None:
             continue
         print('   package=%s errors=%s hook32=%s hook64=%s codes=%s' % (

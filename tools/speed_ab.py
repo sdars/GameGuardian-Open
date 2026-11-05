@@ -17,7 +17,7 @@ import time
 
 ROOT = '/root/gameguardian'
 ADB = os.path.join(ROOT, 'tmp/tools/platform-tools/adb')
-SERIAL = '123.57.254.92:51213'
+SERIAL = '8.162.0.198:30138'
 OUT = os.path.join(ROOT, 'build/flow')
 os.makedirs(OUT, exist_ok=True)
 

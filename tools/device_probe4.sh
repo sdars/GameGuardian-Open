@@ -4,7 +4,7 @@
 set -uo pipefail
 ROOT=/root/gameguardian
 export PATH="$ROOT/tmp/tools/platform-tools:$PATH"
-S=123.57.254.92:51213
+S=8.162.0.198:30138
 
 echo "=== the digests of the daemon files of our helper"
 adb -s $S shell "su -c 'sha256sum /data/user/0/com.wrw/files/GG-*/*'" 2>&1 | tr -d '\r'

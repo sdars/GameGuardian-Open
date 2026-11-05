@@ -15,7 +15,7 @@
 set -uo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 export PATH="$ROOT/tmp/tools/platform-tools:$PATH"
-DEV="${DEV:-123.57.254.92:51213}"
+DEV="${DEV:-8.162.0.198:30138}"
 OUT="$ROOT/build/logs"
 mkdir -p "$OUT"
 

@@ -12,7 +12,7 @@ TAG=${2:-ui}
 LOG=$ROOT/build/logs
 mkdir -p "$LOG"
 
-A() { adb -s 123.57.254.92:51213 "$@"; }
+A() { adb -s 8.162.0.198:30138 "$@"; }
 
 echo "==> stop every other GameGuardian on the device"
 for other in com.utnciuwv.ldcsra com.fqqvbgr com.xzqwitnufxpj com.oyn com.uyileqmdfw com.xplwru com.zijosy; do

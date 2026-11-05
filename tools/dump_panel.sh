@@ -9,7 +9,7 @@ PKG=${1:-com.hdzj.yopvkq}
 TAG=${2:-panel}
 LOG=$ROOT/build/logs
 mkdir -p "$LOG"
-A() { adb -s 123.57.254.92:51213 "$@"; }
+A() { adb -s 8.162.0.198:30138 "$@"; }
 
 for other in com.utnciuwv.ldcsra com.fqqvbgr com.xzqwitnufxpj com.oyn com.uyileqmdfw com.xplwru com.zijosy com.hdzj.yopvkq; do
     A shell am force-stop "$other" >/dev/null 2>&1

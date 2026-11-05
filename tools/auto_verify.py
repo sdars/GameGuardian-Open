@@ -108,8 +108,16 @@ def target_info():
         if not maps:
             continue
         lines = maps.splitlines()
-        first = lines[0].split('-')[0] if lines else ''
-        bit = '64' if len(first) >= 8 else '32'
+        # the architecture of a process is decided by the binary it runs:
+        # app_process64 for a 64 bit process, app_process32 for a 32 bit one
+        exe = adlib.sh('su -c \'readlink /proc/%s/exe\'' % pid, timeout=60)
+        if '64' in exe:
+            bit = '64'
+        elif '32' in exe:
+            bit = '32'
+        else:
+            first = lines[0].split('-')[0] if lines else ''
+            bit = '64' if len(first) > 8 else '32'
         # an execute only mapping is the reason for the old failure: the
         # system libraries of an application with targetSdk >= 29 are mapped
         # with "--xp" and can not be read with process_vm_readv

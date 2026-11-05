@@ -22,7 +22,7 @@ export PATH="$ROOT/tmp/tools/platform-tools:$PATH"
 PKG=catch_.me_.if_.you_.can_
 APK="$ROOT/release/GameGuardian-101.4-open.apk"
 
-adb connect 123.57.254.92:51213 >/dev/null 2>&1
+adb connect 8.162.0.198:30138 >/dev/null 2>&1
 
 if [ "${1:-}" = "install" ]; then
     echo "==> push $APK"

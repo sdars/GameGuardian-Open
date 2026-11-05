@@ -3,7 +3,7 @@
 set -uo pipefail
 ROOT=/root/gameguardian
 export PATH="$ROOT/tmp/tools/platform-tools:$PATH"
-S=123.57.254.92:51213
+S=8.162.0.198:30138
 
 echo "=== the installed base.apk of both helpers"
 adb -s $S shell "ls -l /data/app/com.wrw*/base.apk /data/app/com.utnciuwv*/base.apk" 2>&1 | tr -d '\r'

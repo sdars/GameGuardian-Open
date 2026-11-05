@@ -12,7 +12,7 @@ PID=${3:-18122}
 VALUE=${4:-999}
 OUT=$ROOT/build/search_$TAG
 mkdir -p "$OUT"
-A() { adb -s 123.57.254.92:51213 "$@"; }
+A() { adb -s 8.162.0.198:30138 "$@"; }
 
 dump() {
     A shell uiautomator dump /sdcard/s_$TAG.xml >/dev/null 2>&1

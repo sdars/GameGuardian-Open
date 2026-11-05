@@ -10,9 +10,9 @@ LOG=$ROOT/build/flow/${OUT}.out
 rm -f "$LOG"
 {
   echo "### push $S"
-  $A -s 123.57.254.92:51213 push "$S" /data/local/tmp/gg_$OUT.sh
+  $A -s 8.162.0.198:30138 push "$S" /data/local/tmp/gg_$OUT.sh
   echo "### run"
-  timeout 600 $A -s 123.57.254.92:51213 shell "su -c sh /data/local/tmp/gg_$OUT.sh"
+  timeout 600 $A -s 8.162.0.198:30138 shell "su -c sh /data/local/tmp/gg_$OUT.sh"
   echo "### rc=$?"
 } >"$LOG" 2>&1
 echo done >>"$LOG"

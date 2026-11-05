@@ -74,6 +74,15 @@ def main():
     value = sys.argv[4] if len(sys.argv) > 4 else '777'
     want_type = sys.argv[5] if len(sys.argv) > 5 else 'Dword'
 
+    if not pid.isdigit():
+        # a package name: the process of it is looked up right before the
+        # run, the device restarts the processes of the apps
+        out = adlib.sh('pidof %s' % pid, timeout=120).strip().split()
+        if not out:
+            print('!! %s is not running' % pid)
+            return 1
+        pid = out[0]
+
     print('==> package %s tag %s pid %s value %s type %s'
           % (pkg, tag, pid, value, want_type), flush=True)
     adlib.attach(tag, pkg, pid)

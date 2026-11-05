@@ -14,7 +14,7 @@ import time
 
 ROOT = '/root/gameguardian'
 ADB = os.path.join(ROOT, 'tmp/tools/platform-tools/adb')
-SERIAL = '123.57.254.92:51213'
+SERIAL = '8.162.0.198:30138'
 
 
 def _run(args, timeout):
