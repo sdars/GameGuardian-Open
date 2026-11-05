@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
-"""Wait for the device, then run the whole speed hack matrix on it.
+"""Wait for the device, then verify the published build on it.
 
 The link to the phone drops every now and then.  This script does not care:
-it waits until the device answers again and then verifies the *published*
-build on the real device, against real processes of both architectures.
+it waits until the device answers again, makes sure that the published
+asset is on the device and then runs the speed panel and the value search
+against a representative set of the real processes of the device - both
+architectures, with and without execute only pages.
 
     tools/auto_verify.py [max_targets]
 
@@ -30,6 +32,7 @@ import adlib  # noqa: E402
 
 ROOT = '/root/gameguardian'
 OUT = os.path.join(ROOT, 'build', 'flow')
+APK = os.path.join(ROOT, 'release', 'GameGuardian-101.4-open.apk')
 
 
 def log(msg):
@@ -72,6 +75,23 @@ def gg_packages():
     return out
 
 
+def ensure_installed():
+    """the published asset has to be on the device, install it if it is not"""
+    pkgs = gg_packages()
+    if pkgs:
+        return pkgs
+    log('==> the app is not on the device, install the published asset')
+    if not os.path.isfile(APK):
+        log('!! %s is missing' % APK)
+        return []
+    subprocess.run([sys.executable, os.path.join(ROOT, 'tools', 'push_apk.py'),
+                    APK], timeout=3600)
+    env = dict(os.environ, GG_SKIP_BUILD='1', GG_SKIP_PUSH='1')
+    subprocess.run(['bash', os.path.join(ROOT, 'tools', 'deploy.sh'), APK],
+                   env=env, timeout=3600)
+    return gg_packages()
+
+
 def target_info():
     """every process of the device with its architecture and page rights"""
     out = []
@@ -87,7 +107,8 @@ def target_info():
                         timeout=120)
         if not maps:
             continue
-        first = maps.splitlines()[0].split('-')[0] if maps.splitlines() else ''
+        lines = maps.splitlines()
+        first = lines[0].split('-')[0] if lines else ''
         bit = '64' if len(first) >= 8 else '32'
         # an execute only mapping is the reason for the old failure: the
         # system libraries of an application with targetSdk >= 29 are mapped
@@ -149,12 +170,34 @@ def run_speed(pkg, tag, pid):
             'stdout': (r.stdout or '').strip().splitlines()[-3:]}
 
 
+def run_search(pkg, tag, pid, value='777', kind='Dword'):
+    """the value search of one target, returns the answer of the daemon"""
+    cmd = [sys.executable, os.path.join(ROOT, 'tools', 'search_verify.py'),
+           pkg, tag, str(pid), value, kind]
+    try:
+        r = subprocess.run(cmd, capture_output=True, text=True, timeout=1800)
+    except subprocess.TimeoutExpired:
+        return {'pid': pid, 'verdict': 'timeout'}
+    logtext = adlib.logcat()
+    done = re.findall(r'::searchDone: ([0-9, ]+)', logtext)
+    sent = re.findall(r'sendSearchNumber: ([0-9]+)', logtext)
+    if done:
+        last = done[-1]
+        numbers = [int(x) for x in last.split(',') if x.strip().isdigit()]
+        verdict = 'ok' if numbers and numbers[0] else 'nothing found'
+    else:
+        verdict = 'no answer'
+    return {'pid': pid, 'verdict': verdict, 'searchDone': done[-1] if done else '',
+            'sent': sent[-1] if sent else '',
+            'stdout': (r.stdout or '').strip().splitlines()[-3:]}
+
+
 def main():
     limit = int(sys.argv[1]) if len(sys.argv) > 1 else 8
     if not wait_for_device():
         log('!! the device never came back')
         return 1
-    pkgs = gg_packages()
+    pkgs = ensure_installed()
     log('==> packages of the app: %s' % pkgs)
     pkg = None
     for p in pkgs:
@@ -184,13 +227,27 @@ def main():
         log('   -> %s codes=%s hook32=%s hook64=%s' % (v['verdict'], v.get('codes'),
                                                        v.get('hook32'), v.get('hook64')))
         results.append(v)
+    # the value search of one target of every architecture
+    searches = []
+    for bit in ('64', '32'):
+        cand = [t for t in targets if t['bit'] == bit]
+        if not cand:
+            continue
+        t = cand[0]
+        log('== search in %s %s (%s bit)' % (t['pid'], t['name'], t['bit']))
+        s = run_search(pkg, 'autos%s' % t['pid'], t['pid'])
+        s.update({'name': t['name'], 'bit': t['bit']})
+        log('   -> %s %s' % (s['verdict'], s.get('searchDone', '')))
+        searches.append(s)
     with open(os.path.join(OUT, 'auto_verify.json'), 'w', encoding='utf-8') as fh:
-        json.dump({'package': pkg, 'results': results}, fh, indent=1,
-                  ensure_ascii=False)
+        json.dump({'package': pkg, 'results': results, 'searches': searches},
+                  fh, indent=1, ensure_ascii=False)
     bad = [r for r in results if r['verdict'] != 'ok']
     log('==> %d/%d targets ok' % (len(results) - len(bad), len(results)))
     for r in bad:
         log('   !! %s %s -> %s' % (r['pid'], r.get('name'), r['verdict']))
+    for s in searches:
+        log('==> search %s %s -> %s' % (s['pid'], s.get('name'), s['verdict']))
     return 0
 
 
