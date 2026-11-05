@@ -203,3 +203,52 @@ bash tools/build_release.sh         # -> release/GameGuardian-101.4-open.apk (al
 python3 tools/patch_daemon.py       # -> the daemons of every architecture are patched
 bash tools/deploy.sh                # -> install it on the device, grant the root, start the daemon
 ```
+
+## 6. The verification of the published asset
+
+The asset was downloaded again from the release page and checked:
+
+```
+$ curl -sLO https://github.com/sdars/GameGuardian-Open-Source/releases/download/v101.4-open-source.4/GameGuardian-101.4-open.apk
+$ sha256sum GameGuardian-101.4-open.apk
+4ab93fcd8f18d3d5f3a6cfbc5c7f417710651c9311fc6926df4fcaa0385d1650  GameGuardian-101.4-open.apk
+$ md5sum classes.dex res/raw/ydw0 res/raw/ydw1 res/raw/ydw2 res/raw/ydw5 res/raw/ydw7 res/raw/ydw8
+3eb347d94f97ace660e1c8ad55b38180  classes.dex
+101fc1b183eb6a0859481e9c96f6de01  res/raw/ydw0
+5a9264bcb3f07610cb7ddadf654a7ce6  res/raw/ydw1
+b84e80d7b89283b914cee412b64b51c9  res/raw/ydw2
+615681e53ae55bf48b2b7409a0bd0c14  res/raw/ydw5
+579e6be38776a4ede589c4b24ea570bb  res/raw/ydw7
+df263a351bb7f19ef2ef9e8261b27b4c  res/raw/ydw8
+```
+
+The digest that github computed for the uploaded file is the same:
+
+```
+GameGuardian-101.4-open.apk 17896103 uploaded sha256:4ab93fcd8f18d3d5f3a6cfbc5c7f417710651c9311fc6926df4fcaa0385d1650
+```
+
+That published asset was installed on the device (as `com.q.jloinrvodbpxlu`)
+and verified there - the daemon it unpacks is the patched one
+(`615681e53ae55bf48b2b7409a0bd0c14`), the policy of the device was enforced
+before the run and the daemon turned it off while it worked:
+
+```
+I/SELinux (  550): avc:  received setenforce notice (enforcing=0)
+```
+
+The speed panel of the published asset:
+
+| target | arch | errors | codes |
+|---|---|---|---|
+| `[16403] Google Play 商店` (vending, privileged app) | 64 bit | none | 11, 18, 18 |
+| `[22705] Trebuchet` (launcher3, privileged app) | 64 bit | none | 11, 18, 18 |
+| `[24932] 系统界面` (systemui) | 64 bit | none | 11, 18, 18 |
+| `[6304] GG32Probe` (com.gg.abitest) | **32 bit** | none | 11, 18, 18 |
+
+The value search of the published asset:
+
+```
+64 bit, Google Play 商店:  found_count is ' (5)'   ::searchDone: 5, 5 0
+32 bit, GG32Probe:        found_count is ' (2)'   ::searchDone: 2, 2 0
+```
