@@ -69,23 +69,31 @@ That is the state of the device, not something the app did:
 
 ## 4. Device state that this project did change
 
-1. **The root grant of the package** - `/data/adb/ap/package_config` got
-   `com.hdzj.yopvkq,0,1,10254,0,u:r:magisk:s0` (the original package
-   `com.utnciuwv.ldcsra` is on the same list).  `tools/grant_root.sh` writes
-   that entry and keeps the uid in sync after every reinstall; it leaves a
-   `package_config.bak-*` copy next to it.
+1. **The root grant of the package** - `/data/adb/ap/package_config` got an
+   entry for the package of the release (the self install gives it a random
+   name and a new uid on every install, the entry of the run of the fix
+   release 3 was `com.lfq.hy.rhmxkypfyj,0,1,10315,0,u:r:magisk:s0`; the
+   original package `com.utnciuwv.ldcsra` is on the same list).
+   `tools/grant_root.sh` writes that entry and keeps the uid in sync after
+   every reinstall; it leaves a `package_config.bak-*` copy next to it.
 2. **Debug leftovers in `/data/local/tmp`** - the probes of this project
    (`abi_scan.sh`, `class32.sh`, `class_of*.sh`, `daemon_*.sh`, `fds.sh`,
    `gg_uid.sh`, `gglog.sh`, `lsapp.sh`, `prefs_watch.sh`, `probe*.sh`,
    `scan_all.sh`, `t.dex`, `tm*.dex`, the `*.MF` files, `ADBKeyboard.apk`,
    `gg-orig.apk`, `fr.apk`, `lib05.so`, `lib5.so`).
 3. **Installed packages** - the release package (installed as
-   `com.hdzj.yopvkq` by the self install) and the probe packages
+   `com.lfq.hy.rhmxkypfyj` by the self install) and the probe packages
    `com.gg.abitest`, `com.gg.abi64`, `com.gg.uidprobe`.
 
 The files `server`, `server.sh`, `script_execution.log`, `ydw00` .. `ydw08`
 and `ggt/`, `ggt3/` in `/data/local/tmp` are **not** debug leftovers:
 they are unpacked by the daemon at runtime, exactly like the original does.
-The 33 `res/raw` entries of the release APK are byte identical to the
-original ones (`sha256` of every `ydw*` matches), so this behaviour is
-the original behaviour.
+
+The 33 `res/raw` entries of the release APK were byte identical to the
+original ones (`sha256` of every `ydw*` matched) until the fix release 3.
+Since then the six daemons of the app carry the patch of
+`docs/SPEED_HACK_EXEC_ONLY.md` - two instructions each, so that the daemon
+reads the memory of the target with `ptrace` instead of
+`process_vm_readv`.  The other 27 entries are still byte identical to the
+original ones.  The patch is a change of the *copy* of the daemon in this
+repository; the daemon of the original application is not touched.
