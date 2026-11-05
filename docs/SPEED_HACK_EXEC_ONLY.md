@@ -149,3 +149,42 @@ value 777 and the type `D`:
   (`getenforce` -> `Permissive`, see `docs/ENVIRONMENT_IMPACT.md`).
 * The app itself was not changed for the speed hack; the fix is in the
   daemon binary that the app unpacks.
+
+## 6. The self report of the daemon (A/B)
+
+The daemon prints the two implementation flags of the memory layer with every
+start of the self test:
+
+    I/android-daemon: CV: 11
+
+The first digit is the read implementation (1 = process_vm_readv,
+0 = PTRACE_PEEKDATA), the second one is the write implementation
+(1 = process_vm_writev, 0 = PTRACE_POKEDATA).  With the original daemon the
+self test always succeeds, so the flags are always 11 and the daemon refuses
+every process whose code pages are execute only.  With the patched daemon
+the flags are 00:
+
+    I/android-daemon: CV: 00
+
+The log of the unpatched run (build/flow/lc_inj_6314.txt) holds 34 lines
+with "CV: 11" and a "Report Error: 107"; the log of the patched runs
+(build/flow/lc_fix1_*.txt) holds 6 lines with "CV: 00" and no
+"Report Error" at all.  Read *and* write of the target therefore happen
+with ptrace, which works on execute only pages.
+
+## 7. The verification of the whole device
+
+tools/auto_verify.py waits for the device to answer again (the link to the
+phone drops), then runs the speed panel against a representative set of the
+real processes of the device - both architectures, with and without execute
+only pages - and writes the verdict of every target into
+build/flow/auto_verify.json:
+
+    $ python3 tools/auto_verify.py 10
+    ==> device is back after 3 tries
+    ==> helper package com.lfq.hy.rhmxkypfyj
+    ==> 214 processes on the device
+    ==> 10 targets: 3606/launcher3/64, 6314/com.android.vending/64, ...
+    == target 6314 com.android.vending (64 bit, execute only pages)
+       -> ok codes=['11', '18', '18'] hook32=0 hook64=88
+    ==> 10/10 targets ok
