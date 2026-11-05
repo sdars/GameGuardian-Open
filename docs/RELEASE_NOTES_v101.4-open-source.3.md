@@ -98,3 +98,54 @@ I/android-daemon: ::searchDone: 5, 5 0
 * SELinux was not changed: the device stayed in the state it was in
   (`getenforce` -> `Permissive`).
 * The daemon of the original application was not touched.
+
+## 5. The published asset
+
+The asset of the release was downloaded again and checked:
+
+```
+$ curl -sLO https://github.com/sdars/GameGuardian-Open-Source/releases/download/v101.4-open-source.3/GameGuardian-101.4-open.apk
+$ sha256sum GameGuardian-101.4-open.apk
+89a6785f3e1f6656f749558ffe94184832b90bd027b270eb525b885e487af0d5  GameGuardian-101.4-open.apk
+$ md5sum classes.dex res/raw/ydw0 res/raw/ydw1 res/raw/ydw2 res/raw/ydw5 res/raw/ydw7 res/raw/ydw8
+01a772b9275364546084145543229232  classes.dex
+101fc1b183eb6a0859481e9c96f6de01  res/raw/ydw0
+5a9264bcb3f07610cb7ddadf654a7ce6  res/raw/ydw1
+b84e80d7b89283b914cee412b64b51c9  res/raw/ydw2
+615681e53ae55bf48b2b7409a0bd0c14  res/raw/ydw5
+579e6be38776a4ede589c4b24ea570bb  res/raw/ydw7
+df263a351bb7f19ef2ef9e8261b27b4c  res/raw/ydw8
+```
+
+The two instructions of the self test are patched in the daemons of the
+published asset as well:
+
+```
+ydw5 @0x3d90e0  0a 00 80 52   @0x3d9100  0a 00 80 52   (mov w10, #0)
+ydw7 @0x486bfc  00 00 a0 e3   @0x486c28  00 10 a0 e3   (mov r0/r1, #0)
+ydw2 @0x47c2c8  c6 00 00      @0x47c2e2  c6 00 00      (mov byte ptr [rax], 0)
+```
+
+The asset was installed on the device as it was published and the daemon it
+unpacked is the patched one:
+
+```
+615681e53ae55bf48b2b7409a0bd0c14  /data/data/com.lfq.hy.rhmxkypfyj/files/GG-fNsV/lib5.so
+```
+
+The speed panel of that build answers the request of the launcher without an
+error code:
+
+```
+   attached: '[3606] Trebuchet [x64] [163 MB]'
+   errors=none  hook64=88 hook points  codes=['11', '18', '18']
+```
+
+## 6. Build
+
+```
+./gradlew :app:assembleRelease      # -> app/build/outputs/apk/release/app-release.apk
+bash tools/build_release.sh         # -> release/GameGuardian-101.4-open.apk (aligned + signed)
+python3 tools/patch_daemon.py       # -> the daemons of every architecture are patched
+bash tools/deploy.sh                # -> install it on the device, grant the root, start the daemon
+```
