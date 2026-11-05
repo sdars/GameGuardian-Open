@@ -174,7 +174,7 @@ def pull(remote, local, timeout=180):
     return len(data)
 
 
-def attach(tag, pkg, pid, memory_tab=False):
+def attach(tag, pkg, pid, memory_tab=False, keep=()):
     """start the package, open its panel and attach the target process.
 
     The panel of the app and the list of the processes are two windows: as
@@ -189,11 +189,25 @@ def attach(tag, pkg, pid, memory_tab=False):
     except OSError:
         pass
     for other in others:
+        if other in keep:
+            continue
         sh('am force-stop %s' % other)
     adb('logcat', '-c')
     sh('am start -n %s/.MainActivity' % pkg)
     time.sleep(12)
     xml = dump(tag, 'main')
+    # a run that died leaves the sel.txt marker behind and the app then
+    # starts with the "switch to work with SELinux" dialog, which covers the
+    # whole screen.  Take the first entry of that dialog so the flow can
+    # continue (it also switches the daemon into its SELinux mode).
+    for n in nodes(xml):
+        if 'SELinux' in n['text'] or 'SeLinux' in n['text']:
+            x, y = centre(n)
+            print('    selinux dialog: take the first entry', flush=True)
+            tap(x, y)
+            time.sleep(8)
+            xml = dump(tag, 'main_sel')
+            break
     for n in nodes(xml):
         if n['text'].strip() == '开始':
             x, y = centre(n)
@@ -204,6 +218,19 @@ def attach(tag, pkg, pid, memory_tab=False):
         xml = dump(tag, 'main%d' % attempt)
         if find(xml, rid='toolbar_row'):
             break
+        # the starter screen is shown again after every restart of the app and
+        # it holds the start button below the fold, so look for it here too
+        start = None
+        for n in nodes(xml):
+            if n['text'].strip() == '开始':
+                start = n
+                break
+        if start is not None:
+            x, y = centre(start)
+            print('    starter: press 开始', flush=True)
+            tap(x, y)
+            time.sleep(8)
+            continue
         row = None
         for n in nodes(xml):
             if ('[%s]' % pid) in n['text']:
