@@ -138,6 +138,11 @@ def logcat(pattern=None):
     return out
 
 
+def logcat_clear():
+    """empty the buffer of the device, the next logcat only shows what follows"""
+    adb('logcat', '-c', timeout=60)
+
+
 def screencap(tag):
     path = '/sdcard/shot_%s.png' % tag
     adb('shell', 'screencap -p %s' % path)
