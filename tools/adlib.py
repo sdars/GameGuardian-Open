@@ -132,6 +132,9 @@ def centre(node):
 
 
 def logcat(pattern=None):
+    if pattern and re.match(r'^[A-Za-z0-9_.-]+$', pattern):
+        # a tag is much cheaper than the whole buffer of the device
+        return adb('logcat', '-d', '-v', 'time', '-s', pattern, timeout=120).stdout
     out = adb('logcat', '-d', '-v', 'time', timeout=120).stdout
     if pattern:
         out = '\n'.join(l for l in out.splitlines() if pattern in l)

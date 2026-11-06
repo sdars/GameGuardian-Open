@@ -93,13 +93,18 @@ def rows_of(xml, rid_addr='address', rid_type='addr_item_type'):
 def checked_rows(xml):
     """the rows whose checkbox is checked"""
     out = []
-    addr = None
     for n in nodes(xml):
-        rid = n['rid'].split('/')[-1]
-        if rid == 'address':
-            addr = n['text'].strip().rstrip(':').lower().lstrip('0')
-        elif rid == 'ch' and 'checked="true"' in n['raw']:
-            out.append(addr)
+        if n['rid'].split('/')[-1] != 'ch' or 'checked="true"' not in n['raw']:
+            continue
+        # The dump of the list puts the checkbox of a row in front of the
+        # address of the same row, so the two of them have to be matched by
+        # their bounds and not by their order in the file.
+        for m in nodes(xml):
+            if m['rid'].split('/')[-1] != 'address' or not m['bounds']:
+                continue
+            if n['bounds'][1] < m['bounds'][3] and m['bounds'][1] < n['bounds'][3]:
+                out.append(m['text'].strip().rstrip(':').lower().lstrip('0'))
+                break
     return out
 
 
@@ -444,6 +449,60 @@ def live_address(pid, rows, wait=1.5):
     return None
 
 
+def freeze_value(pid, seed, target):
+    """save the row of the result and lock it
+
+    The row of the result is put into the saved list of the panel and the
+    lock of the row is pressed, so the daemon starts to write the value
+    back into the target.
+    """
+    xml = scroll_to_address(adlib.dump('fz', 'results2'), target[0])
+    sel = checkbox_of(xml, target[0])
+    if sel is None:
+        print('!! the result list has no checkbox for %s' % target[0], flush=True)
+        return False
+    tap_node(sel, 'the checkbox of %s' % target[0])
+    time.sleep(2)
+    # the tap has to land on the row of the target, the list is checked
+    # again and the tap is repeated when it did not
+    for _ in range(3):
+        xml = adlib.dump('fz', 'checked')
+        done = checked_rows(xml)
+        if target[0].lower().lstrip('0') in done:
+            log('the row %s is checked' % target[0])
+            break
+        log('the row %s is not checked, the tap is repeated' % target[0])
+        box = checkbox_of(xml, target[0])
+        if box is None:
+            print('!! the checkbox of %s is gone' % target[0], flush=True)
+            return False
+        tap_node(box, 'the checkbox of %s' % target[0])
+        time.sleep(2)
+    adlib.tap(*MORE_BTN)
+    time.sleep(4)
+    xml = adlib.dump('fz', 'menu2')
+    entry = by_text(xml, '保存所选')
+    if entry is None:
+        print('!! the more menu has no save entry', flush=True)
+        return False
+    tap_node(entry, 'save the selected')
+    time.sleep(5)
+
+    adlib.tap(*TAB_SAVED)
+    time.sleep(4)
+    xml = adlib.dump('fz', 'saved')
+    lock = lock_of(xml, target[0])
+    if lock is None:
+        print('!! the saved list has no row for %s' % target[0], flush=True)
+        for n in nodes(xml):
+            if n['rid'].split('/')[-1] in ('name', 'address'):
+                log('%s %r' % (n['rid'].split('/')[-1], n['text']))
+        return False
+    tap_node(lock, 'the lock of the saved value')
+    time.sleep(4)
+    return True
+
+
 def main():
     pkg = sys.argv[1]
     pid = sys.argv[2]
@@ -491,51 +550,9 @@ def main():
         return 1
 
     print('==> save the result', flush=True)
-    xml = scroll_to_address(adlib.dump('fz', 'results2'), target[0])
-    sel = checkbox_of(xml, target[0])
-    if sel is None:
-        print('!! the result list has no checkbox for %s' % target[0], flush=True)
-        return 1
-    tap_node(sel, 'the checkbox of %s' % target[0])
-    time.sleep(2)
-    # the tap has to land on the row of the target, the list is checked
-    # again and the tap is repeated when it did not
-    for _ in range(3):
-        xml = adlib.dump('fz', 'checked')
-        done = checked_rows(xml)
-        if target[0].lower().lstrip('0') in done:
-            log('the row %s is checked' % target[0])
-            break
-        log('the row %s is not checked, the tap is repeated' % target[0])
-        box = checkbox_of(xml, target[0])
-        if box is None:
-            print('!! the checkbox of %s is gone' % target[0], flush=True)
-            return 1
-        tap_node(box, 'the checkbox of %s' % target[0])
-        time.sleep(2)
-    adlib.tap(*MORE_BTN)
-    time.sleep(4)
-    xml = adlib.dump('fz', 'menu2')
-    entry = by_text(xml, '保存所选')
-    if entry is None:
-        print('!! the more menu has no save entry', flush=True)
-        return 1
-    tap_node(entry, 'save the selected')
-    time.sleep(5)
-
     print('==> freeze it', flush=True)
-    adlib.tap(*TAB_SAVED)
-    time.sleep(4)
-    xml = adlib.dump('fz', 'saved')
-    lock = lock_of(xml, target[0])
-    if lock is None:
-        print('!! the saved list has no row for %s' % target[0], flush=True)
-        for n in nodes(xml):
-            if n['rid'].split('/')[-1] in ('name', 'address'):
-                log('%s %r' % (n['rid'].split('/')[-1], n['text']))
+    if not freeze_value(pid, seed, target):
         return 1
-    tap_node(lock, 'the lock of the saved value')
-    time.sleep(4)
 
     set_mode('test')
 

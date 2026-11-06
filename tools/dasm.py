@@ -96,6 +96,29 @@ def xrefs(path, target_va):
                         print('    %08x  %-8s %s' % (insns[j].address, insns[j].mnemonic, insns[j].op_str))
 
 
+def callers(path, target_va):
+    """every place that calls target_va
+
+    The daemon has one big code segment - the first section with the flag
+    of the code is not the code of the daemon, so the whole text of the
+    file is scanned here.
+    """
+    data, elf = load(path)
+    end = 0x3e0c60
+    md = Cs(CS_ARCH_ARM64, CS_MODE_ARM)
+    md.detail = False
+    md.skipdata = True
+    insns = list(md.disasm(data[0:end], 0))
+    print('# %d instructions' % len(insns))
+    hits = [i for i, x in enumerate(insns)
+            if x.mnemonic in ('bl', 'b') and x.op_str == '#0x%x' % target_va]
+    for i in hits:
+        x = insns[i]
+        print('=== call at 0x%x (%s %s)' % (x.address, x.mnemonic, x.op_str))
+        for j in range(max(0, i - 14), min(len(insns), i + 10)):
+            print('    %08x  %-8s %s' % (insns[j].address, insns[j].mnemonic, insns[j].op_str))
+
+
 if __name__ == '__main__':
     cmd = sys.argv[1]
     if cmd == 'strings':
@@ -104,3 +127,5 @@ if __name__ == '__main__':
         disas(sys.argv[2], int(sys.argv[3], 0), int(sys.argv[4]) if len(sys.argv) > 4 else 80)
     elif cmd == 'xrefs':
         xrefs(sys.argv[2], int(sys.argv[3], 0))
+    elif cmd == 'callers':
+        callers(sys.argv[2], int(sys.argv[3], 0))
