@@ -23,6 +23,7 @@ import time
 
 sys.path.insert(0, '/root/gameguardian/tools')
 import adlib  # noqa: E402
+import gg_ui  # noqa: E402
 
 ADB = '/root/gameguardian/tmp/tools/platform-tools/adb'
 
@@ -36,6 +37,19 @@ CRASH_OK = (360, 892)
 
 def log(msg):
     print('    %s' % msg, flush=True)
+
+
+def icon():
+    """the place of the floating icon of the panel on the screen
+
+    The icon lives in a window of its own, the window manager clamps it to
+    the screen, so the place is taken from the windows of the device and
+    not from a fixed number.
+    """
+    at = gg_ui.icon_window(gg_ui.detect_app())
+    if at is not None:
+        return at
+    return ICON
 
 
 def nodes(xml):
@@ -222,7 +236,7 @@ def open_panel():
     if is_panel(xml):
         return xml
     for _ in range(4):
-        adlib.tap(*ICON)
+        adlib.tap(*icon())
         time.sleep(4)
         xml = adlib.dump('fz', 'panel')
         if crash_dialog(xml):
@@ -238,40 +252,31 @@ def open_panel():
 
 
 def attach(pkg, pid):
-    xml = open_panel()
-    nm = by_id(xml, 'app_name')
-    if nm and ('[%s]' % pid) in nm['text']:
-        log('already attached to %r' % nm['text'])
-        return True
-    # the icon of the panel opens the picker with the processes
-    for _ in range(3):
-        adlib.tap(*ICON)
-        time.sleep(4)
-        xml = adlib.dump('fz', 'procs')
-        if '选择应用进程' in xml:
+    """attach the panel of the app to the target process
+
+    The flow of adlib starts the app, opens its interface, picks the
+    process out of the list and waits for the name of the target in the
+    header of the panel.
+    """
+    keep = []
+    for line in adlib.sh('ps -A -o PID,NAME', timeout=90).splitlines():
+        parts = line.split()
+        if len(parts) >= 2 and parts[0] == str(pid):
+            keep.append(parts[1])
             break
-        log('the picker did not open, try again')
-    row = None
-    for _ in range(12):
-        xml = adlib.dump('fz', 'procs')
-        for n in nodes(xml):
-            if ('[%s]' % pid) in n['text']:
-                row = n
-                break
-        if row is not None:
-            break
-        log('the target is not on the screen, scroll the process list')
-        adlib.sh('input swipe 360 1000 360 400 400')
+    adlib.attach('fz', pkg, pid, keep=keep)
+    for _ in range(4):
+        xml = open_panel()
+        nm = by_id(xml, 'app_name')
+        if nm is not None:
+            if ('[%s]' % pid) in nm['text']:
+                log('attached to %r' % nm['text'])
+                return True
+            log('the panel is attached to %r and not to %s' % (nm['text'], pid))
+            return False
         time.sleep(3)
-    if row is None:
-        print('!! the process %s is not in the list' % pid, flush=True)
-        return False
-    tap_node(row, 'the target process')
-    time.sleep(10)
-    xml = open_panel()
-    nm = by_id(xml, 'app_name')
-    log('attached to %r' % (nm['text'] if nm else '?'))
-    return nm is not None and ('[%s]' % pid) in nm['text']
+    print('!! the panel did not come up', flush=True)
+    return False
 
 
 def search_dialog():

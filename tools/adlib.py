@@ -21,7 +21,7 @@ os.makedirs(OUT, exist_ok=True)
 
 def _run(args, timeout):
     return subprocess.run([ADB, '-s', SERIAL] + list(args), capture_output=True,
-                          text=True, timeout=timeout)
+                          text=True, timeout=timeout, errors='replace')
 
 
 def _run_bin(args, timeout):
@@ -182,6 +182,78 @@ def pull(remote, local, timeout=180):
     return len(data)
 
 
+def overlay_windows(pkg):
+    """the overlay windows of the app with their frames
+
+    The panel of the app is a floating window, it is not part of the
+    hierarchy that uiautomator dumps while it is closed.  ``dumpsys window``
+    knows every window of the device, so the overlays are taken from there.
+    """
+    out = sh('dumpsys window windows | grep -E "Window #|ty=APPLICATION_OVERLAY|mFrame="',
+             timeout=240)
+    res = []
+    state = {'name': None, 'attrs': None, 'frame': None}
+
+    def flush():
+        if state['name'] and state['attrs'] and state['frame']:
+            res.append((state['name'], state['attrs'], state['frame']))
+
+    for line in out.splitlines():
+        m = re.match(r'\s*Window #\d+ Window\{(.*?)\}', line)
+        if m:
+            flush()
+            state['name'] = m.group(1)
+            state['attrs'] = None
+            state['frame'] = None
+            continue
+        if state['name'] is None:
+            continue
+        if 'ty=APPLICATION_OVERLAY' in line:
+            state['attrs'] = line.strip()
+        m = re.search(r'mFrame=\[(\d+),(\d+)\]\[(\d+),(\d+)\]', line)
+        if m and state['frame'] is None:
+            state['frame'] = tuple(int(x) for x in m.groups())
+    flush()
+    return [r for r in res if pkg in r[0]]
+
+
+def float_row(pkg):
+    """the frame of the row of the floating icon of the panel of the app
+
+    The icon sits in the row of the floating panel, that row is the overlay
+    of the app in the top left corner of the screen that is the tallest one:
+    the text of the speed hack sits in a window of its own below the row and
+    is lower.
+    """
+    cands = []
+    for name, attrs, frame in overlay_windows(pkg):
+        if 'gr=TOP LEFT CENTER' not in attrs:
+            continue
+        x1, y1, x2, y2 = frame
+        if x1 < 0 or y1 < 0 or x2 > 720 or y2 > 1280:
+            continue
+        if '10000,10000' in attrs:
+            continue
+        cands.append((name, attrs, frame))
+    if not cands:
+        return None
+    icon = max(cands, key=lambda c: (c[2][3] - c[2][1],
+                                     (c[2][2] - c[2][0]) * (c[2][3] - c[2][1])))
+    return icon[2]
+
+
+def float_icon(pkg):
+    """the centre of the floating icon of the panel of the app
+
+    The icon is in the middle of the row of the floating panel.
+    """
+    row = float_row(pkg)
+    if row is None:
+        return None
+    x1, y1, x2, y2 = row
+    return (x1 + x2) // 2, (y1 + y2) // 2
+
+
 def attach(tag, pkg, pid, memory_tab=False, keep=()):
     """start the package, open its panel and attach the target process.
 
@@ -191,8 +263,10 @@ def attach(tag, pkg, pid, memory_tab=False, keep=()):
     so it is scrolled until the target is on the screen.
     """
     # the overlay of another application (a clicker) covers the panel of the
-    # app and hides the list of the processes, it is closed before the run
-    others = ['com.utnciuwv.ldcsra', 'com.wrw', 'com.dianjiqi', pkg]
+    # app and hides the list of the processes, it is closed before the run.
+    # The target itself is not closed: its pid is the key of the run and the
+    # list of the processes has to show that very pid.
+    others = ['com.utnciuwv.ldcsra', 'com.wrw', 'com.dianjiqi']
     try:
         with open(os.path.join(ROOT, 'build', 'deploy.state')) as fh:
             others += [line.strip() for line in fh if line.strip()]
@@ -206,6 +280,16 @@ def attach(tag, pkg, pid, memory_tab=False, keep=()):
     sh('am start -n %s/.MainActivity' % pkg)
     time.sleep(12)
     xml = dump(tag, 'main')
+    # the app does not always come to the front: when it was already
+    # running, the start only delivers the intent to the instance that is
+    # already up and the launcher stays in the foreground.  The start is
+    # repeated until the window of the app is the one that is dumped.
+    for _ in range(4):
+        if any(n['pkg'] == pkg for n in nodes(xml)):
+            break
+        sh('am start -n %s/.MainActivity' % pkg)
+        time.sleep(8)
+        xml = dump(tag, 'main')
     # a run that died leaves the sel.txt marker behind and the app then
     # starts with the "switch to work with SELinux" dialog, which covers the
     # whole screen.  Take the first entry of that dialog so the flow can
@@ -243,6 +327,16 @@ def attach(tag, pkg, pid, memory_tab=False, keep=()):
         xml = dump(tag, 'main%d' % attempt)
         if find(xml, rid='toolbar_row'):
             break
+        # the panel of the app is a floating window: when the app goes to
+        # the background, the list of the processes is only reachable by
+        # tapping the floating icon
+        if not any(n['pkg'] == pkg for n in nodes(xml)):
+            icon = float_icon(pkg)
+            if icon is not None:
+                print('    open the panel with the icon at %d,%d' % icon, flush=True)
+                tap(*icon)
+                time.sleep(6)
+                continue
         # a fresh install shows the agreement of the user before anything
         # else, it covers the whole screen and has to be accepted first
         for n in nodes(xml):

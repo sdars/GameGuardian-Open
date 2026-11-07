@@ -19,7 +19,10 @@ esac
 
 for _ in $(seq 1 "$TRIES"); do
     adb shell uiautomator dump /sdcard/tap_text.xml >/dev/null 2>&1
-    adb pull /sdcard/tap_text.xml "$XML" >/dev/null 2>&1
+    # the link to the device drops often, so the dump is read back with
+    # exec-out instead of a pull - a half transferred file would look like
+    # an empty dump
+    adb exec-out cat /sdcard/tap_text.xml > "$XML" 2>/dev/null
     if [ -s "$XML" ]; then
         if [ "$EXACT" = "1" ]; then
             line="$(python3 "$ROOT/tools/uix.py" "$XML" 2>/dev/null \

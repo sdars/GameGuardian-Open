@@ -191,6 +191,24 @@ class FreezeProbeTicker implements Runnable {
             junk.clear();
             Log.i(FreezeProbeActivity.TAG, "churn tick=" + FreezeProbeActivity.ticks);
             w[0] = FreezeProbeActivity.POISON;
+        } else if ("clock".equals(FreezeProbeActivity.mode)) {
+            // The speed hack of the panel makes the clock of the target run
+            // faster.  The value of System.currentTimeMillis() is written
+            // to the log every second of the real time; the ratio of the
+            // growth of that value to the growth of the real time of the
+            // device is the factor of the speed hack.
+            if (FreezeProbeActivity.ticks % 10 == 0) {
+                // The clock of ART (System.currentTimeMillis) lives in the
+                // runtime of the system, the daemon does not hook it.  The
+                // clock of SystemClock lives in the library of the
+                // framework, that one is hooked: it shows the factor of
+                // the speed hack.
+                Log.i(FreezeProbeActivity.TAG, "CLOCK virtual=" + System.currentTimeMillis()
+                        + " mono=" + System.nanoTime()
+                        + " native=" + android.os.SystemClock.uptimeMillis()
+                        + " boot=" + android.os.SystemClock.elapsedRealtime()
+                        + " ticks=" + FreezeProbeActivity.ticks);
+            }
         } else {
             if (w[0] != FreezeProbeActivity.SEED) {
                 // the value has to stay the same, the search has to find it

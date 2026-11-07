@@ -25,6 +25,19 @@ def main():
     if icon is None:
         icon = adlib.find(xml, rid='hot_frame')
     if icon is None:
+        # the panel is open - the icon of the panel closes it and leaves
+        # the floating button on the screen
+        app_icon = adlib.find(xml, rid='app_icon')
+        if app_icon is not None:
+            x, y = adlib.centre(app_icon)
+            print('== close the panel with the icon at %d,%d' % (x, y))
+            adlib.tap(x, y)
+            time.sleep(4)
+            xml = adlib.dump(tag, 'overlay')
+            icon = adlib.find(xml, rid='hot_point_icon')
+            if icon is None:
+                icon = adlib.find(xml, rid='hot_frame')
+    if icon is None:
         print('== no floating icon in the dump')
         for node in adlib.nodes(xml):
             if node['bounds'] and node['pkg'] != 'com.android.launcher3':

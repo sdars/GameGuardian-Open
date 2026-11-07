@@ -117,3 +117,55 @@ moves the array, the daemon keeps writing the frozen value into the old
 address and the target writes something else there.  `tools/freeze_probe`
 has a mode (`churn`) that moves the array on purpose to reproduce that
 case.
+
+The crash had a second cause, which was found after the release 4 and which
+explains it without the moving array: the command stream of the app was
+masked, so the daemon did not receive the number of the values and the
+addresses that the panel had selected.  See section 6 and
+`docs/PROTOCOL_WORD_MASK.md`.
+
+## 6. The crash of the freeze: the word mask of the command stream
+
+The freeze of the panel sends the command 36 to the daemon:
+
+```java
+// app/src/main/java/android/ext/f0$f0.java
+inOut.q(this.f850b, (byte) 36, (android.ext.InOut.n + 4) * i2);
+inOut.u(i2);                       // the number of the values
+while (i < i3) {
+    inOut.u(this.f849a[i]);         // the address of the value
+    inOut.v(this.f851c[i]);         // the value
+    i++;
+}
+```
+
+`InOut.u()` writes the word masked with `byteOrderMask`, the field carries
+the value `0xf` of the original dex and nothing in the app ever writes it
+(`docs/PROTOCOL_WORD_MASK.md`).  With the mask of `0xf` the daemon received
+
+* the number of the values `12` as `3` - it read three values out of the
+  stream, took the rest of the bytes for the next command and wrote the
+  values of the app into the wrong places of the target,
+* the address of the value `0x1300cfcc` as `0x1300cfd3` - the daemon wrote
+  the frozen value seven bytes behind the place the panel had selected.
+
+Both corrupt the memory of the target: the first one writes the values into
+the heap of the target at addresses that belong to other objects, the second
+one overwrites a part of an object that the target uses.  A process that is
+written into like that dies - sometimes right away, sometimes after a while,
+when the corrupted object is used.
+
+After the fix (`byteOrderMask = 0`) the run of `tools/freeze_flow.py`
+against the test bed of the tool shows neither of them:
+
+```
+alive=18356 freeze=710 canary=0 ... status ticks=26600 freezes=709 corrupt=0
+```
+
+* the daemon wrote the frozen value back into the target 10 times out of 12
+  samples of its memory,
+* the canary behind the frozen word stayed intact (`canary=0`), the test bed
+  counted no broken write (`corrupt=0`),
+* the target process was alive during the whole run (720 freeze events in two
+  minutes),
+* the device wrote no tombstone of the target during the run.

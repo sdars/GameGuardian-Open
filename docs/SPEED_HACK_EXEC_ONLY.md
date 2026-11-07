@@ -188,3 +188,29 @@ build/flow/auto_verify.json:
     == target 6314 com.android.vending (64 bit, execute only pages)
        -> ok codes=['11', '18', '18'] hook32=0 hook64=88
     ==> 10/10 targets ok
+
+## 8. The word mask of the command stream (release 5)
+
+A second reason for *"the speed hack does nothing"* was found after the
+release 4: the 32 bit words of the command stream that the app sends to its
+daemon were masked with `0xf`, and the daemon reads them unmasked.  The
+factor of the speed hack (`num`/`den`) is one of those words, so the daemon
+received `9/10` instead of `6/5` - the target kept the speed of `1.0` and the
+panel looked dead.
+
+The whole analysis, the A/B and the fix are in `docs/PROTOCOL_WORD_MASK.md`.
+The measurement of the effect in the target:
+
+```
+$ python3 tools/clockdump.py 4215
+slot  1 obj=0x718d47b478 flag=1 index= 20 num=6 den=5 base=9924.924 acc=0 last=9645.766
+
+$ python3 tools/speed_rate.py 4215 30
+wall 38.7 s
+slot  1 num=6/5 flag=1  virtual +36.103 s  real +30.086 s  factor 1.2000
+```
+
+The clock that the target reads advances 36.103 s while the real clock of the
+device advances 30.086 s: the target runs at 1.2x, the factor that the panel
+set.  The change is one line of `app/src/main/java/android/ext/InOut.java`
+(`byteOrderMask = 0`), the daemon binaries are unchanged.

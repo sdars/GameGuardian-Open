@@ -2,7 +2,33 @@ package android.ext;
 
 /* JADX INFO: loaded from: classes.dex */
 public class InOut {
-    public static volatile int byteOrderMask = 15;
+    /*
+     * The daemon reads the 32 bit integers of the command stream without any
+     * transformation: tools/mdis.py shows that the reader of the daemon
+     * (lib5.so, function 0x1d66c) copies four bytes into the buffer and
+     * returns them unchanged (0x1d798: ldr w0, [sp, #4]).  Every command of
+     * the stream carries counts and flag bits in those integers, so the mask
+     * must be 0 - with 15 every single one of them arrives at the daemon
+     * corrupted:
+     *
+     *   opcode 35 (the speed hack) reads the flags of the speed table from
+     *   bit 0 of the first integer and the layout of the configuration of the
+     *   injected library from the same bit.  The value 16 that the app sends
+     *   there becomes 31, bit 0 is set, so the daemon reads 76 instead of 176
+     *   flags and writes the speed factor into the layout of the 32 bit
+     *   library while lib6.so/lib9.so read the layout of the 64 bit one
+     *   (lib6.so, 0x1b470: strb w9, [x8, #0xb8] and 0x1b47c: ldrb w8,
+     *   [x21, x3, uxtw]).  The factor never reaches the hook, the speed hack
+     *   has no effect and the leftover bytes desynchronise the command
+     *   stream, which is what makes the target die after a while.
+     *
+     *   The search sends the number of values (opcode 33), the length of the
+     *   search text (opcode 34) and the searched value itself.  A masked
+     *   length makes the daemon read the wrong number of bytes, a masked
+     *   value makes it search for a different number - the search finds
+     *   nothing.
+     */
+    public static volatile int byteOrderMask = 0;
     public static volatile boolean m;
     public static volatile int n;
     static boolean o;
