@@ -194,3 +194,76 @@ b84e80d7b89283b914cee412b64b51c9  res/raw/ydw2
 579e6be38776a4ede589c4b24ea570bb  res/raw/ydw7
 df263a351bb7f19ef2ef9e8261b27b4c  res/raw/ydw8
 ```
+
+The digest that github computed for the uploaded file is the same:
+
+```
+GameGuardian-101.4-open.apk 17896103 uploaded sha256:49e05361f38c3af15f7d9af277c10292f1f6bc87e05633347424d69350f42885
+```
+
+### 6.1 The published asset on the device
+
+The published asset was downloaded again, installed on the device
+(`tools/deploy_noreboot.sh`, no reboot of the device) and verified there.  The
+app installs *itself* under a randomised package name, so the helper of this
+run is `com.nsvjhjasgfingxacx`.  The daemon that it unpacks is the one of
+this repository:
+
+```
+615681e53ae55bf48b2b7409a0bd0c14  /data/user/0/com.nsvjhjasgfingxacx/files/GG-j5D7/lib5.so
+ecb6f408a46421a159df0dd86a855e9e  /data/user/0/com.nsvjhjasgfingxacx/files/GG-j5D7/lib6.so
+```
+
+**The search of the published asset** against the test bed of the repository
+(`tools/freeze_flow.py com.nsvjhjasgfingxacx 18356 120`):
+
+```
+the search is done
+result 13009860 type D
+result 1300CFCC type D
+result 7191D4CC00 type D
+found_count is ' (3)'
+1 of 3 results carry the canary
+the address of the test bed is 1300CFCC (type D)
+```
+
+**The freeze of the published asset** - the same run:
+
+```
+the daemon wrote the frozen value back 11 of 12 times
+alive=12407 freeze=713 canary=0 ... status ticks=41900 freezes=1670 corrupt=0
+```
+
+713 freeze events during the run, the target alive, the canary behind the
+frozen word intact, no broken write.
+
+**The speed hack of the published asset** - the factor is in the clock object
+of the target and the effect is measurable in the target
+(`tools/speed_e2e.py com.nsvjhjasgfingxacx 19187 150`,
+`tools/speed_rate.py 19187 35`):
+
+```
+the clocks of the target: [(1, 20, 6, 5, 1)]
+t=  95.6  acc=3  clocks=[(1, 20, 6, 5, 3)]  alive=True
+
+wall 42.1 s
+slot  1 num=6/5 flag=1  virtual +68.749 s  real +57.291 s  factor 1.2000
+```
+
+The clock that the target reads advances 68.749 s while the real clock of the
+device advances 57.291 s in the same interval: **1.2000x**, the factor 6/5
+that the panel set.  The target was alive during the whole run.
+
+The state of the device after the verification:
+
+```
+$ adb shell getenforce
+Permissive
+$ adb shell cat /proc/uptime
+13458.17 98629.26
+```
+
+SELinux is in the state it was in before the run and the device was not
+rebooted (the uptime only grew).  The only tombstones of the device are of
+`com.dianjiqi`, an unrelated application of the device that crashes on its
+own.
